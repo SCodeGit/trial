@@ -3,18 +3,31 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>College of Education Past Questions</title>
+  <title>University Past Questions — SCode Portal</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <header>
-    <h1>College of Education Past Questions</h1>
-    <input type="text" id="searchBox" placeholder="Search by university, subject, or file..." />
+    <h1>SCode — University Past Questions Portal</h1>
+    <p>Explore, preview and study anytime, anywhere.</p>
   </header>
 
-  <main id="content"></main>
+  <main>
+    <section class="intro">
+      <h2>University of Ghana — Level 100, Semester 1</h2>
+      <p>Click a paper below to view instantly in-browser.</p>
+    </section>
 
-  <footer>© 2025 SCode — Educational Archive Initiative</footer>
+    <section id="pdfList" class="pdf-list"></section>
+
+    <div class="viewer-container">
+      <iframe id="pdfViewer" title="PDF Viewer"></iframe>
+    </div>
+  </main>
+
+  <footer>
+    <p>© 2025 SCode Developer Studio | All rights reserved.</p>
+  </footer>
 
   <script src="script.js"></script>
 </body>

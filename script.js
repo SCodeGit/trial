@@ -1,89 +1,33 @@
-async function loadData() {
-  const res = await fetch('data.json');
-  const data = await res.json();
-  displayUniversities(data);
-}
+// SCode Portal — Auto PDF Loader
+const folderURL =
+  "https://api.github.com/repos/SCodeGit/trial/contents/university%20of%20Ghana(UG)/level%20100/sem%201";
+const pdfList = document.getElementById("pdfList");
+const pdfViewer = document.getElementById("pdfViewer");
 
-function displayUniversities(data) {
-  const content = document.getElementById('content');
-  content.innerHTML = '';
-  const ul = document.createElement('ul');
+async function loadPDFs() {
+  try {
+    const response = await fetch(folderURL);
+    const files = await response.json();
 
-  for (let uni in data) {
-    const li = document.createElement('li');
-    li.textContent = uni;
-    li.onclick = () => displayLevels(data[uni], uni);
-    ul.appendChild(li);
+    const pdfFiles = files.filter((f) => f.name.endsWith(".pdf"));
+    if (pdfFiles.length === 0) {
+      pdfList.innerHTML = "<p>No PDFs found in this folder.</p>";
+      return;
+    }
+
+    pdfFiles.forEach((file) => {
+      const item = document.createElement("div");
+      item.className = "pdf-item";
+      item.textContent = file.name.replace(".pdf", "");
+      item.onclick = () => {
+        pdfViewer.src = file.download_url;
+        window.scrollTo({ top: pdfViewer.offsetTop, behavior: "smooth" });
+      };
+      pdfList.appendChild(item);
+    });
+  } catch (err) {
+    pdfList.innerHTML = `<p style="color:red;">⚠️ Error loading PDFs: ${err}</p>`;
   }
-  content.appendChild(ul);
 }
 
-function displayLevels(levels, uniName) {
-  const content = document.getElementById('content');
-  content.innerHTML = `<h2>${uniName}</h2>`;
-  const ul = document.createElement('ul');
-
-  for (let level in levels) {
-    const li = document.createElement('li');
-    li.textContent = level;
-    li.onclick = () => displaySemesters(levels[level], uniName, level);
-    ul.appendChild(li);
-  }
-  content.appendChild(ul);
-}
-
-function displaySemesters(sems, uni, level) {
-  const content = document.getElementById('content');
-  content.innerHTML = `<h2>${uni} - ${level}</h2>`;
-  const ul = document.createElement('ul');
-
-  for (let sem in sems) {
-    const li = document.createElement('li');
-    li.textContent = sem;
-    li.onclick = () => displaySubjects(sems[sem], uni, level, sem);
-    ul.appendChild(li);
-  }
-  content.appendChild(ul);
-}
-
-function displaySubjects(subjects, uni, level, sem) {
-  const content = document.getElementById('content');
-  content.innerHTML = `<h2>${uni} - ${level} - ${sem}</h2>`;
-  const ul = document.createElement('ul');
-
-  for (let subject in subjects) {
-    const li = document.createElement('li');
-    li.textContent = subject;
-    li.onclick = () => displayFiles(subjects[subject]);
-    ul.appendChild(li);
-  }
-  content.appendChild(ul);
-}
-
-function displayFiles(files) {
-  const content = document.getElementById('content');
-  content.innerHTML = `<h2>Available Past Questions</h2>`;
-  const ul = document.createElement('ul');
-
-  files.forEach(file => {
-    const li = document.createElement('li');
-    const a = document.createElement('a');
-    a.href = file.path;
-    a.textContent = file.name;
-    a.target = "_blank";
-    li.appendChild(a);
-    ul.appendChild(li);
-  });
-  content.appendChild(ul);
-}
-
-// 🔍 Search function
-document.getElementById('searchBox').addEventListener('input', function (e) {
-  const term = e.target.value.toLowerCase();
-  const items = document.querySelectorAll('#content li');
-  items.forEach(li => {
-    li.style.display = li.textContent.toLowerCase().includes(term) ? '' : 'none';
-  });
-});
-
-loadData();
+loadPDFs();
