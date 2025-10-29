@@ -1,4 +1,4 @@
-/* General body & fonts */
+/* ===== General body & fonts ===== */
 body {
   font-family: 'Segoe UI', Arial, sans-serif;
   background: #f0f4f8;
@@ -6,188 +6,223 @@ body {
   margin: 0;
   padding: 0 20px;
   text-align: center;
+  transition: background 0.3s, color 0.3s;
 }
 
-/* Top logos */
+/* ===== Top logos ===== */
 .top-logos {
   display: flex;
   justify-content: center;
   gap: 20px;
-  margin: 20px 0;
+  margin: 30px 0;
 }
-
 .top-logos img {
   width: 60px;
   height: 60px;
   border-radius: 50%;
   object-fit: cover;
   border: 2px solid #003366;
-  transition: transform 0.3s, box-shadow 0.3s;
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
 }
-
 .top-logos img:hover {
-  transform: scale(1.2);
-  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+  transform: scale(1.2) rotate(3deg);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.25);
 }
 
-/* Page title and tagline */
+/* ===== Headings & Taglines ===== */
 h1 {
   color: #003366;
-  margin-bottom: 5px;
+  font-size: 2rem;
+  margin-bottom: 10px;
+  animation: fadeInDown 1s ease;
 }
-
 .tagline {
-  font-size: 1rem;
+  font-size: 1.1rem;
   color: #555;
   font-style: italic;
-  margin-bottom: 30px;
+  margin-bottom: 40px;
+  animation: fadeInUp 1s ease;
 }
+
+/* ===== Animations ===== */
+@keyframes fadeInDown {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ===== Instructions ===== */
 .instructions {
   max-width: 650px;
   margin: 30px auto;
   text-align: left;
-  background: #e6f0ff;
-  padding: 25px;
-  border-radius: 10px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  background: linear-gradient(135deg, #e6f0ff, #ffffff);
+  padding: 25px 30px;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
-
+.instructions:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.18);
+}
 .instructions h2 {
   color: #003366;
+  font-size: 1.3rem;
   margin-bottom: 15px;
 }
-
 .instructions ol li {
   margin: 10px 0;
   font-size: 1rem;
-  line-height: 1.5;
+  line-height: 1.6;
 }
-
 .instructions a {
   color: #0055aa;
   text-decoration: none;
+  font-weight: 600;
 }
+.instructions a:hover { text-decoration: underline; }
 
-.instructions a:hover {
-  text-decoration: underline;
-}
-
-/* Dropdowns & buttons */
+/* ===== Dropdowns & Buttons ===== */
 select, button, input {
   margin: 10px 5px;
   padding: 10px 14px;
-  border-radius: 6px;
+  border-radius: 8px;
   border: 1px solid #003366;
   font-size: 1rem;
-  transition: 0.3s;
+  transition: all 0.3s ease;
 }
-
 select:focus, input:focus {
-  border-color: #0055aa;
+  border-color: #2288ff;
   outline: none;
+  box-shadow: 0 0 8px rgba(34,136,255,0.4);
 }
-
 button {
   background: #003366;
   color: #fff;
   cursor: pointer;
+  font-weight: 600;
 }
-
 button:hover {
   background: #0055aa;
   transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(0,0,0,0.2);
 }
 
-/* PDF cards */
+/* ===== PDF Cards ===== */
 .pdf-list {
-  margin: 30px auto;
+  margin: 40px auto;
   display: grid;
-  gap: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
   justify-content: center;
-  padding: 0 20px;
+  padding: 0 10px;
 }
-
 .pdf-item {
   background: #fff;
   padding: 18px;
-  border-radius: 10px;
-  width: 300px;
+  border-radius: 12px;
   text-align: left;
-  box-shadow: 0px 4px 15px rgba(0,0,0,0.1);
-  transition: transform 0.3s, box-shadow 0.3s;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.12);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
-
 .pdf-item:hover {
-  transform: translateY(-3px);
-  box-shadow: 0px 6px 20px rgba(0,0,0,0.15);
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.18);
 }
-
 .pdf-item a {
   color: #003366;
   text-decoration: none;
   font-weight: 600;
 }
+.pdf-item a:hover { color: #0055aa; text-decoration: underline; }
 
-.pdf-item a:hover {
-  text-decoration: underline;
-  color: #0055aa;
-}
-
-/* Search by name */
+/* ===== Search by name ===== */
 .search-name {
-  margin-top: 20px;
+  margin-top: 25px;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
 }
-
 .search-name input {
   width: 250px;
-  padding: 10px;
-  border-radius: 6px;
+  padding: 10px 12px;
+  border-radius: 8px;
   border: 1px solid #003366;
+  transition: all 0.3s;
 }
+.search-name input:focus { box-shadow: 0 0 8px rgba(34,136,255,0.3); }
 
-/* Instructions section */
-.instructions {
-  max-width: 600px;
-  margin: 30px auto;
-  text-align: left;
-  background: #e6f0ff;
-  padding: 20px;
-  border-radius: 10px;
-}
-
-.instructions h2 { color: #003366; }
-.instructions ol li { margin: 10px 0; }
-
-/* Footer */
+/* ===== Footer ===== */
 footer {
-  margin-top: 50px;
-  padding: 20px;
+  margin-top: 60px;
+  padding: 25px;
   background: #003366;
   color: #fff;
-  font-size: 0.9rem;
+  font-size: 0.95rem;
+  letter-spacing: 0.5px;
 }
 
-/* Contact page form */
+/* ===== Contact Form ===== */
 .contact-form {
   max-width: 500px;
-  margin: 30px auto;
+  margin: 40px auto;
   background: #e6f0ff;
-  padding: 25px;
-  border-radius: 10px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  padding: 30px 25px;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
-
-.contact-form input, .contact-form textarea, .contact-form button {
+.contact-form:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.18);
+}
+.contact-form input, 
+.contact-form textarea, 
+.contact-form button {
   width: 100%;
   margin-bottom: 15px;
+  font-size: 1rem;
 }
-
 .contact-form button {
   background: #003366;
   color: #fff;
+  font-weight: 600;
 }
-
 .contact-form button:hover {
   background: #0055aa;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(0,0,0,0.2);
 }
 
+/* ===== Dark Theme ===== */
+body[data-theme="dark"] {
+  background: #0b1118;
+  color: #eef2f5;
+}
+body[data-theme="dark"] footer,
+body[data-theme="dark"] .instructions,
+body[data-theme="dark"] .contact-form,
+body[data-theme="dark"] .pdf-item {
+  background: #111827;
+  color: #eef2f5;
+  border-color: #334155;
+}
+body[data-theme="dark"] select, 
+body[data-theme="dark"] input, 
+body[data-theme="dark"] button {
+  background: #1f2937;
+  color: #eef2f5;
+  border: 1px solid #334155;
+}
+body[data-theme="dark"] button:hover { background: #3b82f6; }
+
+/* ===== Responsive ===== */
+@media (max-width: 640px) {
+  .pdf-list { grid-template-columns: 1fr; }
+  .search-name { flex-direction: column; gap: 10px; }
+  select, input, button { width: 90%; max-width: 300px; }
+}
