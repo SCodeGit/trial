@@ -1,21 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>University Past Questions Repository</title>
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <header>
     <h1>University Past Questions Repository</h1>
   </header>
 
-  <main id="content">
-    <div id="breadcrumb"></div>
-    <div id="viewer"></div>
+  <main>
+    <section class="selector">
+      <label for="universitySelect">Select University:</label>
+      <select id="universitySelect">
+        <option value="">-- Select University --</option>
+      </select>
+
+      <label for="levelSelect">Select Level:</label>
+      <select id="levelSelect" disabled>
+        <option value="">-- Select Level --</option>
+      </select>
+
+      <label for="semesterSelect">Select Semester:</label>
+      <select id="semesterSelect" disabled>
+        <option value="">-- Select Semester --</option>
+      </select>
+
+      <label for="programSelect">Select Program:</label>
+      <select id="programSelect" disabled>
+        <option value="">-- Select Program --</option>
+      </select>
+    </section>
+
+    <section id="pdfList" class="pdf-list">
+      <!-- PDF links will be dynamically inserted here -->
+    </section>
   </main>
 
-  <script src="js/script.js"></script>
+  <footer>
+    <p>© 2025 University Past Questions Repository | SCode Studio</p>
+  </footer>
+
+  <script src="script.js"></script>
 </body>
 </html>

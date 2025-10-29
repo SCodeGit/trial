@@ -1,45 +1,69 @@
 body {
-  font-family: 'Poppins', sans-serif;
-  background: #0d1117;
-  color: #e6edf3;
-  padding: 20px;
+  font-family: "Poppins", sans-serif;
+  background-color: #0f141a;
+  color: #eaeaea;
+  margin: 0;
+  padding: 0;
 }
 
 header {
   text-align: center;
-  margin-bottom: 20px;
+  padding: 1.5em 0;
+  background: #1a2028;
+  border-bottom: 2px solid #00ff80;
 }
 
-.folder, .pdf-link {
-  display: block;
-  padding: 10px;
-  margin: 8px 0;
-  border-radius: 8px;
-  cursor: pointer;
+.selector {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
   background: #161b22;
-  transition: 0.3s;
+  padding: 1.5rem;
+  border-radius: 10px;
+  margin: 1rem auto;
+  width: 90%;
+  max-width: 900px;
 }
 
-.folder:hover, .pdf-link:hover {
-  background: #1f6feb;
-  color: white;
-}
-
-#breadcrumb {
-  margin-bottom: 15px;
+label {
   font-weight: bold;
 }
 
-button {
-  background: transparent;
-  border: 1px solid #58a6ff;
-  color: #58a6ff;
+select {
+  padding: 0.5rem;
   border-radius: 6px;
-  margin-left: 10px;
-  cursor: pointer;
+  border: none;
+  background: #0d1117;
+  color: #00ff80;
 }
 
-button:hover {
-  background: #58a6ff;
-  color: black;
+.pdf-list {
+  margin: 2rem auto;
+  width: 90%;
+  max-width: 800px;
+  background: #1c2128;
+  border-radius: 10px;
+  padding: 1rem;
+}
+
+.pdf-item {
+  background: #0d1117;
+  padding: 1rem;
+  border-radius: 8px;
+  margin: 0.5rem 0;
+  transition: background 0.2s;
+}
+
+.pdf-item:hover {
+  background: #00ff80;
+  color: #000;
+}
+
+footer {
+  text-align: center;
+  padding: 1rem;
+  background: #0d1117;
+  border-top: 1px solid #00ff80;
+  margin-top: 2rem;
 }

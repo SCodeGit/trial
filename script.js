@@ -1,59 +1,105 @@
-let data = {};
-let currentPath = [];
+document.addEventListener("DOMContentLoaded", () => {
+  const uniSelect = document.getElementById("universitySelect");
+  const levelSelect = document.getElementById("levelSelect");
+  const semSelect = document.getElementById("semesterSelect");
+  const programSelect = document.getElementById("programSelect");
+  const pdfList = document.getElementById("pdfList");
 
-fetch('data.json')
-  .then(res => res.json())
-  .then(json => {
-    data = json;
-    renderLevel(data);
+  let data = {};
+
+  fetch("data.json")
+    .then((res) => res.json())
+    .then((json) => {
+      data = json;
+      populateUniversities(Object.keys(data));
+    });
+
+  function populateUniversities(universities) {
+    universities.forEach((uni) => {
+      const opt = document.createElement("option");
+      opt.value = uni;
+      opt.textContent = uni;
+      uniSelect.appendChild(opt);
+    });
+  }
+
+  uniSelect.addEventListener("change", () => {
+    clearSelect(levelSelect, "-- Select Level --");
+    clearSelect(semSelect, "-- Select Semester --");
+    clearSelect(programSelect, "-- Select Program --");
+    pdfList.innerHTML = "";
+
+    if (uniSelect.value) {
+      const levels = Object.keys(data[uniSelect.value]);
+      levelSelect.disabled = false;
+      levels.forEach((lvl) => {
+        const opt = document.createElement("option");
+        opt.value = lvl;
+        opt.textContent = lvl;
+        levelSelect.appendChild(opt);
+      });
+    } else {
+      levelSelect.disabled = true;
+    }
   });
 
-function renderLevel(level) {
-  const viewer = document.getElementById('viewer');
-  viewer.innerHTML = '';
+  levelSelect.addEventListener("change", () => {
+    clearSelect(semSelect, "-- Select Semester --");
+    clearSelect(programSelect, "-- Select Program --");
+    pdfList.innerHTML = "";
 
-  Object.keys(level).forEach(key => {
-    const item = document.createElement('div');
-    item.classList.add('folder');
-    item.textContent = key;
-
-    item.onclick = () => {
-      currentPath.push(key);
-      updateBreadcrumb();
-      if (Array.isArray(level[key])) {
-        renderPDFs(level[key]);
-      } else {
-        renderLevel(level[key]);
-      }
-    };
-    viewer.appendChild(item);
+    if (levelSelect.value) {
+      const semesters = Object.keys(data[uniSelect.value][levelSelect.value]);
+      semSelect.disabled = false;
+      semesters.forEach((sem) => {
+        const opt = document.createElement("option");
+        opt.value = sem;
+        opt.textContent = sem;
+        semSelect.appendChild(opt);
+      });
+    } else {
+      semSelect.disabled = true;
+    }
   });
-}
 
-function renderPDFs(pdfList) {
-  const viewer = document.getElementById('viewer');
-  viewer.innerHTML = '';
-  pdfList.forEach(pdf => {
-    const link = document.createElement('a');
-    link.href = `https://raw.githubusercontent.com/SCodeGit/trial/main/${pdf.path}`;
-    link.textContent = pdf.name;
-    link.target = '_blank';
-    link.classList.add('pdf-link');
-    viewer.appendChild(link);
+  semSelect.addEventListener("change", () => {
+    clearSelect(programSelect, "-- Select Program --");
+    pdfList.innerHTML = "";
+
+    if (semSelect.value) {
+      const programs = Object.keys(
+        data[uniSelect.value][levelSelect.value][semSelect.value]
+      );
+      programSelect.disabled = false;
+      programs.forEach((prog) => {
+        const opt = document.createElement("option");
+        opt.value = prog;
+        opt.textContent = prog;
+        programSelect.appendChild(opt);
+      });
+    } else {
+      programSelect.disabled = true;
+    }
   });
-}
 
-function updateBreadcrumb() {
-  const breadcrumb = document.getElementById('breadcrumb');
-  breadcrumb.innerHTML = currentPath.join(' / ') + ' <button onclick="goBack()">← Back</button>';
-}
+  programSelect.addEventListener("change", () => {
+    pdfList.innerHTML = "";
+    if (programSelect.value) {
+      const pdfs =
+        data[uniSelect.value][levelSelect.value][semSelect.value][
+          programSelect.value
+        ];
+      pdfs.forEach((pdf) => {
+        const div = document.createElement("div");
+        div.className = "pdf-item";
+        div.innerHTML = `<a href="https://github.com/SCodeGit/trial/blob/main/${pdf.path}?raw=true" target="_blank">${pdf.name}</a>`;
+        pdfList.appendChild(div);
+      });
+    }
+  });
 
-function goBack() {
-  currentPath.pop();
-  breadcrumb = document.getElementById('breadcrumb');
-  breadcrumb.innerHTML = currentPath.join(' / ');
-  
-  let ref = data;
-  for (const key of currentPath) ref = ref[key];
-  renderLevel(ref);
-}
+  function clearSelect(select, placeholder) {
+    select.innerHTML = `<option value="">${placeholder}</option>`;
+    select.disabled = true;
+  }
+});
