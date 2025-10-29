@@ -42,6 +42,35 @@ h1 {
   font-style: italic;
   margin-bottom: 30px;
 }
+.instructions {
+  max-width: 650px;
+  margin: 30px auto;
+  text-align: left;
+  background: #e6f0ff;
+  padding: 25px;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.instructions h2 {
+  color: #003366;
+  margin-bottom: 15px;
+}
+
+.instructions ol li {
+  margin: 10px 0;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.instructions a {
+  color: #0055aa;
+  text-decoration: none;
+}
+
+.instructions a:hover {
+  text-decoration: underline;
+}
 
 /* Dropdowns & buttons */
 select, button, input {
@@ -161,3 +190,4 @@ footer {
 .contact-form button:hover {
   background: #0055aa;
 }
+
