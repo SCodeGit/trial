@@ -29,16 +29,19 @@
       margin: 0;
       padding: 20px;
       text-align: center;
+      transition: background 0.3s, color 0.3s;
     }
 
     h1 { color: #003366; margin-bottom: 8px; }
     .tagline { font-size: 1.1rem; color: #054a91; font-style: italic; margin-bottom: 24px; }
 
+    /* Top logos */
     .top-logos {
       display: flex;
       justify-content: center;
       gap: 20px;
       margin-bottom: 18px;
+      padding-top: 16px; /* Prevent toggle overlap */
     }
     .top-logos img {
       width: 60px; height: 60px; border-radius: 50%;
@@ -47,17 +50,26 @@
     }
     .top-logos img:hover { transform: scale(1.1); box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
 
+    /* Instructions */
     .instructions { max-width: 640px; margin: 0 auto 24px; text-align: left; }
     .instructions h2 { color: #003366; font-size: 1.2rem; margin-bottom: 8px; }
     .instructions ol { padding-left: 20px; color: #054a91; }
     .instructions li { margin-bottom: 6px; }
+    .instructions a { color: #0055aa; text-decoration: none; }
+    .instructions a:hover { text-decoration: underline; }
 
     select, button, input {
       padding: 8px 12px; margin: 4px; border-radius: 8px; border: 1px solid #d0d8e8;
       font-size: 0.95rem;
+      transition: all 0.25s ease;
     }
-    button { cursor: pointer; background: #003366; color: #fff; border: none; }
-    button:hover { background: #0055aa; }
+    select:focus, input:focus { outline: none; border-color: #0055aa; }
+
+    button {
+      cursor: pointer; background: #003366; color: #fff; border: none;
+      transition: transform 0.2s, background 0.2s;
+    }
+    button:hover { background: #0055aa; transform: translateY(-2px); }
 
     .search-name { margin: 12px 0; }
     .pdf-list { margin-top: 16px; }
@@ -75,6 +87,7 @@
       cursor: pointer;
       backdrop-filter: blur(4px);
       font-size: 0.95rem;
+      transition: background 0.25s, color 0.25s;
     }
 
     /* Dark theme */
@@ -94,11 +107,11 @@
   <!-- Theme toggle -->
   <button id="theme-toggle" aria-label="Toggle theme">🌙 Dark Mode</button>
 
-  <!-- Top logos -->
+  <!-- Top logos (correct order) -->
   <div class="top-logos">
-    <img src="https://raw.githubusercontent.com/SCodeGit/trial/main/WhatsApp%20Image%202025-10-29%20at%2021.28.30_968e228b.jpg" alt="School Collaboration Logo">
-    <img src="https://raw.githubusercontent.com/SCodeGit/trial/main/WhatsApp%20Image%202025-10-29%20at%2021.29.26_b1bcd9d3.jpg" alt="Colleges Group Logo">
-    <img src="https://raw.githubusercontent.com/SCodeGit/trial/main/WhatsApp%20Image%202025-10-29%20at%2021.31.34_5c11e8e8.jpg" alt="SCode Studio Logo">
+    <img src="https://raw.githubusercontent.com/SCodeGit/trial/main/WhatsApp%20Image%202025-10-29%20at%2021.31.34_5c11e8e8.jpg" alt="SCode Studio">
+    <img src="https://raw.githubusercontent.com/SCodeGit/trial/main/WhatsApp%20Image%202025-10-29%20at%2021.28.30_968e228b.jpg" alt="TTAG">
+    <img src="https://raw.githubusercontent.com/SCodeGit/trial/main/WhatsApp%20Image%202025-10-29%20at%2021.29.26_b1bcd9d3.jpg" alt="Peki College of Education">
   </div>
 
   <h1>Colleges of Education Past Questions</h1>
@@ -138,4 +151,3 @@
   <script src="theme.js"></script>
 </body>
 </html>
-
