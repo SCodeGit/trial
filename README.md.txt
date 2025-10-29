@@ -1,12 +1,16 @@
 # College of Education Past Questions
 
-A clean academic site that organizes and displays past questions from multiple universities, hosted on GitHub Pages.
+A clean, academic repository hosting past questions from various universities including:
+- University of Ghana (UG)
+- UPSA
+- UDS
+- KNUST
 
-## 📂 Structure
-Each university folder contains subfolders by **level** and **semester**, each containing PDF past questions.
+### Features
+- Organized by university → level → semester → subject
+- Direct access to PDF files
+- Built with static HTML, CSS, and JavaScript
+- Search feature for quick lookup
+- Free hosting via GitHub Pages
 
-Example:
-/university of Ghana(UG)/
-└── level 100/
-└── sem 1/
-└── Algebra.pdf
+**© 2025 SCode — Educational Archive Initiative**
