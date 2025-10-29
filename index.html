@@ -3,54 +3,20 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>University Past Questions Repository</title>
-<style>
-  body {
-    font-family: 'Segoe UI', Arial, sans-serif;
-    background: #f5f5f5;
-    color: #222;
-    text-align: center;
-    padding: 40px;
-  }
-  h1 { color: #003366; margin-bottom: 30px; }
-  select, button {
-    margin: 10px;
-    padding: 10px;
-    border-radius: 6px;
-    border: 1px solid #003366;
-    font-size: 1rem;
-  }
-  button {
-    background: #003366;
-    color: #fff;
-    cursor: pointer;
-  }
-  button:hover { background: #0055aa; }
-  .pdf-list {
-    margin-top: 30px;
-    display: grid;
-    gap: 12px;
-    justify-content: center;
-  }
-  .pdf-item {
-    background: #e8e8e8;
-    padding: 14px;
-    border-radius: 8px;
-    width: 300px;
-    text-align: left;
-    border: 1px solid #ccc;
-  }
-  .pdf-item a {
-    color: #003366;
-    text-decoration: none;
-    font-weight: 600;
-  }
-  .pdf-item a:hover { text-decoration: underline; }
-</style>
+<title>Colleges of Education Past Questions</title>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<h1>University Past Questions Repository</h1>
+<!-- Top logos -->
+<div class="top-logos">
+  <img src="https://raw.githubusercontent.com/SCodeGit/trial/main/WhatsApp%20Image%202025-10-29%20at%2021.28.30_968e228b.jpg" alt="School Collaboration Logo">
+  <img src="https://raw.githubusercontent.com/SCodeGit/trial/main/WhatsApp%20Image%202025-10-29%20at%2021.29.26_b1bcd9d3.jpg" alt="Colleges Group Logo">
+  <img src="https://raw.githubusercontent.com/SCodeGit/trial/main/WhatsApp%20Image%202025-10-29%20at%2021.31.34_5c11e8e8.jpg" alt="SCode Studio Logo">
+</div>
+
+<h1>Colleges of Education Past Questions</h1>
+<p class="tagline">Empowering Learning Through Past Questions</p>
 
 <div>
   <select id="university">
@@ -68,146 +34,19 @@
   <button id="searchBtn">Search PDFs</button>
 </div>
 
+<!-- Search by PDF name -->
+<div class="search-name">
+  <input type="text" id="searchInput" placeholder="Type part of the PDF name...">
+  <button id="searchNameBtn">Search by Name</button>
+</div>
+
 <div id="pdf-list" class="pdf-list"></div>
 
-<script>
-/*
-CONFIGURATION:
-Option 1: Single repo for all universities
-Option 2: Multiple repos per university (JSON)
-*/
+<!-- Footer -->
+<footer>
+  &copy; 2025 SCode Studio. All rights reserved.
+</footer>
 
-const config = {
-  mode: "single", // "single" or "multi"
-  singleRepo: {
-    owner: "SCodeGit",
-    repo: "trial",
-    branch: "main"
-  },
-  multiRepo: [
-    { name: "University A", api: "https://api.github.com/repos/Owner/UniA/contents", branch: "main" },
-    { name: "University B", api: "https://api.github.com/repos/Owner/UniB/contents", branch: "main" }
-  ]
-};
-
-const universitySel = document.getElementById("university");
-const levelSel = document.getElementById("level");
-const semSel = document.getElementById("semester");
-const progSel = document.getElementById("program");
-const pdfList = document.getElementById("pdf-list");
-const searchBtn = document.getElementById("searchBtn");
-
-// Fetch folder contents from GitHub API
-async function fetchFolder(url, branch="main") {
-  const fullUrl = url.includes("?") ? url : `${url}?ref=${branch}`;
-  const res = await fetch(fullUrl);
-  if (!res.ok) return [];
-  return await res.json();
-}
-
-// Populate dropdown
-function populateDropdown(dropdown, items) {
-  items.forEach(i => {
-    if (i.type === "dir") {
-      const opt = document.createElement("option");
-      opt.value = i.path || i.name;
-      opt.textContent = i.name;
-      dropdown.appendChild(opt);
-    }
-  });
-  dropdown.disabled = false;
-}
-
-function resetDropdowns(...dropdowns) {
-  dropdowns.forEach(d => {
-    d.innerHTML = `<option value="">Select ${d.id.charAt(0).toUpperCase() + d.id.slice(1)}</option>`;
-    d.disabled = true;
-  });
-  pdfList.innerHTML = "";
-}
-
-// Load universities
-(async () => {
-  if(config.mode === "single") {
-    const baseURL = `https://api.github.com/repos/${config.singleRepo.owner}/${config.singleRepo.repo}/contents/`;
-    const universities = await fetchFolder(baseURL, config.singleRepo.branch);
-    populateDropdown(universitySel, universities);
-  } else {
-    config.multiRepo.forEach(u => {
-      const opt = document.createElement("option");
-      opt.value = u.api + "|" + u.branch; // store API + branch in value
-      opt.textContent = u.name;
-      universitySel.appendChild(opt);
-    });
-    universitySel.disabled = false;
-  }
-})();
-
-// Dropdown change events
-universitySel.addEventListener("change", async () => {
-  resetDropdowns(levelSel, semSel, progSel);
-  if(!universitySel.value) return;
-  
-  let api, branch;
-  if(config.mode === "single") {
-    api = `https://api.github.com/repos/${config.singleRepo.owner}/${config.singleRepo.repo}/contents/${universitySel.value}`;
-    branch = config.singleRepo.branch;
-  } else {
-    [api, branch] = universitySel.value.split("|");
-  }
-  const levels = await fetchFolder(api, branch);
-  populateDropdown(levelSel, levels);
-});
-
-levelSel.addEventListener("change", async () => {
-  resetDropdowns(semSel, progSel);
-  if(!levelSel.value) return;
-  const parentApi = config.mode === "single" 
-    ? `https://api.github.com/repos/${config.singleRepo.owner}/${config.singleRepo.repo}/contents/${levelSel.value}`
-    : levelSel.value; // multi-mode requires full API URL
-  const sems = await fetchFolder(parentApi);
-  populateDropdown(semSel, sems);
-});
-
-semSel.addEventListener("change", async () => {
-  resetDropdowns(progSel);
-  if(!semSel.value) return;
-  const parentApi = config.mode === "single" 
-    ? `https://api.github.com/repos/${config.singleRepo.owner}/${config.singleRepo.repo}/contents/${semSel.value}`
-    : semSel.value; 
-  const programs = await fetchFolder(parentApi);
-  populateDropdown(progSel, programs);
-});
-
-// Search PDFs
-searchBtn.addEventListener("click", async () => {
-  pdfList.innerHTML = "";
-  if(!progSel.value) {
-    alert("Please select a program to search PDFs.");
-    return;
-  }
-
-  const parentApi = config.mode === "single" 
-    ? `https://api.github.com/repos/${config.singleRepo.owner}/${config.singleRepo.repo}/contents/${progSel.value}`
-    : progSel.value;
-
-  const files = await fetchFolder(parentApi);
-  const pdfs = files.filter(f => f.name.toLowerCase().endsWith(".pdf"));
-  if(pdfs.length === 0) {
-    pdfList.innerHTML = "<p>No PDF files found in this program.</p>";
-    return;
-  }
-
-  pdfs.forEach(f => {
-    const rawURL = config.mode === "single" 
-      ? `https://raw.githubusercontent.com/${config.singleRepo.owner}/${config.singleRepo.repo}/${config.singleRepo.branch}/${f.path}`
-      : f.download_url; // multi-mode repo should provide download_url
-    const div = document.createElement("div");
-    div.className = "pdf-item";
-    div.innerHTML = `<a href="${rawURL}" download>${f.name}</a>`;
-    pdfList.appendChild(div);
-  });
-});
-</script>
+<script src="script.js"></script>
 </body>
 </html>
