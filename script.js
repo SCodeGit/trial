@@ -17,8 +17,9 @@ const searchBtn = document.getElementById("searchBtn");
 const searchInput = document.getElementById("searchInput");
 const searchNameBtn = document.getElementById("searchNameBtn");
 
-let loadedPDFs = []; // Store fetched PDFs
+let loadedPDFs = []; // PDFs from the currently selected program
 
+// Fetch folder contents from GitHub API
 async function fetchFolder(url, branch=config.singleRepo.branch) {
   const fullUrl = url.includes("?") ? url : `${url}?ref=${branch}`;
   const res = await fetch(fullUrl);
@@ -26,6 +27,7 @@ async function fetchFolder(url, branch=config.singleRepo.branch) {
   return await res.json();
 }
 
+// Populate a dropdown with directories
 function populateDropdown(dropdown, items) {
   items.forEach(i => {
     if (i.type === "dir") {
@@ -38,21 +40,40 @@ function populateDropdown(dropdown, items) {
   dropdown.disabled = false;
 }
 
+// Reset dropdowns and PDF list
 function resetDropdowns(...dropdowns) {
   dropdowns.forEach(d => {
     d.innerHTML = `<option value="">Select ${d.id.charAt(0).toUpperCase() + d.id.slice(1)}</option>`;
     d.disabled = true;
   });
   pdfList.innerHTML = "";
+  loadedPDFs = [];
 }
 
-// Load universities
+// Display PDFs in the list
+function displayPDFs(pdfs) {
+  pdfList.innerHTML = "";
+  if (pdfs.length === 0) {
+    pdfList.innerHTML = "<p>No PDF files found.</p>";
+    return;
+  }
+  pdfs.forEach(f => {
+    const rawURL = `https://raw.githubusercontent.com/${config.singleRepo.owner}/${config.singleRepo.repo}/${config.singleRepo.branch}/${f.path}`;
+    const div = document.createElement("div");
+    div.className = "pdf-item";
+    div.innerHTML = `<a href="${rawURL}" download>${f.name}</a>`;
+    pdfList.appendChild(div);
+  });
+}
+
+// Load universities on page load
 (async () => {
   const baseURL = `https://api.github.com/repos/${config.singleRepo.owner}/${config.singleRepo.repo}/contents/`;
   const universities = await fetchFolder(baseURL);
   populateDropdown(universitySel, universities);
 })();
 
+// Dropdown event listeners
 universitySel.addEventListener("change", async () => {
   resetDropdowns(levelSel, semSel, progSel);
   if(!universitySel.value) return;
@@ -74,38 +95,30 @@ semSel.addEventListener("change", async () => {
   populateDropdown(progSel, programs);
 });
 
-// Program PDF search
-searchBtn.addEventListener("click", async () => {
-  pdfList.innerHTML = "";
-  loadedPDFs = [];
-  if (!progSel.value) {
-    alert("Please select a program to search PDFs.");
-    return;
-  }
+// Helper: Load PDFs from currently selected program
+async function loadPDFs() {
+  if (!progSel.value) return [];
   const files = await fetchFolder(`https://api.github.com/repos/${config.singleRepo.owner}/${config.singleRepo.repo}/contents/${progSel.value}`);
-  loadedPDFs = files.filter(f => f.name.toLowerCase().endsWith(".pdf"));
+  return files.filter(f => f.name.toLowerCase().endsWith(".pdf"));
+}
+
+// Search PDFs by program
+searchBtn.addEventListener("click", async () => {
+  loadedPDFs = await loadPDFs();
   displayPDFs(loadedPDFs);
 });
 
-function displayPDFs(pdfs) {
-  pdfList.innerHTML = "";
-  if (pdfs.length === 0) {
-    pdfList.innerHTML = "<p>No PDF files found.</p>";
+// Search PDFs by name
+searchNameBtn.addEventListener("click", async () => {
+  if (!progSel.value) {
+    alert("Please select a program first!");
     return;
   }
-  pdfs.forEach(f => {
-    const rawURL = `https://raw.githubusercontent.com/${config.singleRepo.owner}/${config.singleRepo.repo}/${config.singleRepo.branch}/${f.path}`;
-    const div = document.createElement("div");
-    div.className = "pdf-item";
-    div.innerHTML = `<a href="${rawURL}" download>${f.name}</a>`;
-    pdfList.appendChild(div);
-  });
-}
 
-// Name search filter
-searchNameBtn.addEventListener("click", () => {
+  // Load PDFs if not already loaded
+  if (loadedPDFs.length === 0) loadedPDFs = await loadPDFs();
+
   const query = searchInput.value.toLowerCase().trim();
-  if (!query) return displayPDFs(loadedPDFs);
-  const filtered = loadedPDFs.filter(f => f.name.toLowerCase().includes(query));
+  const filtered = query ? loadedPDFs.filter(f => f.name.toLowerCase().includes(query)) : loadedPDFs;
   displayPDFs(filtered);
 });
