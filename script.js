@@ -1,33 +1,59 @@
-// SCode Portal — Auto PDF Loader
-const folderURL =
-  "https://api.github.com/repos/SCodeGit/trial/contents/university%20of%20Ghana(UG)/level%20100/sem%201";
-const pdfList = document.getElementById("pdfList");
-const pdfViewer = document.getElementById("pdfViewer");
+let data = {};
+let currentPath = [];
 
-async function loadPDFs() {
-  try {
-    const response = await fetch(folderURL);
-    const files = await response.json();
+fetch('data.json')
+  .then(res => res.json())
+  .then(json => {
+    data = json;
+    renderLevel(data);
+  });
 
-    const pdfFiles = files.filter((f) => f.name.endsWith(".pdf"));
-    if (pdfFiles.length === 0) {
-      pdfList.innerHTML = "<p>No PDFs found in this folder.</p>";
-      return;
-    }
+function renderLevel(level) {
+  const viewer = document.getElementById('viewer');
+  viewer.innerHTML = '';
 
-    pdfFiles.forEach((file) => {
-      const item = document.createElement("div");
-      item.className = "pdf-item";
-      item.textContent = file.name.replace(".pdf", "");
-      item.onclick = () => {
-        pdfViewer.src = file.download_url;
-        window.scrollTo({ top: pdfViewer.offsetTop, behavior: "smooth" });
-      };
-      pdfList.appendChild(item);
-    });
-  } catch (err) {
-    pdfList.innerHTML = `<p style="color:red;">⚠️ Error loading PDFs: ${err}</p>`;
-  }
+  Object.keys(level).forEach(key => {
+    const item = document.createElement('div');
+    item.classList.add('folder');
+    item.textContent = key;
+
+    item.onclick = () => {
+      currentPath.push(key);
+      updateBreadcrumb();
+      if (Array.isArray(level[key])) {
+        renderPDFs(level[key]);
+      } else {
+        renderLevel(level[key]);
+      }
+    };
+    viewer.appendChild(item);
+  });
 }
 
-loadPDFs();
+function renderPDFs(pdfList) {
+  const viewer = document.getElementById('viewer');
+  viewer.innerHTML = '';
+  pdfList.forEach(pdf => {
+    const link = document.createElement('a');
+    link.href = `https://raw.githubusercontent.com/SCodeGit/trial/main/${pdf.path}`;
+    link.textContent = pdf.name;
+    link.target = '_blank';
+    link.classList.add('pdf-link');
+    viewer.appendChild(link);
+  });
+}
+
+function updateBreadcrumb() {
+  const breadcrumb = document.getElementById('breadcrumb');
+  breadcrumb.innerHTML = currentPath.join(' / ') + ' <button onclick="goBack()">← Back</button>';
+}
+
+function goBack() {
+  currentPath.pop();
+  breadcrumb = document.getElementById('breadcrumb');
+  breadcrumb.innerHTML = currentPath.join(' / ');
+  
+  let ref = data;
+  for (const key of currentPath) ref = ref[key];
+  renderLevel(ref);
+}
