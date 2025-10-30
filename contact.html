@@ -1,178 +1,203 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <script>
-  window.location.href = "index.html"; // redirects anyone who tries to open contact.html
-</script>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Contact - Colleges of Education Past Questions</title>
-  <link rel="icon" href="ttag.png" type="image/png">
-  <style>
-    /* ===== General page styling ===== */
-    :root{
-      --bg-start: #f7fbff;
-      --bg-end: #eef6ff;
-      --text-color: #222;
-      --accent: #003366;
-      --muted: #054a91;
-      --card-bg: #ffffff;
-      --card-border: rgba(3,34,84,0.06);
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact - Colleges of Education Past Questions</title>
+<link rel="icon" href="ttag.png" type="image/png">
 
-    body {
-      font-family: 'Segoe UI', Arial, sans-serif;
-      background: linear-gradient(180deg, var(--bg-start) 0%, var(--bg-end) 100%);
-      color: var(--text-color);
-      margin: 0;
-      padding: 20px;
-      text-align: center;
-    }
+<style>
+  :root {
+    --navy: #0a1f44;
+    --light: #ffffff;
+    --accent: #1e3a8a;
+    --shadow: rgba(10, 31, 68, 0.25);
+  }
 
-    h1 { color: var(--accent); margin-bottom: 5px; }
-    .tagline { font-size: 1rem; color: var(--muted); font-style: italic; margin-bottom: 18px; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
 
-    /* ===== Top logos ===== */
-    .top-logos { display: flex; justify-content: center; gap: 20px; margin: 16px 0 22px; }
-    .top-logos img {
-      width: 60px; height: 60px; border-radius: 50%; object-fit: cover;
-      border: 2px solid var(--accent); transition: transform .3s, box-shadow .3s;
-    }
-    .top-logos img:hover { transform: scale(1.12); box-shadow: 0 6px 18px rgba(0,0,0,0.12); }
+  body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: var(--light);
+    color: var(--navy);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 2rem 1rem;
+    overflow-x: hidden;
+    position: relative;
+  }
 
-    /* ===== Contact form ===== */
-    .contact-form {
-      width: 100%; max-width: 560px; margin: 0 auto 28px;
-      background: var(--card-bg); padding: 24px; border-radius: 12px;
-      box-shadow: 0 8px 30px rgba(3, 34, 84, 0.08);
-      border: 1px solid var(--card-border); text-align: left;
-      transition: transform .22s ease, box-shadow .22s ease;
-    }
-    .contact-form:hover { transform: translateY(-6px); box-shadow: 0 14px 40px rgba(3,34,84,0.12); }
+  /* Watermark background */
+  body::before {
+    content: "";
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: -1;
+    background:
+      radial-gradient(circle at 20% 30%, rgba(14,42,95,0.08), transparent 60%),
+      radial-gradient(circle at 80% 60%, rgba(14,42,95,0.06), transparent 60%),
+      radial-gradient(circle at 50% 90%, rgba(14,42,95,0.05), transparent 60%);
+    animation: floatBg 12s ease-in-out infinite alternate;
+  }
 
-    .contact-form input[type="text"],
-    .contact-form input[type="email"],
-    .contact-form textarea {
-      width: 100%; padding: 12px 14px; margin-bottom: 12px;
-      border-radius: 10px; border: 1px solid #d7e8ff;
-      background: linear-gradient(180deg,#fff 0%, #fbfdff 100%);
-      font-size: 0.98rem; color: #043058; resize: vertical;
-      transition: border-color .16s ease, box-shadow .16s ease;
-    }
-    .contact-form input:focus,
-    .contact-form textarea:focus { outline: none; border-color: #2b8cff; box-shadow: 0 6px 18px rgba(43,140,255,0.08); }
+  @keyframes floatBg {
+    from { transform: translateY(0); }
+    to { transform: translateY(-20px); }
+  }
 
-    .contact-form p { margin: 10px 0 12px; color: var(--muted); font-weight: 600; }
+  /* Top logos */
+  .top-logos {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 18px;
+  }
 
-    /* WhatsApp button */
-    .btn-whatsapp {
-      display: inline-flex; align-items: center; gap: 10px;
-      background: linear-gradient(90deg,#25D366 0%,#20b858 100%);
-      color: #fff; padding: 12px 18px; border-radius: 10px; border: none;
-      font-weight: 700; font-size: 0.98rem; cursor: pointer;
-      box-shadow: 0 8px 20px rgba(37,211,102,0.18);
-      transition: transform .14s ease, box-shadow .14s ease, filter .14s ease;
-    }
-    .btn-whatsapp:hover { transform: translateY(-3px); box-shadow: 0 14px 30px rgba(37,211,102,0.22); filter: brightness(1.03); }
-    .btn-whatsapp:active { transform: translateY(-1px); }
+  .top-logos img {
+    width: 65px; height: 65px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--navy);
+    background: var(--light);
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
 
-    .btn-whatsapp .wa-icon {
-      display:inline-block; width:18px; height:18px;
-      background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="%23ffffff" d="M20.5 3.5A11 11 0 0 0 3.4 20.6L2 22l1.4-1.4A11 11 0 1 0 20.5 3.5zM12 20a8.1 8.1 0 0 1-4.3-1.2l-.3-.2-2.6.7.7-2.6-.2-.3A8 8 0 1 1 12 20z"/><path fill="%23ffffff" d="M17 14.6c-.2-.1-1.1-.5-1.3-.6-.3-.1-.5-.1-.7.1-.2.2-.7.6-.8.7-.1.1-.3.1-.6 0-1.1-.5-2-1.6-2.8-3a2.7 2.7 0 0 1 0-2.5c.1-.2.3-.5.4-.6.1-.1.2-.2.3-.4.1-.1.1-.3 0-.5l-.4-1.1c-.1-.2-.5-.5-.8-.6-.3-.2-.7-.1-.9 0-.2.1-.9.6-1.3 1-.4.4-1 1-1 2.3 0 1.3.9 3.1 2.1 4.6 1.5 1.9 3.4 3.2 5 3.8 1 .4 1.7.3 2.2.2.5-.1 1.1-.5 1.3-1 .2-.5.1-.9-.1-1.1z"/></svg>') no-repeat center/contain;
-    }
+  .top-logos img:hover {
+    transform: scale(1.1);
+    box-shadow: 0 4px 16px var(--shadow);
+  }
 
-    /* Back to Home */
-    .back-home { display:inline-block; background: var(--accent); color:#fff; padding:10px 16px; border-radius:10px; text-decoration:none; font-weight:600; margin:18px 0; transition: transform .18s, background .18s; }
-    .back-home:hover { background:#0055aa; transform: translateY(-3px); }
+  h1 {
+    font-size: 1.8rem;
+    color: var(--accent);
+    margin-top: 8px;
+    font-weight: 600;
+    animation: fadeIn 1.2s ease;
+  }
 
-    /* Footer */
-    footer { margin-top: 20px; padding: 18px; background: var(--accent); color:#fff; font-size:0.9rem; }
+  .tagline {
+    font-style: italic;
+    font-size: 1.05rem;
+    color: #054a91;
+    margin-bottom: 28px;
+    animation: fadeIn 2s ease;
+  }
 
-    /* Theme toggle button (fixed) */
-    #theme-toggle {
-      position: fixed; top: 16px; right: 16px; z-index: 999;
-      background: rgba(0,0,0,0.06); border: none; padding: 8px 10px; border-radius: 8px;
-      cursor: pointer; backdrop-filter: blur(4px);
-    }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
 
-    /* Responsive */
-    @media (max-width:640px) {
-      .top-logos img { width:52px; height:52px; }
-      .btn-whatsapp { width: 100%; justify-content: center; }
-      .back-home { width: 100%; text-align:center; display:block; }
-      .contact-form { padding: 18px; border-radius: 12px; }
-      #theme-toggle { top: 10px; right: 10px; }
-    }
+  .contact-form {
+    width: 100%;
+    max-width: 480px;
+    background: rgba(255,255,255,0.95);
+    padding: 2rem 1.5rem;
+    border-radius: 20px;
+    box-shadow: 0 6px 18px var(--shadow);
+    animation: slideUp 1s ease;
+    backdrop-filter: blur(5px);
+  }
 
-    /* === Dark theme overrides (CSS variables may also be set by theme.js) === */
-    body[data-theme="dark"] {
-      --bg-start: #071018;
-      --bg-end: #07181b;
-      --text-color: #eef2f5;
-      --accent: #88b5ff;
-      --muted: #a8c9ff;
-      --card-bg: #0f1416;
-      --card-border: rgba(255,255,255,0.04);
-    }
-  </style>
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .contact-form input,
+  .contact-form textarea {
+    width: 100%;
+    padding: 0.9rem;
+    margin-bottom: 1rem;
+    border: 1px solid var(--accent);
+    border-radius: 10px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background: var(--light);
+    color: var(--navy);
+  }
+
+  .contact-form input:focus,
+  .contact-form textarea:focus {
+    box-shadow: 0 0 12px rgba(30,58,138,0.25);
+    outline: none;
+    transform: scale(1.02);
+  }
+
+  .contact-form button {
+    background: var(--accent);
+    color: var(--light);
+    border: none;
+    padding: 0.9rem;
+    width: 100%;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .contact-form button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 12px rgba(30,58,138,0.25);
+  }
+
+  footer {
+    margin-top: 2rem;
+    color: #555;
+    font-size: 0.85rem;
+  }
+
+  @media (max-width: 600px) {
+    .contact-form { padding: 1.5rem 1rem; }
+    h1 { font-size: 1.5rem; }
+    .tagline { font-size: 0.95rem; }
+  }
+</style>
 </head>
+
 <body>
 
-  <!-- Theme toggle (shows current state text set by theme.js) -->
-  <button id="theme-toggle" aria-label="Toggle theme">🌙 Dark Mode</button>
-
-  <!-- Page Heading -->
-  <h1>Contact / Submit Your PDF</h1>
-  <p class="tagline">Send your past questions for your affiliation</p>
-
-  <!-- Logos (optional) -->
-  <div class="top-logos" aria-hidden="true">
-    <img src="https://raw.githubusercontent.com/SCodeGit/trial/main/WhatsApp%20Image%202025-10-29%20at%2021.28.30_968e228b.jpg" alt="School Collaboration Logo">
-    <img src="https://raw.githubusercontent.com/SCodeGit/trial/main/WhatsApp%20Image%202025-10-29%20at%2021.29.26_b1bcd9d3.jpg" alt="Colleges Group Logo">
-    <img src="https://raw.githubusercontent.com/SCodeGit/trial/main/WhatsApp%20Image%202025-10-29%20at%2021.31.34_5c11e8e8.jpg" alt="SCode Studio Logo">
+  <div class="top-logos">
+    <img src="https://raw.githubusercontent.com/SCodeGit/trial/main/WhatsApp%20Image%202025-10-29%20at%2021.31.34_5c11e8e8.jpg" alt="SCode Studio">
+    <img src="https://raw.githubusercontent.com/SCodeGit/trial/main/WhatsApp%20Image%202025-10-29%20at%2021.28.30_968e228b.jpg" alt="TTAG">
+    <img src="https://raw.githubusercontent.com/SCodeGit/trial/main/WhatsApp%20Image%202025-10-29%20at%2021.29.26_b1bcd9d3.jpg" alt="Peki College of Education">
   </div>
 
-  <!-- Contact Form -->
-  <div class="contact-form" role="form" aria-label="Contact form">
-    <form onsubmit="return false;">
+  <h1>Contact / Submit Your PDF</h1>
+  <p class="tagline">Send your past questions for your affiliated university</p>
+
+  <div class="contact-form">
+    <form onsubmit="event.preventDefault(); sendWhatsApp();">
       <input type="text" name="name" placeholder="Your Name" required>
       <input type="email" name="email" placeholder="Your Email" required>
-      <textarea name="message" placeholder="A short note & PDF details" rows="5" required></textarea>
+      <textarea name="message" placeholder="Your Message or PDF details" rows="5" required></textarea>
 
-      <p>Send via WhatsApp:</p>
-      <button type="button" class="btn-whatsapp" onclick="sendWhatsApp()">
-        <span class="wa-icon" aria-hidden="true"></span>
-        Send via WhatsApp
-      </button>
+      <p style="margin-bottom:10px;">Send via WhatsApp:</p>
+      <button type="submit">📩 WhatsApp Us</button>
     </form>
   </div>
 
-  <!-- Back to Home Button -->
-  <a href="index.html" class="back-home" aria-label="Back to home">&larr; Back to Home</a>
-
-  <!-- Footer -->
   <footer>
     &copy; 2025 SCode Studio. All rights reserved.
   </footer>
 
-  <!-- WhatsApp Script (obfuscated number) -->
   <script>
     function sendWhatsApp() {
-      // Obfuscated WhatsApp number parts (keeps raw number out of static HTML)
-      const part1 = "+233";
-      const part2 = "20";
-      const part3 = "988";
-      const part4 = "3339";
+      const name = document.querySelector('[name="name"]').value;
+      const email = document.querySelector('[name="email"]').value;
+      const message = document.querySelector('[name="message"]').value;
+      
+      const part1 = "+233", part2 = "20", part3 = "988", part4 = "3339";
       const number = part1 + part2 + part3 + part4;
-      const name = encodeURIComponent(document.querySelector('input[name="name"]').value || '');
-      const email = encodeURIComponent(document.querySelector('input[name="email"]').value || '');
-      const messageText = encodeURIComponent(document.querySelector('textarea[name="message"]').value || '');
-      const message = encodeURIComponent(`Hello, I'd like to submit a PDF.%0AName: ${name}%0AEmail: ${email}%0AInfo: ${messageText}`);
-      window.open(`https://wa.me/${number}?text=${message}`, '_blank');
+      const text = encodeURIComponent(`Hello, my name is ${name} (${email}).\n\n${message}`);
+      window.open(`https://wa.me/${number}?text=${text}`, '_blank');
     }
   </script>
 
-  <!-- Theme script (external) -->
-  <script src="theme.js"></script>
 </body>
 </html>
