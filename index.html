@@ -159,60 +159,103 @@
       select, button { font-size: 0.9rem; }
     }
 
-    /* Toggle Icon (Top Right) */
-    #theme-toggle {
-      position: fixed;
-      top: 12px;
-      right: 16px;
-      z-index: 2000;
-      background: rgba(255,255,255,0.7);
-      border: 1px solid rgba(0,0,0,0.1);
-      padding: 10px;
-      border-radius: 50%;
-      cursor: pointer;
-      font-size: 1.25rem;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-      transition: all 0.3s ease;
-      backdrop-filter: blur(8px);
-    }
+   <!-- Theme Toggle Icon -->
+<button id="theme-toggle" aria-label="Toggle theme">☀️</button>
 
-    #theme-toggle:hover {
-      transform: scale(1.12);
-      background: rgba(255,255,255,0.9);
-    }
+<style>
+  /* ===== THEME TOGGLE (TOP RIGHT CORNER) ===== */
+  #theme-toggle {
+    position: fixed;
+    top: 12px;
+    right: 18px;
+    z-index: 3000;
+    background: rgba(255, 255, 255, 0.8);
+    border: none;
+    padding: 8px 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1.2rem;
+    color: #0a1f44;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    transition: background 0.2s ease, transform 0.2s ease;
+  }
 
-    /* Dark Theme */
-    body[data-theme="dark"] {
-      background: #0a1f44;
-      color: #e9edf7;
-    }
+  /* Slight color feedback on hover (no floating effect) */
+  #theme-toggle:hover {
+    background: rgba(255, 255, 255, 0.95);
+    transform: scale(1.03);
+  }
 
-    body[data-theme="dark"] main {
-      background: rgba(12, 24, 54, 0.95);
-      box-shadow: 0 6px 18px rgba(255,255,255,0.05);
-    }
+  /* ===== LIGHT THEME (DEFAULT) ===== */
+  body {
+    background: #f9f9fc;
+    color: #0a1f44;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    transition: background 0.3s ease, color 0.3s ease;
+  }
 
-    body[data-theme="dark"] select, 
-    body[data-theme="dark"] button {
-      background: #111827;
-      color: #eef2f5;
-      border: 1px solid #445566;
-    }
+  main {
+    background: #ffffff;
+    border: 1px solid #e0e6f0;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 30, 0.05);
+    padding: 2rem;
+    margin: 3rem auto;
+    max-width: 800px;
+  }
 
-    body[data-theme="dark"] button:hover {
-      background: #2563eb;
-    }
+  footer {
+    text-align: center;
+    padding: 1rem;
+    color: #555;
+  }
 
-    body[data-theme="dark"] footer {
-      color: #ddd;
-    }
-  </style>
-</head>
+  /* ===== DARK THEME ===== */
+  body[data-theme="dark"] {
+    background: #0a1f44;
+    color: #e9edf7;
+  }
 
-<body>
-  <!-- Theme Toggle Icon -->
-  <button id="theme-toggle" aria-label="Toggle theme">☀️</button>
+  body[data-theme="dark"] main {
+    background: rgba(12, 24, 54, 0.95);
+    border: 1px solid #223355;
+    box-shadow: 0 4px 12px rgba(255, 255, 255, 0.05);
+  }
 
+  body[data-theme="dark"] #theme-toggle {
+    background: rgba(20, 30, 60, 0.85);
+    color: #f5f7fa;
+  }
+
+  body[data-theme="dark"] footer {
+    color: #cfd5e5;
+  }
+</style>
+
+<script>
+  // ===== Theme Toggle Logic =====
+  const toggle = document.getElementById('theme-toggle');
+  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  const storedTheme = localStorage.getItem('theme');
+
+  // Set initial theme
+  if (storedTheme) {
+    document.body.setAttribute('data-theme', storedTheme);
+    toggle.textContent = storedTheme === 'dark' ? '🌙' : '☀️';
+  } else if (prefersDark) {
+    document.body.setAttribute('data-theme', 'dark');
+    toggle.textContent = '🌙';
+  }
+
+  // Switch themes when clicked
+  toggle.addEventListener('click', () => {
+    const currentTheme = document.body.getAttribute('data-theme');
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    document.body.setAttribute('data-theme', newTheme);
+    toggle.textContent = newTheme === 'dark' ? '🌙' : '☀️';
+    localStorage.setItem('theme', newTheme);
+  });
+</script>
   <!-- Logos -->
   <div class="top-logos">
     <img src="https://raw.githubusercontent.com/SCodeGit/trial/main/WhatsApp%20Image%202025-10-29%20at%2021.31.34_5c11e8e8.jpg" alt="SCode Studio">
@@ -273,3 +316,4 @@
   <script src="script.js"></script>
 </body>
 </html>
+
