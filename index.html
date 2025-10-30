@@ -201,7 +201,66 @@
 
   <h1>Colleges of Education Past Questions</h1>
   <p class="tagline">Empowering Learning Through Past Questions</p>
+<!-- ===== Instructions for Trainees Section ===== -->
+<style>
+.instructions-container {
+  text-align: center;
+  margin: 40px auto;
+  max-width: 700px;
+  font-family: 'Poppins', sans-serif;
+}
+.instructions-toggle {
+  background: transparent;
+  color: #00b3ff;
+  border: 1px solid #00b3ff;
+  border-radius: 8px;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 17px;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 10px rgba(0,179,255,0.3);
+}
+.instructions-toggle:hover {
+  color: #fff;
+  background: #001a33;
+  box-shadow: 0 0 15px #00b3ff;
+}
+.instructions-content {
+  display: none;
+  margin-top: 15px;
+  background: rgba(0,10,30,0.9);
+  color: #d6f1ff;
+  border: 1px solid #0a3d62;
+  border-radius: 10px;
+  padding: 20px;
+  animation: fadeIn 0.5s ease;
+  box-shadow: 0 0 10px rgba(0,179,255,0.2);
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+</style>
 
+<div class="instructions-container">
+  <button class="instructions-toggle" onclick="toggleInstructions()">📘 View Navigation Instructions</button>
+  <div class="instructions-content" id="instructionsBox">
+    <p><strong>Welcome Trainees!</strong> Here’s how to navigate this platform:</p>
+    <ul style="list-style: none; text-align: left; padding: 0; margin-top: 10px;">
+      <li> Select your <strong>university of affilation,level,semester one or two, and Program,</strong> (e.g., Geography, History, Mathematics) to view available PDF materials.</li>
+      <li> Click on any file name to <strong>open or download</strong> past question.</li>
+      <li> Materials are grouped by <strong>institution and course</strong> for easy access.</li>
+    </ul>
+    <p style="margin-top: 10px; font-size: 0.9rem; opacity: 0.8;">Stay focused, study smart, and make learning productive! 🚀</p>
+  </div>
+</div>
+
+<script>
+function toggleInstructions() {
+  const box = document.getElementById("instructionsBox");
+  box.style.display = box.style.display === "block" ? "none" : "block";
+}
+</script>
   <!-- NAVY FRAME that wraps your content — content itself untouched -->
   <div class="frame">
     <div class="frame-inner">
@@ -267,4 +326,5 @@
   <script src="script.js"></script>
 </body>
 </html>
+
 
