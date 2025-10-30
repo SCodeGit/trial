@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -35,33 +35,12 @@
       transition: background 0.4s, color 0.4s;
     }
 
-    /* Watermark background using the three logos */
-    body::before {
-      content: "";
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      z-index: -1;
-      background: 
-        url('https://raw.githubusercontent.com/SCodeGit/trial/main/WhatsApp%20Image%202025-10-29%20at%2021.31.34_5c11e8e8.jpg') no-repeat 10% 40% / 300px,
-        url('https://raw.githubusercontent.com/SCodeGit/trial/main/WhatsApp%20Image%202025-10-29%20at%2021.28.30_968e228b.jpg') no-repeat 80% 70% / 300px,
-        url('https://raw.githubusercontent.com/SCodeGit/trial/main/WhatsApp%20Image%202025-10-29%20at%2021.29.26_b1bcd9d3.jpg') no-repeat 50% 90% / 300px,
-        radial-gradient(circle at 50% 50%, rgba(14,42,95,0.05), transparent 70%);
-      opacity: 0.08;
-      animation: floatBg 16s ease-in-out infinite alternate;
-    }
-
-    @keyframes floatBg {
-      from { transform: translateY(0px); }
-      to { transform: translateY(-25px); }
-    }
-
-    /* Header and logos */
+    /* Top Logos */
     .top-logos {
       display: flex;
       justify-content: center;
       gap: 20px;
-      margin-top: 70px; /* leaves room for toggle button */
+      margin-top: 70px; /* leaves room for toggle */
       margin-bottom: 18px;
     }
 
@@ -70,8 +49,8 @@
       border-radius: 50%;
       object-fit: cover;
       border: 2px solid var(--navy);
-      transition: transform 0.3s, box-shadow 0.3s;
       background: var(--light);
+      transition: transform 0.3s, box-shadow 0.3s;
     }
 
     .top-logos img:hover {
@@ -122,20 +101,25 @@
       text-align: left;
     }
 
+    .instructions {
+      text-align: left;
+      margin-bottom: 1.5rem;
+    }
+
     select, button {
       width: 100%;
-      padding: 0.8rem;
+      padding: 0.7rem;
       border-radius: 10px;
       border: 1px solid var(--accent);
-      font-size: 1rem;
-      margin-top: 0.7rem;
-      transition: all 0.3s ease;
+      font-size: 0.95rem;
+      margin-top: 0.6rem;
       background: var(--light);
       color: var(--navy);
+      transition: all 0.3s ease;
     }
 
     select:hover, button:hover {
-      box-shadow: 0 0 12px rgba(30,58,138,0.25);
+      box-shadow: 0 0 10px rgba(30,58,138,0.2);
       transform: scale(1.02);
     }
 
@@ -146,12 +130,7 @@
       font-weight: 600;
     }
 
-    .instructions {
-      text-align: left;
-      margin-bottom: 1.5rem;
-    }
-
-    /* Contact link highlight */
+    /* Contact link styling */
     .instructions a {
       color: var(--light);
       background: var(--accent);
@@ -177,10 +156,10 @@
     @media (max-width: 600px) {
       main { padding: 1rem; margin: 1rem; }
       h1 { font-size: 1.4rem; }
-      select, button { font-size: 0.95rem; }
+      select, button { font-size: 0.9rem; }
     }
 
-    /* Theme toggle symbol */
+    /* Toggle Icon (Top Right) */
     #theme-toggle {
       position: fixed;
       top: 12px;
@@ -202,31 +181,39 @@
       background: rgba(255,255,255,0.9);
     }
 
-    /* Dark theme */
+    /* Dark Theme */
     body[data-theme="dark"] {
       background: #0a1f44;
       color: #e9edf7;
     }
 
     body[data-theme="dark"] main {
-      background: rgba(12, 24, 54, 0.9);
+      background: rgba(12, 24, 54, 0.95);
       box-shadow: 0 6px 18px rgba(255,255,255,0.05);
     }
 
-    body[data-theme="dark"] select, body[data-theme="dark"] button {
+    body[data-theme="dark"] select, 
+    body[data-theme="dark"] button {
       background: #111827;
       color: #eef2f5;
       border: 1px solid #445566;
     }
 
-    body[data-theme="dark"] button:hover { background: #2563eb; }
-    body[data-theme="dark"] footer { color: #ddd; }
+    body[data-theme="dark"] button:hover {
+      background: #2563eb;
+    }
+
+    body[data-theme="dark"] footer {
+      color: #ddd;
+    }
   </style>
 </head>
 
 <body>
+  <!-- Theme Toggle Icon -->
   <button id="theme-toggle" aria-label="Toggle theme">☀️</button>
 
+  <!-- Logos -->
   <div class="top-logos">
     <img src="https://raw.githubusercontent.com/SCodeGit/trial/main/WhatsApp%20Image%202025-10-29%20at%2021.31.34_5c11e8e8.jpg" alt="SCode Studio">
     <img src="https://raw.githubusercontent.com/SCodeGit/trial/main/WhatsApp%20Image%202025-10-29%20at%2021.28.30_968e228b.jpg" alt="TTAG">
@@ -262,8 +249,10 @@
   </footer>
 
   <script>
+    // Theme toggle + system preference
     const themeToggle = document.getElementById("theme-toggle");
     const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+
     if (prefersDark) {
       document.body.setAttribute("data-theme", "dark");
       themeToggle.textContent = "🌙";
