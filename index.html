@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Colleges of Education Past Questions</title>
 
-  <!-- SEO meta tags -->
+  <!-- SEO -->
   <meta name="description" content="Colleges of Education Past Questions repository. Access PDFs by University, Level, Semester, and Program. Instructions included for first-time users.">
   <meta name="keywords" content="Colleges, Education, Past Questions, PDF, Exams, University, Level, Semester, Program">
   <meta name="author" content="SCode Studio">
@@ -18,47 +18,52 @@
 
   <!-- Favicon -->
   <link rel="icon" href="ttag.png" type="image/png">
-  <link rel="shortcut icon" href="ttag.png" type="image/png">
-  <link rel="apple-touch-icon" sizes="180x180" href="ttag.png">
 
   <style>
-    /* Base layout */
+    /* Base theme */
+    :root {
+      --navy: #0a1f44;
+      --light: #ffffff;
+      --accent: #1e3a8a;
+      --shadow: rgba(10, 31, 68, 0.25);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
     body {
       font-family: 'Segoe UI', Arial, sans-serif;
-      background: linear-gradient(180deg, #f7fbff 0%, #eef6ff 100%);
-      color: #222;
-      margin: 0;
-      padding: 20px;
-      text-align: center;
-      transition: background 0.4s, color 0.4s;
-      position: relative;
+      background: var(--light);
+      color: var(--navy);
       overflow-x: hidden;
+      position: relative;
+      min-height: 100vh;
+      text-align: center;
+      padding: 1.5rem;
+      transition: background 0.4s, color 0.4s;
     }
 
-    /* ===== Background watermark area ===== */
-    body::after {
+    /* Subtle animated watermark background */
+    body::before {
       content: "";
       position: fixed;
-      top: 180px; /* starts after logos */
+      top: 0;
       left: 0;
       width: 100%;
-      height: calc(100% - 180px);
-      background-image:
-        url("https://raw.githubusercontent.com/SCodeGit/trial/main/WhatsApp%20Image%202025-10-29%20at%2021.31.34_5c11e8e8.jpg"),
-        url("https://raw.githubusercontent.com/SCodeGit/trial/main/WhatsApp%20Image%202025-10-29%20at%2021.28.30_968e228b.jpg"),
-        url("https://raw.githubusercontent.com/SCodeGit/trial/main/WhatsApp%20Image%202025-10-29%20at%2021.29.26_b1bcd9d3.jpg");
-      background-repeat: no-repeat, no-repeat, no-repeat;
-      background-size: 40vw, 45vw, 35vw;
-      background-position: 15% 60%, 85% 40%, 50% 85%;
-      opacity: 0.08;
-      filter: blur(2px);
+      height: 100%;
       z-index: -1;
+      background:
+        radial-gradient(circle at 20% 30%, rgba(14,42,95,0.08), transparent 60%),
+        radial-gradient(circle at 80% 60%, rgba(14,42,95,0.06), transparent 60%),
+        radial-gradient(circle at 50% 90%, rgba(14,42,95,0.05), transparent 60%);
+      animation: floatBg 12s ease-in-out infinite alternate;
     }
 
-    h1 { color: #003366; margin-bottom: 8px; }
-    .tagline { font-size: 1.1rem; color: #054a91; font-style: italic; margin-bottom: 24px; }
+    @keyframes floatBg {
+      from { transform: translateY(0px); }
+      to { transform: translateY(-20px); }
+    }
 
-    /* Top logos */
+    /* Header and logos */
     .top-logos {
       display: flex;
       justify-content: center;
@@ -66,43 +71,128 @@
       margin-bottom: 18px;
       padding-top: 16px;
     }
-    .top-logos img {
-      width: 60px; height: 60px; border-radius: 50%;
-      object-fit: cover; border: 2px solid #003366;
-      transition: transform .3s, box-shadow .3s;
-    }
-    .top-logos img:hover { transform: scale(1.1); box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
 
-    /* Instructions */
-    .instructions { max-width: 640px; margin: 0 auto 24px; text-align: left; background: rgba(255,255,255,0.9); padding: 16px; border-radius: 12px; box-shadow: 0 3px 10px rgba(0,0,0,0.08); }
-    .instructions h2 { color: #003366; font-size: 1.2rem; margin-bottom: 8px; }
-    .instructions ol { padding-left: 20px; color: #054a91; }
-    .instructions li { margin-bottom: 6px; }
-    .instructions a { color: #0055aa; text-decoration: none; font-weight: 600; }
-    .instructions a:hover { text-decoration: underline; }
+    .top-logos img {
+      width: 65px; height: 65px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid var(--navy);
+      transition: transform 0.3s, box-shadow 0.3s;
+      background: var(--light);
+    }
+
+    .top-logos img:hover {
+      transform: scale(1.1);
+      box-shadow: 0 4px 16px var(--shadow);
+    }
+
+    h1 {
+      font-size: 1.8rem;
+      color: var(--accent);
+      margin-top: 8px;
+      font-weight: 600;
+      animation: fadeIn 1.2s ease;
+    }
+
+    .tagline {
+      font-style: italic;
+      font-size: 1.05rem;
+      color: #054a91;
+      margin-bottom: 24px;
+      animation: fadeIn 2s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Card container */
+    main {
+      max-width: 700px;
+      margin: 1.5rem auto;
+      background: rgba(255,255,255,0.95);
+      border-radius: 20px;
+      padding: 1.5rem;
+      box-shadow: 0 6px 18px var(--shadow);
+      animation: slideUp 1s ease;
+      backdrop-filter: blur(5px);
+    }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h2 {
+      color: var(--accent);
+      margin-bottom: 0.8rem;
+      text-align: left;
+    }
 
     select, button, input {
-      padding: 8px 12px; margin: 4px; border-radius: 8px; border: 1px solid #d0d8e8;
-      font-size: 0.95rem;
-      transition: all 0.25s ease;
+      width: 100%;
+      padding: 0.8rem;
+      border-radius: 10px;
+      border: 1px solid var(--accent);
+      font-size: 1rem;
+      margin-top: 0.7rem;
+      transition: all 0.3s ease;
+      background: var(--light);
+      color: var(--navy);
     }
-    select:focus, input:focus { outline: none; border-color: #0055aa; }
+
+    select:hover, button:hover {
+      box-shadow: 0 0 12px rgba(30,58,138,0.25);
+      transform: scale(1.02);
+    }
 
     button {
-      cursor: pointer; background: #003366; color: #fff; border: none;
-      transition: transform 0.2s, background 0.2s;
+      background: var(--accent);
+      color: var(--light);
+      cursor: pointer;
+      font-weight: 600;
     }
-    button:hover { background: #0055aa; transform: translateY(-2px); }
 
-    .search-name { margin: 12px 0; }
-    .pdf-list { margin-top: 16px; }
+    .instructions {
+      text-align: left;
+      margin-bottom: 1.5rem;
+    }
 
-    footer { margin-top: 40px; padding: 20px; background: #003366; color: #fff; font-size: 0.9rem; }
+    .instructions a {
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 600;
+      background: rgba(30,58,138,0.1);
+      padding: 3px 6px;
+      border-radius: 5px;
+      transition: background 0.3s;
+    }
+
+    .instructions a:hover {
+      background: rgba(30,58,138,0.2);
+    }
+
+    footer {
+      text-align: center;
+      font-size: 0.85rem;
+      color: #555;
+      margin-top: 2rem;
+      padding-bottom: 1rem;
+    }
+
+    /* Mobile fixes */
+    @media (max-width: 600px) {
+      main { padding: 1rem; margin: 1rem; }
+      h1 { font-size: 1.4rem; }
+      select, button, input { font-size: 0.95rem; }
+    }
 
     /* Theme toggle */
     #theme-toggle {
       position: fixed;
-      top: 16px; right: 16px; z-index: 999;
+      top: 16px; right: 16px;
+      z-index: 999;
       background: rgba(0,0,0,0.08);
       border: none;
       padding: 8px 12px;
@@ -115,28 +205,29 @@
 
     /* Dark theme */
     body[data-theme="dark"] {
-      background: linear-gradient(180deg, #0a0f1f 0%, #071018 100%);
-      color: #eef2f5;
+      background: #0a1f44;
+      color: #e9edf7;
     }
-    body[data-theme="dark"] footer { background: #081f3c; }
-    body[data-theme="dark"] select, body[data-theme="dark"] input, body[data-theme="dark"] button {
-      background: #0f1416; color: #eef2f5; border: 1px solid #445566;
-    }
-    body[data-theme="dark"] button:hover { background: #1c5fff; }
 
-    /* Dark mode watermark tone */
-    body[data-theme="dark"]::after {
-      opacity: 0.04;
-      filter: blur(3px) brightness(0.8);
+    body[data-theme="dark"] main {
+      background: rgba(12, 24, 54, 0.9);
+      box-shadow: 0 6px 18px rgba(255,255,255,0.05);
     }
+
+    body[data-theme="dark"] select, body[data-theme="dark"] input, body[data-theme="dark"] button {
+      background: #111827;
+      color: #eef2f5;
+      border: 1px solid #445566;
+    }
+
+    body[data-theme="dark"] button:hover { background: #2563eb; }
+    body[data-theme="dark"] footer { color: #ddd; }
   </style>
 </head>
 
 <body>
-  <!-- Theme toggle -->
   <button id="theme-toggle" aria-label="Toggle theme">Dark Mode</button>
 
-  <!-- Top logos -->
   <div class="top-logos">
     <img src="https://raw.githubusercontent.com/SCodeGit/trial/main/WhatsApp%20Image%202025-10-29%20at%2021.31.34_5c11e8e8.jpg" alt="SCode Studio">
     <img src="https://raw.githubusercontent.com/SCodeGit/trial/main/WhatsApp%20Image%202025-10-29%20at%2021.28.30_968e228b.jpg" alt="TTAG">
@@ -146,61 +237,53 @@
   <h1>Colleges of Education Past Questions</h1>
   <p class="tagline">Empowering Learning Through Past Questions</p>
 
-  <div class="instructions">
-    <h2>Instructions for Trainees</h2>
-    <ol>
-      <li>Select your <strong>University</strong>, <strong>Level</strong>, <strong>Semester</strong>, and <strong>Program</strong>.</li>
-      <li>Click a PDF to <strong>download</strong> or use the search box to find it.</li>
-      <li>To submit a PDF, visit the <a href="contact.html">Contact Page</a>.</li>
-    </ol>
-  </div>
+  <main>
+    <div class="instructions">
+      <h2>Instructions for Trainees</h2>
+      <ol>
+        <li>Select your <strong>University</strong>, <strong>Level</strong>, <strong>Semester</strong>, and <strong>Program</strong>.</li>
+        <li>Click a PDF to <strong>download</strong> or use the search box to find it.</li>
+        <li>To submit a PDF, visit the <a href="contact.html">Contact Page</a>.</li>
+      </ol>
+    </div>
 
-  <div>
-    <select id="university"><option value="">Select University</option></select>
-    <select id="level" disabled><option value="">Select Level</option></select>
-    <select id="semester" disabled><option value="">Select Semester</option></select>
-    <select id="program" disabled><option value="">Select Program</option></select>
-    <button id="searchBtn">Search PDFs</button>
-  </div>
+    <div>
+      <select id="university"><option value="">Select University</option></select>
+      <select id="level" disabled><option value="">Select Level</option></select>
+      <select id="semester" disabled><option value="">Select Semester</option></select>
+      <select id="program" disabled><option value="">Select Program</option></select>
+      <button id="searchBtn">Search PDFs</button>
+    </div>
 
-  <div class="search-name">
-    <input type="text" id="searchInput" placeholder="Type part of the PDF name...">
-    <button id="searchNameBtn">Search by Name</button>
-  </div>
+    <div class="search-name">
+      <input type="text" id="searchInput" placeholder="Type part of the PDF name...">
+      <button id="searchNameBtn">Search by Name</button>
+    </div>
 
-  <div id="pdf-list" class="pdf-list"></div>
+    <div id="pdf-list" class="pdf-list"></div>
+  </main>
 
-  <!-- Footer -->
   <footer>
     &copy; 2025 SCode Studio. All rights reserved.
   </footer>
 
-  <!-- Scripts -->
-  <script src="script.js"></script>
-
-  <!-- Theme script -->
   <script>
-    const toggleBtn = document.getElementById('theme-toggle');
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    const savedTheme = localStorage.getItem('theme');
-    const body = document.body;
+    // Theme script (auto-detect + toggle)
+    const themeToggle = document.getElementById("theme-toggle");
+    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    if (prefersDark) document.body.setAttribute("data-theme", "dark");
 
-    // Apply saved or system theme on load
-    if (savedTheme) {
-      body.dataset.theme = savedTheme;
-      toggleBtn.textContent = savedTheme === 'dark' ? 'Light Mode' : 'Dark Mode';
-    } else if (prefersDark) {
-      body.dataset.theme = 'dark';
-      toggleBtn.textContent = 'Light Mode';
-    }
-
-    toggleBtn.addEventListener('click', () => {
-      const current = body.dataset.theme;
-      const newTheme = current === 'dark' ? 'light' : 'dark';
-      body.dataset.theme = newTheme;
-      toggleBtn.textContent = newTheme === 'dark' ? 'Light Mode' : 'Dark Mode';
-      localStorage.setItem('theme', newTheme);
+    themeToggle.addEventListener("click", () => {
+      const current = document.body.getAttribute("data-theme");
+      if (current === "dark") {
+        document.body.removeAttribute("data-theme");
+        themeToggle.textContent = "Dark Mode";
+      } else {
+        document.body.setAttribute("data-theme", "dark");
+        themeToggle.textContent = "Light Mode";
+      }
     });
   </script>
+  <script src="script.js"></script>
 </body>
 </html>
