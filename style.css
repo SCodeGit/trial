@@ -226,3 +226,72 @@ body[data-theme="dark"] button:hover { background: #3b82f6; }
   .search-name { flex-direction: column; gap: 10px; }
   select, input, button { width: 90%; max-width: 300px; }
 }
+<style>
+  /* General fix for spacing and layout */
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', sans-serif;
+  }
+
+  .university-selection {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 70vh;
+    padding: 1rem;
+  }
+
+  .university-selection h2 {
+    font-size: 1.5rem;
+    text-align: center;
+    margin-bottom: 1rem;
+  }
+
+  .university-buttons {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 0.8rem;
+    width: 100%;
+    max-width: 600px;
+  }
+
+  .university-buttons button {
+    background: var(--primary-color, #007bff);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    padding: 0.8rem;
+    font-size: 1rem;
+    transition: background 0.3s ease;
+  }
+
+  .university-buttons button:hover {
+    background: var(--primary-dark, #0056b3);
+  }
+
+  /* Mobile optimization */
+  @media (max-width: 600px) {
+    .university-selection {
+      padding: 0.5rem;
+      min-height: 60vh;
+    }
+
+    .university-buttons {
+      grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+      gap: 0.6rem;
+    }
+
+    .university-buttons button {
+      font-size: 0.9rem;
+      padding: 0.7rem;
+    }
+
+    .university-selection h2 {
+      font-size: 1.2rem;
+      margin-bottom: 0.5rem;
+    }
+  }
+</style>
+
