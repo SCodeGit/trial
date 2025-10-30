@@ -6,7 +6,6 @@
   <title>Colleges of Education Past Questions</title>
 
   <meta name="description" content="Colleges of Education Past Questions repository. Access PDFs by University, Level, Semester, and Program.">
-  <meta name="keywords" content="Colleges, Education, Past Questions, PDF, Exams, University, Level, Semester, Program">
   <meta name="author" content="SCode Studio">
   <link rel="icon" href="ttag.png" type="image/png">
 
@@ -29,7 +28,6 @@
       transition: background 0.4s, color 0.4s;
     }
 
-    /* ===== HEADER WITH LOGOS & TOGGLE ===== */
     header {
       display: flex;
       align-items: center;
@@ -68,7 +66,6 @@
       box-shadow: 0 0 20px rgba(255,255,255,0.25);
     }
 
-    /* ===== THEME TOGGLE (right corner) ===== */
     #theme-toggle {
       background: transparent;
       border: none;
@@ -81,7 +78,6 @@
 
     #theme-toggle:hover { opacity: 0.7; }
 
-    /* ===== MAIN CONTENT ===== */
     h1 {
       font-size: 1.8rem;
       color: var(--accent);
@@ -103,25 +99,10 @@
       margin: 1.5rem auto;
       background: rgba(255,255,255,0.96);
       border-radius: 20px;
+      border: 3px solid var(--navy);
       padding: 1.5rem;
-      box-shadow: 0 0 20px rgba(10,31,68,0.15), 0 0 60px rgba(10,31,68,0.08);
+      box-shadow: 0 0 20px rgba(10,31,68,0.15);
       animation: slideUp 1s ease;
-      position: relative;
-      overflow: hidden;
-    }
-
-    main::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(circle at top left, rgba(30,58,138,0.05), transparent 60%),
-                  radial-gradient(circle at bottom right, rgba(30,58,138,0.05), transparent 60%);
-      animation: shimmer 6s infinite alternate ease-in-out;
-    }
-
-    @keyframes shimmer {
-      0% { opacity: 0.3; }
-      100% { opacity: 1; }
     }
 
     @keyframes fadeIn {
@@ -161,7 +142,6 @@
       font-weight: 600;
     }
 
-    /* Contact link highlighted */
     .instructions a {
       color: var(--light);
       background: var(--accent);
@@ -184,26 +164,21 @@
       padding-bottom: 1rem;
     }
 
-    @media (max-width: 600px) {
-      header { flex-direction: column; gap: 10px; }
-      .top-logos img { width: 50px; height: 50px; }
-      main { padding: 1rem; margin: 1rem; }
-      h1 { font-size: 1.4rem; }
-    }
-
-    /* ===== DARK THEME ===== */
     body[data-theme="dark"] {
       background: #0a1f44;
       color: #e9edf7;
     }
+
     body[data-theme="dark"] main {
       background: rgba(12,24,54,0.95);
-      box-shadow: 0 0 30px rgba(255,255,255,0.05);
+      border: 3px solid #1e3a8a;
     }
+
     body[data-theme="dark"] button {
       background: #1e3a8a;
       color: #fff;
     }
+
     body[data-theme="dark"] #theme-toggle {
       color: #f5f7fa;
     }
@@ -234,14 +209,28 @@
     </div>
 
     <div>
-      <select id="university"><option value="">Select University</option></select>
-      <select id="level" disabled><option value="">Select Level</option></select>
-      <select id="semester" disabled><option value="">Select Semester</option></select>
-      <select id="program" disabled><option value="">Select Program</option></select>
+      <select id="university">
+        <option value="">Select University</option>
+        <option value="uew">University of Education, Winneba</option>
+        <option value="ucc">University of Cape Coast</option>
+      </select>
+
+      <select id="level" disabled>
+        <option value="">Select Level</option>
+      </select>
+
+      <select id="semester" disabled>
+        <option value="">Select Semester</option>
+      </select>
+
+      <select id="program" disabled>
+        <option value="">Select Program</option>
+      </select>
+
       <button id="searchBtn">Search PDFs</button>
     </div>
 
-    <div id="pdf-list" class="pdf-list"></div>
+    <div id="pdf-list"></div>
   </main>
 
   <footer>
@@ -249,14 +238,13 @@
   </footer>
 
   <script>
+    // THEME TOGGLE
     const toggle = document.getElementById('theme-toggle');
     const body = document.body;
-
     if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
       body.dataset.theme = 'dark';
       toggle.textContent = '🌙';
     }
-
     toggle.addEventListener('click', () => {
       if (body.dataset.theme === 'dark') {
         body.dataset.theme = '';
@@ -264,6 +252,60 @@
       } else {
         body.dataset.theme = 'dark';
         toggle.textContent = '🌙';
+      }
+    });
+
+    // DROPDOWN LOGIC
+    const universitySelect = document.getElementById('university');
+    const levelSelect = document.getElementById('level');
+    const semesterSelect = document.getElementById('semester');
+    const programSelect = document.getElementById('program');
+
+    universitySelect.addEventListener('change', () => {
+      levelSelect.innerHTML = '<option value="">Select Level</option>';
+      if (universitySelect.value) {
+        levelSelect.disabled = false;
+        ['Level 100', 'Level 200', 'Level 300'].forEach(lvl => {
+          const opt = document.createElement('option');
+          opt.value = lvl;
+          opt.textContent = lvl;
+          levelSelect.appendChild(opt);
+        });
+      } else {
+        levelSelect.disabled = true;
+        semesterSelect.disabled = true;
+        programSelect.disabled = true;
+      }
+    });
+
+    levelSelect.addEventListener('change', () => {
+      semesterSelect.innerHTML = '<option value="">Select Semester</option>';
+      if (levelSelect.value) {
+        semesterSelect.disabled = false;
+        ['First Semester', 'Second Semester'].forEach(sem => {
+          const opt = document.createElement('option');
+          opt.value = sem;
+          opt.textContent = sem;
+          semesterSelect.appendChild(opt);
+        });
+      } else {
+        semesterSelect.disabled = true;
+        programSelect.disabled = true;
+      }
+    });
+
+    semesterSelect.addEventListener('change', () => {
+      programSelect.innerHTML = '<option value="">Select Program</option>';
+      if (semesterSelect.value) {
+        programSelect.disabled = false;
+        ['Mathematics', 'English', 'Science', 'ICT', 'Social Studies'].forEach(prog => {
+          const opt = document.createElement('option');
+          opt.value = prog;
+          opt.textContent = prog;
+          programSelect.appendChild(opt);
+        });
+      } else {
+        programSelect.disabled = true;
       }
     });
   </script>
