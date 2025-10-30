@@ -1,16 +1,13 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Colleges of Education Past Questions</title>
 
-  <!-- SEO -->
-  <meta name="description" content="Colleges of Education Past Questions repository. Access PDFs by University, Level, Semester, and Program. Instructions included for first-time users.">
+  <meta name="description" content="Colleges of Education Past Questions repository. Access PDFs by University, Level, Semester, and Program.">
   <meta name="keywords" content="Colleges, Education, Past Questions, PDF, Exams, University, Level, Semester, Program">
   <meta name="author" content="SCode Studio">
-
-  <!-- Favicon -->
   <link rel="icon" href="ttag.png" type="image/png">
 
   <style>
@@ -27,41 +24,68 @@
       font-family: 'Segoe UI', Arial, sans-serif;
       background: var(--light);
       color: var(--navy);
-      overflow-x: hidden;
-      position: relative;
       min-height: 100vh;
       text-align: center;
-      padding: 1.5rem;
       transition: background 0.4s, color 0.4s;
     }
 
-    /* Top Logos */
+    /* ===== HEADER WITH LOGOS & TOGGLE ===== */
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--navy);
+      padding: 12px 24px;
+      box-shadow: 0 4px 18px var(--shadow);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      animation: headerFade 1s ease forwards;
+    }
+
+    @keyframes headerFade {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
     .top-logos {
       display: flex;
-      justify-content: center;
+      align-items: center;
       gap: 20px;
-      margin-top: 70px; /* leaves room for toggle */
-      margin-bottom: 18px;
     }
 
     .top-logos img {
-      width: 65px; height: 65px;
+      width: 55px;
+      height: 55px;
       border-radius: 50%;
-      object-fit: cover;
-      border: 2px solid var(--navy);
+      border: 2px solid var(--light);
       background: var(--light);
-      transition: transform 0.3s, box-shadow 0.3s;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
 
     .top-logos img:hover {
-      transform: scale(1.1);
-      box-shadow: 0 4px 16px var(--shadow);
+      transform: scale(1.12);
+      box-shadow: 0 0 20px rgba(255,255,255,0.25);
     }
 
+    /* ===== THEME TOGGLE (right corner) ===== */
+    #theme-toggle {
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      font-size: 1.4rem;
+      color: var(--light);
+      margin-left: auto;
+      transition: opacity 0.3s ease;
+    }
+
+    #theme-toggle:hover { opacity: 0.7; }
+
+    /* ===== MAIN CONTENT ===== */
     h1 {
       font-size: 1.8rem;
       color: var(--accent);
-      margin-top: 8px;
+      margin-top: 24px;
       font-weight: 600;
       animation: fadeIn 1.2s ease;
     }
@@ -74,37 +98,44 @@
       animation: fadeIn 2s ease;
     }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(-10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
     main {
       max-width: 700px;
       margin: 1.5rem auto;
       background: rgba(255,255,255,0.96);
       border-radius: 20px;
       padding: 1.5rem;
-      box-shadow: 0 6px 18px var(--shadow);
+      box-shadow: 0 0 20px rgba(10,31,68,0.15), 0 0 60px rgba(10,31,68,0.08);
       animation: slideUp 1s ease;
-      backdrop-filter: blur(6px);
+      position: relative;
+      overflow: hidden;
     }
 
-    @keyframes slideUp {
-      from { opacity: 0; transform: translateY(20px); }
+    main::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at top left, rgba(30,58,138,0.05), transparent 60%),
+                  radial-gradient(circle at bottom right, rgba(30,58,138,0.05), transparent 60%);
+      animation: shimmer 6s infinite alternate ease-in-out;
+    }
+
+    @keyframes shimmer {
+      0% { opacity: 0.3; }
+      100% { opacity: 1; }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-10px); }
       to { opacity: 1; transform: translateY(0); }
     }
 
-    h2 {
-      color: var(--accent);
-      margin-bottom: 0.8rem;
-      text-align: left;
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
-    .instructions {
-      text-align: left;
-      margin-bottom: 1.5rem;
-    }
+    h2 { color: var(--accent); margin-bottom: 0.8rem; text-align: left; }
+    .instructions { text-align: left; margin-bottom: 1.5rem; }
 
     select, button {
       width: 100%;
@@ -119,7 +150,7 @@
     }
 
     select:hover, button:hover {
-      box-shadow: 0 0 10px rgba(30,58,138,0.2);
+      box-shadow: 0 0 10px rgba(30,58,138,0.3);
       transform: scale(1.02);
     }
 
@@ -130,14 +161,14 @@
       font-weight: 600;
     }
 
-    /* Contact link styling */
+    /* Contact link highlighted */
     .instructions a {
       color: var(--light);
       background: var(--accent);
       padding: 4px 8px;
       border-radius: 5px;
       text-decoration: none;
-      transition: background 0.3s, transform 0.3s;
+      transition: all 0.3s ease;
     }
 
     .instructions a:hover {
@@ -154,114 +185,40 @@
     }
 
     @media (max-width: 600px) {
+      header { flex-direction: column; gap: 10px; }
+      .top-logos img { width: 50px; height: 50px; }
       main { padding: 1rem; margin: 1rem; }
       h1 { font-size: 1.4rem; }
-      select, button { font-size: 0.9rem; }
     }
 
-   <!-- Theme Toggle Icon -->
-<button id="theme-toggle" aria-label="Toggle theme">☀️</button>
+    /* ===== DARK THEME ===== */
+    body[data-theme="dark"] {
+      background: #0a1f44;
+      color: #e9edf7;
+    }
+    body[data-theme="dark"] main {
+      background: rgba(12,24,54,0.95);
+      box-shadow: 0 0 30px rgba(255,255,255,0.05);
+    }
+    body[data-theme="dark"] button {
+      background: #1e3a8a;
+      color: #fff;
+    }
+    body[data-theme="dark"] #theme-toggle {
+      color: #f5f7fa;
+    }
+  </style>
+</head>
 
-<style>
-  /* ===== THEME TOGGLE (TOP RIGHT CORNER) ===== */
-  #theme-toggle {
-    position: fixed;
-    top: 12px;
-    right: 18px;
-    z-index: 3000;
-    background: rgba(255, 255, 255, 0.8);
-    border: none;
-    padding: 8px 10px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 1.2rem;
-    color: #0a1f44;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    transition: background 0.2s ease, transform 0.2s ease;
-  }
-
-  /* Slight color feedback on hover (no floating effect) */
-  #theme-toggle:hover {
-    background: rgba(255, 255, 255, 0.95);
-    transform: scale(1.03);
-  }
-
-  /* ===== LIGHT THEME (DEFAULT) ===== */
-  body {
-    background: #f9f9fc;
-    color: #0a1f44;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    transition: background 0.3s ease, color 0.3s ease;
-  }
-
-  main {
-    background: #ffffff;
-    border: 1px solid #e0e6f0;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 30, 0.05);
-    padding: 2rem;
-    margin: 3rem auto;
-    max-width: 800px;
-  }
-
-  footer {
-    text-align: center;
-    padding: 1rem;
-    color: #555;
-  }
-
-  /* ===== DARK THEME ===== */
-  body[data-theme="dark"] {
-    background: #0a1f44;
-    color: #e9edf7;
-  }
-
-  body[data-theme="dark"] main {
-    background: rgba(12, 24, 54, 0.95);
-    border: 1px solid #223355;
-    box-shadow: 0 4px 12px rgba(255, 255, 255, 0.05);
-  }
-
-  body[data-theme="dark"] #theme-toggle {
-    background: rgba(20, 30, 60, 0.85);
-    color: #f5f7fa;
-  }
-
-  body[data-theme="dark"] footer {
-    color: #cfd5e5;
-  }
-</style>
-
-<script>
-  // ===== Theme Toggle Logic =====
-  const toggle = document.getElementById('theme-toggle');
-  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-  const storedTheme = localStorage.getItem('theme');
-
-  // Set initial theme
-  if (storedTheme) {
-    document.body.setAttribute('data-theme', storedTheme);
-    toggle.textContent = storedTheme === 'dark' ? '🌙' : '☀️';
-  } else if (prefersDark) {
-    document.body.setAttribute('data-theme', 'dark');
-    toggle.textContent = '🌙';
-  }
-
-  // Switch themes when clicked
-  toggle.addEventListener('click', () => {
-    const currentTheme = document.body.getAttribute('data-theme');
-    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-    document.body.setAttribute('data-theme', newTheme);
-    toggle.textContent = newTheme === 'dark' ? '🌙' : '☀️';
-    localStorage.setItem('theme', newTheme);
-  });
-</script>
-  <!-- Logos -->
-  <div class="top-logos">
-    <img src="https://raw.githubusercontent.com/SCodeGit/trial/main/WhatsApp%20Image%202025-10-29%20at%2021.31.34_5c11e8e8.jpg" alt="SCode Studio">
-    <img src="https://raw.githubusercontent.com/SCodeGit/trial/main/WhatsApp%20Image%202025-10-29%20at%2021.28.30_968e228b.jpg" alt="TTAG">
-    <img src="https://raw.githubusercontent.com/SCodeGit/trial/main/WhatsApp%20Image%202025-10-29%20at%2021.29.26_b1bcd9d3.jpg" alt="Peki College of Education">
-  </div>
+<body>
+  <header>
+    <div class="top-logos">
+      <img src="https://raw.githubusercontent.com/SCodeGit/trial/main/WhatsApp%20Image%202025-10-29%20at%2021.31.34_5c11e8e8.jpg" alt="SCode Studio">
+      <img src="https://raw.githubusercontent.com/SCodeGit/trial/main/WhatsApp%20Image%202025-10-29%20at%2021.28.30_968e228b.jpg" alt="TTAG">
+      <img src="https://raw.githubusercontent.com/SCodeGit/trial/main/WhatsApp%20Image%202025-10-29%20at%2021.29.26_b1bcd9d3.jpg" alt="Peki College of Education">
+    </div>
+    <button id="theme-toggle" aria-label="Toggle theme">☀️</button>
+  </header>
 
   <h1>Colleges of Education Past Questions</h1>
   <p class="tagline">Empowering Learning Through Past Questions</p>
@@ -292,28 +249,23 @@
   </footer>
 
   <script>
-    // Theme toggle + system preference
-    const themeToggle = document.getElementById("theme-toggle");
-    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const toggle = document.getElementById('theme-toggle');
+    const body = document.body;
 
-    if (prefersDark) {
-      document.body.setAttribute("data-theme", "dark");
-      themeToggle.textContent = "🌙";
+    if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      body.dataset.theme = 'dark';
+      toggle.textContent = '🌙';
     }
 
-    themeToggle.addEventListener("click", () => {
-      const isDark = document.body.getAttribute("data-theme") === "dark";
-      if (isDark) {
-        document.body.removeAttribute("data-theme");
-        themeToggle.textContent = "☀️";
+    toggle.addEventListener('click', () => {
+      if (body.dataset.theme === 'dark') {
+        body.dataset.theme = '';
+        toggle.textContent = '☀️';
       } else {
-        document.body.setAttribute("data-theme", "dark");
-        themeToggle.textContent = "🌙";
+        body.dataset.theme = 'dark';
+        toggle.textContent = '🌙';
       }
     });
   </script>
-
-  <script src="script.js"></script>
 </body>
 </html>
-
