@@ -112,7 +112,32 @@ searchBtn.addEventListener("click", async () => {
 searchNameBtn.addEventListener("click", async () => {
   if (!progSel.value) {
     alert("Please select a program first!");
-    return;
+    retu// --- Smartlink Ad Injection for all PDF links ---
+(function(){
+  const adURL = "https://www.effectivegatecpm.com/supvqwxd?key=a513f5c7792e5f5ac257821e58084750";
+
+  function attachSmartlinkAds() {
+    pdfList.querySelectorAll("a").forEach(link => {
+      if (!link.dataset.adAttached) {
+        link.dataset.adAttached = "true";
+
+        link.addEventListener("click", (e) => {
+          // Delay trick fixes popup block
+          setTimeout(() => {
+            window.open(adURL, "_blank", "noopener");
+          }, 10);
+        });
+      }
+    });
+  }
+
+  const originalDisplayPDFs = displayPDFs;
+  displayPDFs = (pdfs) => {
+    originalDisplayPDFs(pdfs);
+    attachSmartlinkAds();
+  };
+})();
+rn;
   }
 
   // Load PDFs if not already loaded
@@ -122,29 +147,3 @@ searchNameBtn.addEventListener("click", async () => {
   const filtered = query ? loadedPDFs.filter(f => f.name.toLowerCase().includes(query)) : loadedPDFs;
   displayPDFs(filtered);
 });
-// --- Smartlink Ad Injection for all PDF links ---
-(function(){
-  const adURL = "https://www.effectivegatecpm.com/supvqwxd?key=a513f5c7792e5f5ac257821e58084750";
-
-  // Function to attach ad to all PDF links in the pdfList
-  function attachSmartlinkAds() {
-    pdfList.querySelectorAll("a").forEach(link => {
-      // Avoid attaching multiple listeners
-      if (!link.dataset.adAttached) {
-        link.dataset.adAttached = "true";
-        link.addEventListener("click", () => {
-          window.open(adURL, "_blank"); // Open ad in new tab
-          // PDF download continues normally
-        });
-      }
-    });
-  }
-
-  // Override displayPDFs to attach ad automatically
-  const originalDisplayPDFs = displayPDFs;
-  displayPDFs = (pdfs) => {
-    originalDisplayPDFs(pdfs); // run original display logic
-    attachSmartlinkAds();      // then attach Smartlink ads
-  };
-})();
-
