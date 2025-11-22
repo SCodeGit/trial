@@ -112,7 +112,8 @@ searchBtn.addEventListener("click", async () => {
 searchNameBtn.addEventListener("click", async () => {
   if (!progSel.value) {
     alert("Please select a program first!");
-    retu// --- Smartlink Ad Injection for all PDF links ---
+    retu
+    // Replace existing smartlink block with this
 (function(){
   const adURL = "https://www.effectivegatecpm.com/supvqwxd?key=a513f5c7792e5f5ac257821e58084750";
 
@@ -121,12 +122,17 @@ searchNameBtn.addEventListener("click", async () => {
       if (!link.dataset.adAttached) {
         link.dataset.adAttached = "true";
 
-        link.addEventListener("click", (e) => {
-          // Delay trick fixes popup block
-          setTimeout(() => {
-            window.open(adURL, "_blank", "noopener");
-          }, 10);
-        });
+        // use pointerdown to ensure it's inside the user gesture
+        link.addEventListener("pointerdown", (e) => {
+          // try to open immediately
+          const win = window.open(adURL, "_blank", "noopener,noreferrer");
+          // if blocked, optionally show a minimal hint (non-intrusive)
+          if (!win) {
+            // optional: tiny UX hint; comment out if you don't want a message
+            // console.warn("Ad pop-up blocked by browser. Please allow pop-ups for this site.");
+          }
+          // do NOT preventDefault — allow the <a> click to download the file
+        }, {passive: true});
       }
     });
   }
@@ -137,13 +143,3 @@ searchNameBtn.addEventListener("click", async () => {
     attachSmartlinkAds();
   };
 })();
-rn;
-  }
-
-  // Load PDFs if not already loaded
-  if (loadedPDFs.length === 0) loadedPDFs = await loadPDFs();
-
-  const query = searchInput.value.toLowerCase().trim();
-  const filtered = query ? loadedPDFs.filter(f => f.name.toLowerCase().includes(query)) : loadedPDFs;
-  displayPDFs(filtered);
-});
