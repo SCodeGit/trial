@@ -1,6 +1,6 @@
 // --- CONFIGURATION ---
 const config = {
-  mode: "single",
+  mode: "single", // single repo mode
   singleRepo: {
     owner: "SCodeGit",
     repo: "trial",
@@ -14,29 +14,23 @@ const semSel = document.getElementById("semester");
 const progSel = document.getElementById("program");
 const pdfList = document.getElementById("pdf-list");
 const searchBtn = document.getElementById("searchBtn");
-const searchNameBtn = document.getElementById("searchNameBtn");
 const searchInput = document.getElementById("searchInput");
+const searchNameBtn = document.getElementById("searchNameBtn");
 
-let loadedPDFs = [];
+let loadedPDFs = []; // PDFs from the currently selected program
 
-// --- Helper: fetch folder contents from GitHub API ---
-async function fetchFolder(url, branch = config.singleRepo.branch) {
-  try {
-    const fullUrl = url.includes("?") ? url : `${url}?ref=${branch}`;
-    const res = await fetch(fullUrl);
-    if (!res.ok) return [];
-    return await res.json();
-  } catch (e) {
-    console.error("Fetch failed:", e);
-    return [];
-  }
+// --- Fetch folder contents from GitHub API ---
+async function fetchFolder(url, branch=config.singleRepo.branch) {
+  const fullUrl = url.includes("?") ? url : `${url}?ref=${branch}`;
+  const res = await fetch(fullUrl);
+  if (!res.ok) return [];
+  return await res.json();
 }
 
-// Populate dropdown with directories or PDFs (for first level)
-function populateDropdown(dropdown, items, acceptFiles = false) {
-  dropdown.innerHTML = `<option value="">Select ${dropdown.id.charAt(0).toUpperCase() + dropdown.id.slice(1)}</option>`;
+// --- Populate a dropdown with directories ---
+function populateDropdown(dropdown, items) {
   items.forEach(i => {
-    if (i.type === "dir" || (acceptFiles && i.type === "file" && i.name.toLowerCase().endsWith(".pdf"))) {
+    if (i.type === "dir") {
       const opt = document.createElement("option");
       opt.value = i.path;
       opt.textContent = i.name;
@@ -46,7 +40,7 @@ function populateDropdown(dropdown, items, acceptFiles = false) {
   dropdown.disabled = false;
 }
 
-// Reset dropdowns and PDF list
+// --- Reset dropdowns and PDF list ---
 function resetDropdowns(...dropdowns) {
   dropdowns.forEach(d => {
     d.innerHTML = `<option value="">Select ${d.id.charAt(0).toUpperCase() + d.id.slice(1)}</option>`;
@@ -56,7 +50,7 @@ function resetDropdowns(...dropdowns) {
   loadedPDFs = [];
 }
 
-// Display PDFs in the list with propounder
+// --- Display PDFs in the list with propounder/ad ---
 function displayPDFs(pdfs) {
   pdfList.innerHTML = "";
   if (pdfs.length === 0) {
@@ -72,7 +66,7 @@ function displayPDFs(pdfs) {
     pdfList.appendChild(div);
   });
 
-  // Attach propounder
+  // --- Attach propounder/ad script to each PDF link ---
   pdfList.querySelectorAll("a").forEach(link => {
     if (!link.dataset.propounderAttached) {
       link.dataset.propounderAttached = "true";
@@ -86,56 +80,57 @@ function displayPDFs(pdfs) {
   });
 }
 
-// Load universities (first dropdown)
+// --- Load universities on page load ---
 (async () => {
   const baseURL = `https://api.github.com/repos/${config.singleRepo.owner}/${config.singleRepo.repo}/contents/`;
   const universities = await fetchFolder(baseURL);
-  console.log("Fetched universities:", universities); // debug
-  populateDropdown(universitySel, universities, false);
+  populateDropdown(universitySel, universities);
 })();
 
 // --- Dropdown event listeners ---
 universitySel.addEventListener("change", async () => {
   resetDropdowns(levelSel, semSel, progSel);
-  if (!universitySel.value) return;
+  if(!universitySel.value) return;
   const levels = await fetchFolder(`https://api.github.com/repos/${config.singleRepo.owner}/${config.singleRepo.repo}/contents/${universitySel.value}`);
   populateDropdown(levelSel, levels);
 });
 
 levelSel.addEventListener("change", async () => {
   resetDropdowns(semSel, progSel);
-  if (!levelSel.value) return;
+  if(!levelSel.value) return;
   const sems = await fetchFolder(`https://api.github.com/repos/${config.singleRepo.owner}/${config.singleRepo.repo}/contents/${levelSel.value}`);
   populateDropdown(semSel, sems);
 });
 
 semSel.addEventListener("change", async () => {
   resetDropdowns(progSel);
-  if (!semSel.value) return;
+  if(!semSel.value) return;
   const programs = await fetchFolder(`https://api.github.com/repos/${config.singleRepo.owner}/${config.singleRepo.repo}/contents/${semSel.value}`);
   populateDropdown(progSel, programs);
 });
 
-// Load PDFs from selected program
+// --- Helper: Load PDFs from currently selected program ---
 async function loadPDFs() {
   if (!progSel.value) return [];
   const files = await fetchFolder(`https://api.github.com/repos/${config.singleRepo.owner}/${config.singleRepo.repo}/contents/${progSel.value}`);
   return files.filter(f => f.name.toLowerCase().endsWith(".pdf"));
 }
 
-// Search PDFs by program
+// --- Search PDFs by program ---
 searchBtn.addEventListener("click", async () => {
   loadedPDFs = await loadPDFs();
   displayPDFs(loadedPDFs);
 });
 
-// Search PDFs by name
+// --- Search PDFs by name ---
 searchNameBtn.addEventListener("click", async () => {
   if (!progSel.value) {
     alert("Please select a program first!");
     return;
   }
+
   if (loadedPDFs.length === 0) loadedPDFs = await loadPDFs();
+
   const query = searchInput.value.toLowerCase().trim();
   const filtered = query ? loadedPDFs.filter(f => f.name.toLowerCase().includes(query)) : loadedPDFs;
   displayPDFs(filtered);
