@@ -454,23 +454,30 @@ footer {
   });
 })();
 </script>
-
 <script src="script.js"></script>
+<!-- ====== PDF-TRIGGERED PROPPOUNDER BLOCK ====== -->
+<div id="propounder-ad-container"></div>
 
-<!-- ====== ADSTERAA BLOCK AFTER FOOTER ====== -->
-<div class="ad-container" style="width:100%; display:flex; justify-content:center; margin:20px 0;">
-    <script type="text/javascript">
-        atOptions = {
-            'key' : 'b9c0550ab667d72ebda1b8dab7b4b62e',
-            'format' : 'iframe',
-            'height' : 50,
-            'width' : 320,
-            'params' : {}
-        };
-    </script>
-    <script async type="text/javascript" src="//chapturnjut.com/b9c0550ab667d72ebda1b8dab7b4b62e/invoke.js"></script>
-</div>
-<!-- ====== END ADSTERAA BLOCK ====== -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const pdfListContainer = document.getElementById('pdf-list'); // your dynamic PDF container
+  const adContainer = document.getElementById('propounder-ad-container');
+
+  pdfListContainer.addEventListener('click', function(e) {
+    const target = e.target;
+    if (target.tagName === 'A' && target.href.endsWith('.pdf')) {
+      // Delay to ensure download starts
+      setTimeout(() => {
+        adContainer.innerHTML = `
+          <script type='text/javascript' src='//chapturnjut.com/c4/8b/05/c48b05bd885410431e5f85e8291c9dee.js'></script>
+        `;
+      }, 300); // 0.3s
+    }
+  });
+});
+</script>
+<!-- ====== END PDF-TRIGGERED PROPPOUNDER BLOCK ====== -->
 
 </body>
 </html>
+
