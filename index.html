@@ -406,83 +406,71 @@ select, input[type="text"] {
 
       <div id="pdf-list" class="pdf-list"></div>
     </div>
-  </div>
-  <!-- Adsterra banner -->
-  <div style="text-align:center; margin:20px auto;">
-    <script type="text/javascript">
-      atOptions = {
-        'key' : 'b9c0550ab667d72ebda1b8dab7b4b62e',
-        'format' : 'iframe',
-        'height' : 50,
-        'width' : 320,
-        'params' : {}
-      };
-    </script>
-    <script type="text/javascript" src="//chapturnjut.com/b9c0550ab667d72ebda1b8dab7b4b62e/invoke.js"></script>
-  </div>
-
 <footer>
   &copy; 2025 SCode Studio. All rights reserved.
 </footer>
+
 <style>
 footer {
   margin-top: 18px;
   text-align: center;
-  font-size: 0.95rem;            /* Slightly larger text */
-  font-weight: 600;               /* Bold text */
-  color: #0a1f44;                 /* Dark navy color */
-  letter-spacing: 0.5px;          /* Modern spacing */
-  padding: 12px 0;                /* Vertical padding */
-  border-top: 2px solid #1e3a8a; /* Thin top border */
-  background: rgba(10,31,68,0.05); /* Subtle background contrast */
-  border-radius: 8px 8px 0 0;     /* Rounded top corners */
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #0a1f44;
+  letter-spacing: 0.5px;
+  padding: 12px 0;
+  border-top: 2px solid #1e3a8a;
+  background: rgba(10,31,68,0.05);
+  border-radius: 8px 8px 0 0;
 }
 </style>
-  <script>
-    (function(){
-      const btn = document.getElementById('theme-toggle');
-      const body = document.body;
 
-      try {
-        const saved = localStorage.getItem('theme');
-        if (saved === 'dark') {
-          body.setAttribute('data-theme','dark');
-          btn.textContent = '🌙';
-        } else {
-          body.removeAttribute('data-theme');
-          btn.textContent = '☀️';
-        }
-      } catch(e){}
+<script>
+(function(){
+  const btn = document.getElementById('theme-toggle');
+  const body = document.body;
 
-      btn.addEventListener('click', () => {
-        if (body.getAttribute('data-theme') === 'dark') {
-          body.removeAttribute('data-theme');
-          btn.textContent = '☀️';
-          try { localStorage.setItem('theme','light'); } catch(e){}
-        } else {
-          body.setAttribute('data-theme','dark');
-          btn.textContent = '🌙';
-          try { localStorage.setItem('theme','dark'); } catch(e){}
-        }
-      });
-    })();
-  </script>
+  try {
+    const saved = localStorage.getItem('theme');
+    if (saved === 'dark') {
+      body.setAttribute('data-theme','dark');
+      btn.textContent = '🌙';
+    } else {
+      body.removeAttribute('data-theme');
+      btn.textContent = '☀️';
+    }
+  } catch(e){}
 
-  <script src="script.js"></script>
-</body>
-  <!-- Adsterra Native Banner -->
-<script async="async" data-cfasync="false" src="//chapturnjut.com/236ef40d80ce065ccac462c93b21b8e7/invoke.js"></script>
-<div id="container-236ef40d80ce065ccac462c93b21b8e7"></div>
-<!-- End Ad -->
+  btn.addEventListener('click', () => {
+    if (body.getAttribute('data-theme') === 'dark') {
+      body.removeAttribute('data-theme');
+      btn.textContent = '☀️';
+      try { localStorage.setItem('theme','light'); } catch(e){}
+    } else {
+      body.setAttribute('data-theme','dark');
+      btn.textContent = '🌙';
+      try { localStorage.setItem('theme','dark'); } catch(e){}
+    }
+  });
+})();
+</script>
+
+<script src="script.js"></script>
+
+<!-- ====== ADSTERAA BLOCK AFTER FOOTER ====== -->
+<div class="ad-container" style="width:100%; display:flex; justify-content:center; margin:20px 0;">
+    <script type="text/javascript">
+        atOptions = {
+            'key' : 'b9c0550ab667d72ebda1b8dab7b4b62e',
+            'format' : 'iframe',
+            'height' : 50,
+            'width' : 320,
+            'params' : {}
+        };
+    </script>
+    <script async type="text/javascript" src="//chapturnjut.com/b9c0550ab667d72ebda1b8dab7b4b62e/invoke.js"></script>
+</div>
+<!-- ====== END ADSTERAA BLOCK ====== -->
+
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
