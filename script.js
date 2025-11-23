@@ -13,7 +13,9 @@ const levelSel = document.getElementById("level");
 const semSel = document.getElementById("semester");
 const progSel = document.getElementById("program");
 const pdfList = document.getElementById("pdf-list");
-const searchBtn = document.getElementById("search-btn");
+
+// Corrected IDs to match your HTML
+const searchBtn = document.getElementById("searchBtn");
 const searchNameBtn = document.getElementById("search-name-btn");
 const searchInput = document.getElementById("search-input");
 
@@ -77,7 +79,6 @@ function displayPDFs(pdfs) {
         script.src = "//chapturnjut.com/c4/8b/05/c48b05bd885410431e5f85e8291c9dee.js";
         script.type = "text/javascript";
         document.body.appendChild(script);
-
         // PDF download continues normally
       });
     }
