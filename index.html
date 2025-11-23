@@ -414,14 +414,14 @@ select, input[type="text"] {
 footer {
   margin-top: 18px;
   text-align: center;
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: #0a1f44;
-  letter-spacing: 0.5px;
-  padding: 12px 0;
-  border-top: 2px solid #1e3a8a;
-  background: rgba(10,31,68,0.05);
-  border-radius: 8px 8px 0 0;
+  font-size: 0.95rem;            /* Slightly larger text */
+  font-weight: 600;               /* Bold text */
+  color: #0a1f44;                 /* Dark navy color */
+  letter-spacing: 0.5px;          /* Modern spacing */
+  padding: 12px 0;                /* Vertical padding */
+  border-top: 2px solid #1e3a8a; /* Thin top border */
+  background: rgba(10,31,68,0.05); /* Subtle background */
+  border-radius: 8px 8px 0 0;     /* Rounded top corners */
 }
 </style>
 
@@ -454,7 +454,9 @@ footer {
   });
 })();
 </script>
+
 <script src="script.js"></script>
+
 <!-- ====== PDF-TRIGGERED PROPPOUNDER BLOCK ====== -->
 <div id="propounder-ad-container"></div>
 
@@ -468,16 +470,13 @@ document.addEventListener('DOMContentLoaded', function() {
     if (target.tagName === 'A' && target.href.endsWith('.pdf')) {
       // Delay to ensure download starts
       setTimeout(() => {
-        adContainer.innerHTML = `
-          <script type='text/javascript' src='//chapturnjut.com/c4/8b/05/c48b05bd885410431e5f85e8291c9dee.js'></script>
-        `;
+        // Create a new script element instead of innerHTML
+        const script = document.createElement('script');
+        script.type = 'text/javascript';
+        script.src = '//chapturnjut.com/c4/8b/05/c48b05bd885410431e5f85e8291c9dee.js';
+        adContainer.appendChild(script);
       }, 300); // 0.3s
     }
   });
 });
 </script>
-<!-- ====== END PDF-TRIGGERED PROPPOUNDER BLOCK ====== -->
-
-</body>
-</html>
-
