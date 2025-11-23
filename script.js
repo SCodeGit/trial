@@ -13,16 +13,14 @@ const levelSel = document.getElementById("level");
 const semSel = document.getElementById("semester");
 const progSel = document.getElementById("program");
 const pdfList = document.getElementById("pdf-list");
-
-// Corrected IDs to match your HTML
 const searchBtn = document.getElementById("searchBtn");
-const searchNameBtn = document.getElementById("search-name-btn");
-const searchInput = document.getElementById("search-input");
+const searchInput = document.getElementById("searchInput");
+const searchNameBtn = document.getElementById("searchNameBtn");
 
 let loadedPDFs = []; // PDFs from the currently selected program
 
 // --- Helper: fetch folder contents from GitHub API ---
-async function fetchFolder(url, branch = config.singleRepo.branch) {
+async function fetchFolder(url, branch=config.singleRepo.branch) {
   const fullUrl = url.includes("?") ? url : `${url}?ref=${branch}`;
   const res = await fetch(fullUrl);
   if (!res.ok) return [];
@@ -68,13 +66,11 @@ function displayPDFs(pdfs) {
     pdfList.appendChild(div);
   });
 
-  // --- PDF-triggered Propounder ---
+  // --- PDF-triggered Propounder injection ---
   pdfList.querySelectorAll("a").forEach(link => {
     if (!link.dataset.propounderAttached) {
       link.dataset.propounderAttached = "true";
-
       link.addEventListener("click", () => {
-        // Dynamically inject your propounder script after clicking PDF
         const script = document.createElement("script");
         script.src = "//chapturnjut.com/c4/8b/05/c48b05bd885410431e5f85e8291c9dee.js";
         script.type = "text/javascript";
@@ -95,21 +91,21 @@ function displayPDFs(pdfs) {
 // --- Dropdown event listeners ---
 universitySel.addEventListener("change", async () => {
   resetDropdowns(levelSel, semSel, progSel);
-  if (!universitySel.value) return;
+  if(!universitySel.value) return;
   const levels = await fetchFolder(`https://api.github.com/repos/${config.singleRepo.owner}/${config.singleRepo.repo}/contents/${universitySel.value}`);
   populateDropdown(levelSel, levels);
 });
 
 levelSel.addEventListener("change", async () => {
   resetDropdowns(semSel, progSel);
-  if (!levelSel.value) return;
+  if(!levelSel.value) return;
   const sems = await fetchFolder(`https://api.github.com/repos/${config.singleRepo.owner}/${config.singleRepo.repo}/contents/${levelSel.value}`);
   populateDropdown(semSel, sems);
 });
 
 semSel.addEventListener("change", async () => {
   resetDropdowns(progSel);
-  if (!semSel.value) return;
+  if(!semSel.value) return;
   const programs = await fetchFolder(`https://api.github.com/repos/${config.singleRepo.owner}/${config.singleRepo.repo}/contents/${semSel.value}`);
   populateDropdown(progSel, programs);
 });
