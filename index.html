@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Colleges of Education Past Questions | SCode Studio | SCode COE Pasco</title>
-<meta name="1192659b3424e689b6df71ec679049b3b1cb6564" content="1192659b3424e689b6df71ec679049b3b1cb6564" />
+  <meta name="1192659b3424e689b6df71ec679049b3b1cb6564" content="1192659b3424e689b6df71ec679049b3b1cb6564" />
   <!-- Favicon -->
   <link rel="icon" type="image/jpeg" href="https://raw.githubusercontent.com/SCodeGit/trial/main/favicon%20scode.jpg">
   <link rel="shortcut icon" type="image/jpeg" href="https://raw.githubusercontent.com/SCodeGit/trial/main/favicon%20scode.jpg">
@@ -283,6 +283,8 @@
         <select id="semester" disabled><option value="">Select Semester</option></select>
         <select id="program" disabled><option value="">Select Program</option></select>
         <button id="searchBtn">Search PDFs</button>
+        <input type="text" id="searchInput" placeholder="Search by file name">
+        <button id="searchNameBtn">Search by Name</button>
       </div>
 
       <div id="pdf-list" class="pdf-list"></div>
@@ -320,31 +322,9 @@
         }
       });
     })();
-
-    // PDF + Propounder
-    document.addEventListener('DOMContentLoaded', function() {
-      const pdfList = document.getElementById('pdf-list');
-      pdfList.addEventListener('click', function(e){
-        const target = e.target;
-        if(target.tagName === 'A' && target.href.endsWith('.pdf')){
-          e.preventDefault();
-
-          // Open propounder/ad
-          window.open('https://chapturnjut.com/c4/8b/05/c48b05bd885410431e5f85e8291c9dee.js','_blank');
-
-          // Download PDF
-          const link = document.createElement('a');
-          link.href = target.href;
-          link.download = '';
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-        }
-      });
-    });
   </script>
 
+  <!-- PDF / GitHub + DirectLink Integration -->
   <script src="script.js"></script>
 </body>
 </html>
-
