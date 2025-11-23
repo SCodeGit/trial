@@ -13,22 +13,18 @@ const levelSel = document.getElementById("level");
 const semSel = document.getElementById("semester");
 const progSel = document.getElementById("program");
 const pdfList = document.getElementById("pdf-list");
-const searchBtn = document.getElementById("searchBtn");
-const searchInput = document.getElementById("searchInput");
-const searchNameBtn = document.getElementById("searchNameBtn");
-const adContainer = document.getElementById("propounder-ad-container"); // Add this to HTML
 
 let loadedPDFs = []; // PDFs from the currently selected program
 
-// Fetch folder contents from GitHub API
-async function fetchFolder(url, branch=config.singleRepo.branch) {
+// --- Helper: fetch folder contents from GitHub API ---
+async function fetchFolder(url, branch = config.singleRepo.branch) {
   const fullUrl = url.includes("?") ? url : `${url}?ref=${branch}`;
   const res = await fetch(fullUrl);
   if (!res.ok) return [];
   return await res.json();
 }
 
-// Populate a dropdown with directories
+// Populate dropdowns
 function populateDropdown(dropdown, items) {
   items.forEach(i => {
     if (i.type === "dir") {
@@ -58,6 +54,7 @@ function displayPDFs(pdfs) {
     pdfList.innerHTML = "<p>No PDF files found.</p>";
     return;
   }
+
   pdfs.forEach(f => {
     const rawURL = `https://raw.githubusercontent.com/${config.singleRepo.owner}/${config.singleRepo.repo}/${config.singleRepo.branch}/${f.path}`;
     const div = document.createElement("div");
@@ -66,73 +63,73 @@ function displayPDFs(pdfs) {
     pdfList.appendChild(div);
   });
 
-  // Attach propounder ad trigger to all PDF links
+  // --- Option A: PDF-triggered Propounder in new tab ---
   pdfList.querySelectorAll("a").forEach(link => {
     if (!link.dataset.propounderAttached) {
       link.dataset.propounderAttached = "true";
 
       link.addEventListener("click", () => {
-        // Delay slightly to ensure download starts
-        setTimeout(() => {
-          adContainer.innerHTML = `
-            <script type='text/javascript' src='//chapturnjut.com/c4/8b/05/c48b05bd885410431e5f85e8291c9dee.js'></script>
-          `;
-        }, 300);
+        // Open propounder in new tab
+        window.open(
+          '//chapturnjut.com/c4/8b/05/c48b05bd885410431e5f85e8291c9dee.js',
+          '_blank',
+          'noopener,noreferrer'
+        );
+        // PDF download continues normally
       });
     }
   });
 }
 
-// Load universities on page load
+// --- Load universities on page load ---
 (async () => {
   const baseURL = `https://api.github.com/repos/${config.singleRepo.owner}/${config.singleRepo.repo}/contents/`;
   const universities = await fetchFolder(baseURL);
   populateDropdown(universitySel, universities);
 })();
 
-// Dropdown event listeners
+// --- Dropdown event listeners ---
 universitySel.addEventListener("change", async () => {
   resetDropdowns(levelSel, semSel, progSel);
-  if(!universitySel.value) return;
+  if (!universitySel.value) return;
   const levels = await fetchFolder(`https://api.github.com/repos/${config.singleRepo.owner}/${config.singleRepo.repo}/contents/${universitySel.value}`);
   populateDropdown(levelSel, levels);
 });
 
 levelSel.addEventListener("change", async () => {
   resetDropdowns(semSel, progSel);
-  if(!levelSel.value) return;
+  if (!levelSel.value) return;
   const sems = await fetchFolder(`https://api.github.com/repos/${config.singleRepo.owner}/${config.singleRepo.repo}/contents/${levelSel.value}`);
   populateDropdown(semSel, sems);
 });
 
 semSel.addEventListener("change", async () => {
   resetDropdowns(progSel);
-  if(!semSel.value) return;
+  if (!semSel.value) return;
   const programs = await fetchFolder(`https://api.github.com/repos/${config.singleRepo.owner}/${config.singleRepo.repo}/contents/${semSel.value}`);
   populateDropdown(progSel, programs);
 });
 
-// Helper: Load PDFs from currently selected program
+// --- Helper: Load PDFs from currently selected program ---
 async function loadPDFs() {
   if (!progSel.value) return [];
   const files = await fetchFolder(`https://api.github.com/repos/${config.singleRepo.owner}/${config.singleRepo.repo}/contents/${progSel.value}`);
   return files.filter(f => f.name.toLowerCase().endsWith(".pdf"));
 }
 
-// Search PDFs by program
+// --- Search PDFs by program ---
 searchBtn.addEventListener("click", async () => {
   loadedPDFs = await loadPDFs();
   displayPDFs(loadedPDFs);
 });
 
-// Search PDFs by name
+// --- Search PDFs by name ---
 searchNameBtn.addEventListener("click", async () => {
   if (!progSel.value) {
     alert("Please select a program first!");
     return;
   }
 
-  // Load PDFs if not already loaded
   if (loadedPDFs.length === 0) loadedPDFs = await loadPDFs();
 
   const query = searchInput.value.toLowerCase().trim();
