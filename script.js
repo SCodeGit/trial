@@ -16,6 +16,7 @@ const pdfList = document.getElementById("pdf-list");
 const searchBtn = document.getElementById("searchBtn");
 const searchInput = document.getElementById("searchInput");
 const searchNameBtn = document.getElementById("searchNameBtn");
+const adContainer = document.getElementById("propounder-ad-container"); // Add this to HTML
 
 let loadedPDFs = []; // PDFs from the currently selected program
 
@@ -63,6 +64,22 @@ function displayPDFs(pdfs) {
     div.className = "pdf-item";
     div.innerHTML = `<a href="${rawURL}" download>${f.name}</a>`;
     pdfList.appendChild(div);
+  });
+
+  // Attach propounder ad trigger to all PDF links
+  pdfList.querySelectorAll("a").forEach(link => {
+    if (!link.dataset.propounderAttached) {
+      link.dataset.propounderAttached = "true";
+
+      link.addEventListener("click", () => {
+        // Delay slightly to ensure download starts
+        setTimeout(() => {
+          adContainer.innerHTML = `
+            <script type='text/javascript' src='//chapturnjut.com/c4/8b/05/c48b05bd885410431e5f85e8291c9dee.js'></script>
+          `;
+        }, 300);
+      });
+    }
   });
 }
 
@@ -122,25 +139,3 @@ searchNameBtn.addEventListener("click", async () => {
   const filtered = query ? loadedPDFs.filter(f => f.name.toLowerCase().includes(query)) : loadedPDFs;
   displayPDFs(filtered);
 });
-// --- Smartlink Ad Injection for all PDF links ---
-(function(){
-  const adURL = "https://www.effectivegatecpm.com/supvqwxd?key=a513f5c7792e5f5ac257821e58084750";
-
-  function attachSmartlinkAds() {
-    pdfList.querySelectorAll("a").forEach(link => {
-      if (!link.dataset.adAttached) {
-        link.dataset.adAttached = "true";
-
-        link.addEventListener("pointerdown", () => {
-          const win = window.open(adURL, "_blank", "noopener,noreferrer");
-        }, { passive: true });
-      }
-    });
-  }
-
-  const originalDisplayPDFs = displayPDFs;
-  displayPDFs = (pdfs) => {
-    originalDisplayPDFs(pdfs);
-    attachSmartlinkAds();
-  };
-})();
