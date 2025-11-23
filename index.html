@@ -1,19 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <link rel="icon" type="image/jpeg" href="https://raw.githubusercontent.com/SCodeGit/trial/main/favicon%20scode.jpg">
-  <link rel="shortcut icon" type="image/jpeg" href="https://raw.githubusercontent.com/SCodeGit/trial/main/favicon%20scode.jpg">
-
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Colleges of Education Past Questions | SCode Studio | SCode COE Pasco</title>
 
+  <!-- Favicon -->
+  <link rel="icon" type="image/jpeg" href="https://raw.githubusercontent.com/SCodeGit/trial/main/favicon%20scode.jpg">
+  <link rel="shortcut icon" type="image/jpeg" href="https://raw.githubusercontent.com/SCodeGit/trial/main/favicon%20scode.jpg">
+
+  <!-- SEO & Social -->
   <meta name="description" content="Free Colleges of Education past questions for all universities in Ghana. Filter by level, semester, and program. Official platform of SCode Studio and SCode COE Pasco. Created by Atubra Abraham.">
   <meta name="keywords" content="scode coe pasco, scode-coepasco.online, Colleges of Education past questions, SCode Studio, Atubra Abraham, SCode Groups, Peki College of Education, COE pasco, pasco Ghana, past questions 2025, teacher trainees Ghana">
   <meta name="author" content="Atubra Abraham — SCode Studio">
-  <meta name="application-name" content="SCode COE Pasco">
-  <meta name="publisher" content="SCode Groups">
-  <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://scode-coepasco.online/">
 
   <meta property="og:title" content="Colleges of Education Past Questions | SCode COE Pasco">
@@ -27,18 +26,228 @@
   <meta name="twitter:description" content="Access all past questions for Ghana Colleges of Education.">
   <meta name="twitter:image" content="https://raw.githubusercontent.com/SCodeGit/trial/724991e37c16e87e1f9d68e7111efa15c2386ab7/favicon%20scode.jpg">
 
-  <meta name="theme-color" content="#0a1f44">
-  <meta name="coverage" content="Worldwide">
-
   <!-- Security Hardening -->
   <meta http-equiv="X-Content-Type-Options" content="nosniff">
   <meta http-equiv="X-Frame-Options" content="DENY">
   <meta http-equiv="Referrer-Policy" content="no-referrer">
   <meta http-equiv="Permissions-Policy" content="geolocation=(), microphone=(), camera=()">
+
+  <!-- Tiny CSS -->
+  <style>
+    :root{
+      --navy: #0a1f44;
+      --white: #ffffff;
+      --accent: #1e3a8a;
+      --muted: #f3f6fb;
+      --shadow: rgba(10,31,68,0.12);
+    }
+
+    *{box-sizing:border-box;margin:0;padding:0}
+
+    body{
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: var(--muted);
+      color: var(--navy);
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      padding: 18px;
+    }
+
+    /* Top bar */
+    .top-bar{
+      display:flex;
+      align-items:center;
+      gap:18px;
+      max-width:1100px;
+      margin: 0 auto 18px;
+      padding: 8px 12px;
+    }
+
+    .top-logos{
+      display:flex;
+      gap:14px;
+      justify-content:center;
+      align-items:center;
+      flex: 1 1 auto;
+    }
+
+    .top-logos img{
+      width:58px;
+      height:58px;
+      border-radius:50%;
+      object-fit:cover;
+      border: 2px solid var(--navy);
+      background: var(--white);
+      display:inline-block;
+    }
+
+    #theme-toggle{
+      background: transparent;
+      border: none;
+      font-size: 1.2rem;
+      color: var(--navy);
+      cursor: pointer;
+      padding: 6px 8px;
+      margin-left: 12px;
+    }
+
+    /* Frame container */
+    .frame {
+      max-width: 980px;
+      margin: 18px auto;
+      background: var(--white);
+      border-radius: 14px;
+      border: 6px solid var(--navy);
+      box-shadow: 0 14px 30px var(--shadow);
+      overflow: hidden;
+      animation: frameIn .7s ease both;
+    }
+
+    @keyframes frameIn{
+      from { transform: translateY(12px) scale(.995); opacity: 0 }
+      to   { transform: translateY(0) scale(1); opacity: 1 }
+    }
+
+    .frame-inner {
+      padding: 26px;
+    }
+
+    h1{
+      text-align:center;
+      margin-top: 8px;
+      color: var(--navy);
+      font-size: 1.55rem;
+      font-weight:600;
+    }
+
+    .tagline{
+      text-align:center;
+      color:#0f335f;
+      margin:10px 0 18px;
+      font-style: italic;
+    }
+
+    .controls {
+      display:block;
+      width:100%;
+      max-width:760px;
+      margin: 0 auto;
+      gap:10px;
+    }
+
+    .controls > *{
+      display:block;
+      width:100%;
+      margin:8px 0;
+    }
+
+    select, input[type="text"], button{
+      padding: 10px 12px;
+      border-radius:10px;
+      border:1px solid #cbd9f0;
+      font-size:0.98rem;
+      background: #fff;
+      color: var(--navy);
+    }
+
+    select:hover, button:hover, input[type="text"]:hover{
+      box-shadow: 0 6px 18px rgba(30,58,138,0.06);
+      transform: translateY(-1px);
+    }
+
+    /* PDF links */
+    .pdf-list a {
+      display: block;
+      color: var(--navy);
+      text-decoration: none;
+      padding: 8px 12px;
+      border-radius: 8px;
+      border: 1px solid #cbd9f0;
+      margin: 6px 0;
+      transition: all 0.3s ease;
+    }
+    .pdf-list a:hover {
+      background: var(--accent);
+      color: var(--white);
+      transform: translateX(2px);
+    }
+
+    /* Instructions */
+    .instructions-container {
+      text-align: center;
+      margin: 40px auto;
+      max-width: 700px;
+      font-family: 'Poppins', sans-serif;
+    }
+    .instructions-toggle {
+      background: transparent;
+      color: #00b3ff;
+      border: 1px solid #00b3ff;
+      border-radius: 8px;
+      padding: 10px 20px;
+      cursor: pointer;
+      font-size: 17px;
+      transition: all 0.3s ease;
+      box-shadow: 0 0 10px rgba(0,179,255,0.3);
+    }
+    .instructions-toggle:hover {
+      color: #fff;
+      background: #001a33;
+      box-shadow: 0 0 15px #00b3ff;
+    }
+    .instructions-content {
+      display: none;
+      margin-top: 15px;
+      background: rgba(0,10,30,0.9);
+      color: #d6f1ff;
+      border: 1px solid #0a3d62;
+      border-radius: 10px;
+      padding: 20px;
+      animation: fadeIn 0.5s ease;
+      box-shadow: 0 0 10px rgba(0,179,255,0.2);
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-5px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Footer */
+    footer{
+      margin-top: 18px;
+      text-align:center;
+      color:#374761;
+      font-size:0.9rem;
+    }
+
+    /* Dark theme */
+    body[data-theme="dark"]{
+      background:#071427;
+      color: #e9eef6;
+    }
+    body[data-theme="dark"] .frame{
+      background: rgba(8,18,36,0.92);
+      border-color: #072043;
+      box-shadow: 0 14px 30px rgba(0,0,0,0.5);
+    }
+    body[data-theme="dark"] .top-logos img{ border-color: #e9eef6 }
+    body[data-theme="dark"] #theme-toggle{ color: #e9eef6 }
+    body[data-theme="dark"] select, body[data-theme="dark"] input[type="text"], body[data-theme="dark"] button{
+      background:#071427;
+      color:#e9eef6;
+      border:1px solid rgba(255,255,255,0.06);
+    }
+
+    /* Responsive */
+    @media (max-width:720px){
+      .top-bar{ padding: 8px; gap:10px }
+      .top-logos img{ width:48px;height:48px }
+      .frame-inner{ padding:18px }
+    }
+  </style>
 </head>
 <body>
 
-  <!-- Top bar and logos -->
+  <!-- Top bar -->
   <div class="top-bar">
     <div class="top-logos">
       <img src="https://raw.githubusercontent.com/SCodeGit/trial/main/WhatsApp%20Image%202025-10-29%20at%2021.28.30_968e228b.jpg" alt="School Collaboration Logo">
@@ -48,6 +257,7 @@
     <button id="theme-toggle" title="Toggle theme" aria-label="Toggle theme">☀️</button>
   </div>
 
+  <!-- Heading -->
   <h1>Colleges of Education Past Questions</h1>
   <p class="tagline">Empowering Learning Through Past Questions</p>
 
@@ -57,13 +267,14 @@
     <div class="instructions-content" id="instructionsBox">
       <p><strong>Welcome Trainees!</strong> Here’s how to navigate this platform:</p>
       <ul style="list-style: none; text-align: left; padding: 0; margin-top: 10px;">
-        <li>Select your <strong>university, level, semester, and program</strong> to view available PDFs.</li>
-        <li>Click on any file name to <strong>download</strong> past questions. CHECK YOUR DOWNLOADS IMMEDIATELY AFTERWARDS.</li>
+        <li> Select your <strong>university, level, semester, and program</strong> to view available PDFs.</li>
+        <li> Click on any file name to <strong>download</strong> the past questions.</li>
       </ul>
       <p style="margin-top: 10px; font-size: 0.9rem; opacity: 0.8;">Stay focused, study smart, and all the best!</p>
     </div>
   </div>
 
+  <!-- PDF Controls -->
   <div class="frame">
     <div class="frame-inner">
       <div class="controls">
@@ -73,6 +284,7 @@
         <select id="program" disabled><option value="">Select Program</option></select>
         <button id="searchBtn">Search PDFs</button>
       </div>
+
       <div id="pdf-list" class="pdf-list"></div>
     </div>
   </div>
@@ -81,59 +293,57 @@
     &copy; 2025 SCode Studio. All rights reserved.
   </footer>
 
-  <!-- Theme Toggle -->
+  <!-- Scripts -->
   <script>
-  (function(){
-    const btn = document.getElementById('theme-toggle');
-    const body = document.body;
-    try {
-      const saved = localStorage.getItem('theme');
-      if(saved==='dark'){ body.setAttribute('data-theme','dark'); btn.textContent='🌙'; }
-      else{ body.removeAttribute('data-theme'); btn.textContent='☀️'; }
-    } catch(e){}
-    btn.addEventListener('click', () => {
-      if(body.getAttribute('data-theme')==='dark'){
-        body.removeAttribute('data-theme'); btn.textContent='☀️';
-        try{ localStorage.setItem('theme','light'); }catch(e){}
-      } else{
-        body.setAttribute('data-theme','dark'); btn.textContent='🌙';
-        try{ localStorage.setItem('theme','dark'); }catch(e){}
-      }
+    function toggleInstructions() {
+      const box = document.getElementById("instructionsBox");
+      box.style.display = box.style.display === "block" ? "none" : "block";
+    }
+
+    // Theme toggle
+    (function(){
+      const btn = document.getElementById('theme-toggle');
+      const body = document.body;
+      try {
+        const saved = localStorage.getItem('theme');
+        if (saved === 'dark') { body.setAttribute('data-theme','dark'); btn.textContent='🌙'; } 
+        else { body.removeAttribute('data-theme'); btn.textContent='☀️'; }
+      } catch(e){}
+
+      btn.addEventListener('click', () => {
+        if (body.getAttribute('data-theme')==='dark'){
+          body.removeAttribute('data-theme'); btn.textContent='☀️';
+          try{ localStorage.setItem('theme','light'); }catch(e){}
+        } else {
+          body.setAttribute('data-theme','dark'); btn.textContent='🌙';
+          try{ localStorage.setItem('theme','dark'); }catch(e){}
+        }
+      });
+    })();
+
+    // PDF + Propounder
+    document.addEventListener('DOMContentLoaded', function() {
+      const pdfList = document.getElementById('pdf-list');
+      pdfList.addEventListener('click', function(e){
+        const target = e.target;
+        if(target.tagName === 'A' && target.href.endsWith('.pdf')){
+          e.preventDefault();
+
+          // Open propounder/ad
+          window.open('https://chapturnjut.com/c4/8b/05/c48b05bd885410431e5f85e8291c9dee.js','_blank');
+
+          // Download PDF
+          const link = document.createElement('a');
+          link.href = target.href;
+          link.download = '';
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+        }
+      });
     });
-  })();
   </script>
 
   <script src="script.js"></script>
-
-  <!-- PDF Click + Propounder Logic -->
-  <script>
-  document.addEventListener('DOMContentLoaded', function() {
-    const pdfListContainer = document.getElementById('pdf-list');
-
-    pdfListContainer.addEventListener('click', function(e) {
-      const target = e.target;
-      if(target.tagName==='A' && target.href.endsWith('.pdf')){
-        // Open the ad/propounder in a new tab
-        window.open('//chapturnjut.com/c4/8b/05/c48b05bd885410431e5f85e8291c9dee.js','_blank');
-
-        // Continue download immediately
-        const link = document.createElement('a');
-        link.href = target.href;
-        link.download = '';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-      }
-    });
-  });
-  </script>
-
-  <script>
-  function toggleInstructions() {
-    const box = document.getElementById("instructionsBox");
-    box.style.display = box.style.display === "block" ? "none" : "block";
-  }
-  </script>
-
 </body>
 </html>
