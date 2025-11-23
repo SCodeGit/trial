@@ -13,6 +13,9 @@ const levelSel = document.getElementById("level");
 const semSel = document.getElementById("semester");
 const progSel = document.getElementById("program");
 const pdfList = document.getElementById("pdf-list");
+const searchBtn = document.getElementById("search-btn");
+const searchNameBtn = document.getElementById("search-name-btn");
+const searchInput = document.getElementById("search-input");
 
 let loadedPDFs = []; // PDFs from the currently selected program
 
@@ -63,18 +66,18 @@ function displayPDFs(pdfs) {
     pdfList.appendChild(div);
   });
 
-  // --- Option A: PDF-triggered Propounder in new tab ---
+  // --- PDF-triggered Propounder ---
   pdfList.querySelectorAll("a").forEach(link => {
     if (!link.dataset.propounderAttached) {
       link.dataset.propounderAttached = "true";
 
       link.addEventListener("click", () => {
-        // Open propounder in new tab
-        window.open(
-          '//chapturnjut.com/c4/8b/05/c48b05bd885410431e5f85e8291c9dee.js',
-          '_blank',
-          'noopener,noreferrer'
-        );
+        // Dynamically inject your propounder script after clicking PDF
+        const script = document.createElement("script");
+        script.src = "//chapturnjut.com/c4/8b/05/c48b05bd885410431e5f85e8291c9dee.js";
+        script.type = "text/javascript";
+        document.body.appendChild(script);
+
         // PDF download continues normally
       });
     }
