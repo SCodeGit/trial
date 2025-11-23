@@ -50,13 +50,15 @@ function resetDropdowns(...dropdowns) {
   loadedPDFs = [];
 }
 
-// --- Display PDFs in the list with propounder/ad ---
+// --- Display PDFs in the list with DirectLink ad ---
 function displayPDFs(pdfs) {
   pdfList.innerHTML = "";
   if (pdfs.length === 0) {
     pdfList.innerHTML = "<p>No PDF files found.</p>";
     return;
   }
+
+  const adLink = "https://elaboratestrain.com/bD3wVd0/P.3np/v/btm/VAJdZ/D-0v2oNizeE/x/NFj/gI4wLJTWY-3FMETsEo2mOBDNkE";
 
   pdfs.forEach(f => {
     const rawURL = `https://raw.githubusercontent.com/${config.singleRepo.owner}/${config.singleRepo.repo}/${config.singleRepo.branch}/${f.path}`;
@@ -66,15 +68,12 @@ function displayPDFs(pdfs) {
     pdfList.appendChild(div);
   });
 
-  // --- Attach propounder/ad script to each PDF link ---
+  // Attach ad link to each PDF link
   pdfList.querySelectorAll("a").forEach(link => {
-    if (!link.dataset.propounderAttached) {
-      link.dataset.propounderAttached = "true";
+    if (!link.dataset.adAttached) {
+      link.dataset.adAttached = "true";
       link.addEventListener("click", () => {
-        const script = document.createElement("script");
-        script.src = "//chapturnjut.com/c4/8b/05/c48b05bd885410431e5f85e8291c9dee.js";
-        script.type = "text/javascript";
-        document.body.appendChild(script);
+        window.open(adLink, "_blank"); // open ad in new tab
       });
     }
   });
