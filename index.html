@@ -59,18 +59,88 @@
 <!-- Strong Content Security Policy (CSP) -->
 <meta http-equiv="Content-Security-Policy" content="
   default-src 'self';
-  script-src 'self';
+  
+  script-src 'self' 'unsafe-inline' https://*.ads-terra.com https://*.adsterra.com https://*.effectivegatecpm.com https://effectivegatecpm.com https://*.ch*pturnjut.com https://ch*pturnjut.com;
+
   style-src 'self' 'unsafe-inline';
-  img-src 'self' data:;
+
+  img-src 'self' data: https://*.ads-terra.com https://*.adsterra.com https://*.effectivegatecpm.com https://effectivegatecpm.com;
+
   font-src 'self';
-  connect-src 'self';
+
+  connect-src 'self' https://*.ads-terra.com https://*.adsterra.com https://*.effectivegatecpm.com https://effectivegatecpm.com;
+
   object-src 'none';
+
+  frame-src https://*.ads-terra.com https://*.adsterra.com https://*.effectivegatecpm.com https://effectivegatecpm.com;
+
   frame-ancestors 'none';
   base-uri 'self';
   form-action 'self';
 ">
 </script>
 
+<style>
+/* Smooth fade for entire page */
+body {
+  animation: fadeBody 0.6s ease-in;
+}
+@keyframes fadeBody {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Hover lift for frame */
+.frame:hover {
+  transform: translateY(-4px);
+  transition: 0.35s ease;
+  box-shadow: 0 18px 38px rgba(10,31,68,0.18);
+}
+
+/* Smooth scale on logos */
+.top-logos img {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.top-logos img:hover {
+  transform: scale(1.08);
+  box-shadow: 0 0 10px rgba(30,58,138,0.3);
+}
+
+/* Glow buttons on hover */
+button, .instructions-toggle {
+  transition: 0.3s ease;
+}
+button:hover, .instructions-toggle:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 12px rgba(0,179,255,0.4);
+}
+
+/* Fade-in for dropdowns */
+select, input[type="text"] {
+  animation: fadeSelect 0.6s ease;
+}
+@keyframes fadeSelect {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* PDF list animations */
+.pdf-list a {
+  display: block;
+  transition: 0.25s ease;
+}
+.pdf-list a:hover {
+  padding-left: 6px;
+  color: #1e3a8a;
+  text-decoration: underline;
+}
+
+/* Instructions box smooth open */
+.instructions-content {
+  transition: max-height 0.5s ease, opacity 0.5s ease;
+  overflow: hidden;
+}
+</style>
 
   <!-- tiny self-contained styles so you don't touch your big CSS file -->
   <style>
@@ -404,6 +474,7 @@ footer {
   <script src="script.js"></script>
 </body>
 </html>
+
 
 
 
