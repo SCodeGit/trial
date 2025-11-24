@@ -1,82 +1,107 @@
 // --- CONFIGURATION ---
 const config = {
   mode: "single",
-  singleRepo: {
-    owner: "SCodeGit",
-    repo: "trial",
-    branch: "main"
-  }
+  singleRepo: { owner: "SCodeGit", repo: "trial", branch: "main" }
 };
-
-// --- OPENROUTER API KEY ---
-const OPENROUTER_KEY = "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";
 
 // --- AI MODE SWITCH ---
 let aiMode = false;
 
-// Toggle button handler (add button with id="toggleAI" in HTML)
-document.addEventListener("click", e => {
-  if (e.target.id === "toggleAI") {
-    aiMode = !aiMode;
-    e.target.textContent = aiMode ? "AI MODE: ON" : "AI MODE: OFF";
-    if(loadedPDFs.length) displayPDFs(loadedPDFs); // refresh buttons
-  }
-});
+// --- PKCE FLOW VARIABLES ---
+let codeVerifier = '';
+let userAPIKey = '';
 
-// --- AI FUNCTION: GET FULL ANSWER ---
+// --- Generate Random Code Verifier for PKCE ---
+function generateCodeVerifier() {
+  const array = new Uint8Array(32);
+  crypto.getRandomValues(array);
+  return btoa(String.fromCharCode(...array))
+    .replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+}
+
+// --- Generate SHA256 Code Challenge ---
+async function generateCodeChallenge(verifier) {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(verifier);
+  const hash = await crypto.subtle.digest('SHA-256', data);
+  return btoa(String.fromCharCode(...new Uint8Array(hash)))
+    .replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+}
+
+// --- Start OAuth PKCE Flow ---
+async function startPKCEFlow() {
+  codeVerifier = generateCodeVerifier();
+  const codeChallenge = await generateCodeChallenge(codeVerifier);
+  const authUrl = `https://openrouter.ai/auth?callback_url=${encodeURIComponent(window.location.origin + '/callback')}&code_challenge=${codeChallenge}&code_challenge_method=S256`;
+  window.location.href = authUrl;
+}
+
+// --- Handle Callback to get User Key ---
+async function handleCallback() {
+  const params = new URLSearchParams(window.location.search);
+  const code = params.get('code');
+  if (!code) return;
+  const resp = await fetch('https://openrouter.ai/api/v1/auth/keys', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ code: code, code_verifier: codeVerifier })
+  });
+  const data = await resp.json();
+  userAPIKey = data.key;
+  console.log('User API Key obtained:', userAPIKey);
+}
+
+// --- AI FUNCTION: Get Full Answer ---
 async function getAIFullAnswer(pdfName) {
   try {
+    if (!userAPIKey) {
+      alert('AI not ready: authenticate first!');
+      return 'No API key';
+    }
+
     const prompt = `
 You are solving an exam question from a past paper.
-Provide FULL, DETAILED answers for the past paper filename:
+Give a FULL, DETAILED answer for the question based ONLY on the filename:
 
 Filename: ${pdfName}
 
-Requirements:
-- Full solved answers
-- Step-by-step explanations
-- Examples where applicable
-- No summaries, full answers only
+Provide:
+- full solved answer
+- explanations
+- examples
+- step-by-step where needed
     `;
 
-    const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
-      method: "POST",
+    const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+      method: 'POST',
       headers: {
-        Authorization: `Bearer ${OPENROUTER_KEY}`,
-        "HTTP-Referer": window.location.href,
-        "X-Title": document.title,
-        "Content-Type": "application/json"
+        'Authorization': `Bearer ${userAPIKey}`,
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        model: "openai/gpt-4o",
-        messages: [{ role: "user", content: prompt }],
-        max_tokens: 2500
+        model: 'openai/gpt-4o',
+        messages: [{ role: 'user', content: prompt }]
       })
     });
 
     const data = await response.json();
     return data.choices[0].message.content;
-
   } catch (err) {
-    return "AI ERROR: " + err.message;
+    return 'AI ERROR: ' + err.message;
   }
 }
 
-// ---------------------------------------------------------------------------
-// ORIGINAL DROPDOWN & PDF CODE (UNCHANGED)
-// ---------------------------------------------------------------------------
-
+// --- ORIGINAL DROPDOWN + DOWNLOAD SYSTEM ---
 const universitySel = document.getElementById("university");
 const levelSel = document.getElementById("level");
 const semSel = document.getElementById("semester");
 const progSel = document.getElementById("program");
 const pdfList = document.getElementById("pdf-list");
 const searchBtn = document.getElementById("searchBtn");
-const searchInput = document.getElementById("searchInput");
-const searchNameBtn = document.getElementById("searchNameBtn");
 
 let loadedPDFs = [];
 
+// Fetch GitHub folder
 async function fetchFolder(url, branch=config.singleRepo.branch) {
   const fullUrl = url.includes("?") ? url : `${url}?ref=${branch}`;
   const res = await fetch(fullUrl);
@@ -84,6 +109,7 @@ async function fetchFolder(url, branch=config.singleRepo.branch) {
   return await res.json();
 }
 
+// Populate dropdown
 function populateDropdown(dropdown, items) {
   items.forEach(i => {
     if (i.type === "dir") {
@@ -96,6 +122,7 @@ function populateDropdown(dropdown, items) {
   dropdown.disabled = false;
 }
 
+// Reset dropdowns
 function resetDropdowns(...dropdowns) {
   dropdowns.forEach(d => {
     d.innerHTML = `<option value="">Select ${d.id.charAt(0).toUpperCase() + d.id.slice(1)}</option>`;
@@ -105,13 +132,10 @@ function resetDropdowns(...dropdowns) {
   loadedPDFs = [];
 }
 
+// Display PDFs
 function displayPDFs(pdfs) {
   pdfList.innerHTML = "";
-  if (pdfs.length === 0) {
-    pdfList.innerHTML = "<p>No PDF files found.</p>";
-    return;
-  }
-
+  if (pdfs.length === 0) { pdfList.innerHTML = "<p>No PDF files found.</p>"; return; }
   const adLink = "https://elaboratestrain.com/bD3wVd0/P.3np/v/btm/VAJdZ/D-0v2oNizeE/x/NFj/gI4wLJTWY-3FMETsEo2mOBDNkE";
 
   pdfs.forEach(f => {
@@ -124,18 +148,15 @@ function displayPDFs(pdfs) {
     } else {
       div.innerHTML = `<a href="${rawURL}" download>${f.name}</a>`;
     }
-
     pdfList.appendChild(div);
   });
 
-  // CLICK HANDLING
+  // Attach click events
   if (!aiMode) {
     pdfList.querySelectorAll("a").forEach(link => {
       if (!link.dataset.adAttached) {
         link.dataset.adAttached = "true";
-        link.addEventListener("click", () => {
-          window.open(adLink, "_blank");
-        });
+        link.addEventListener("click", () => { window.open(adLink, "_blank"); });
       }
     });
   } else {
@@ -143,23 +164,22 @@ function displayPDFs(pdfs) {
       btn.addEventListener("click", async () => {
         window.open(adLink, "_blank"); // ad first
         btn.textContent = "Solving...";
-
-        const result = await getAIFullAnswer(btn.dataset.name);
-        showAIAnswerModal(result);
-
+        const answer = await getAIFullAnswer(btn.dataset.name);
+        alert(answer);
         btn.textContent = btn.dataset.name;
       });
     });
   }
 }
 
-// --- Load universities ---
+// Load universities
 (async () => {
   const baseURL = `https://api.github.com/repos/${config.singleRepo.owner}/${config.singleRepo.repo}/contents/`;
   const universities = await fetchFolder(baseURL);
   populateDropdown(universitySel, universities);
 })();
 
+// Dropdown listeners
 universitySel.addEventListener("change", async () => {
   resetDropdowns(levelSel, semSel, progSel);
   if(!universitySel.value) return;
@@ -181,6 +201,7 @@ semSel.addEventListener("change", async () => {
   populateDropdown(progSel, programs);
 });
 
+// Load PDFs
 async function loadPDFs() {
   if (!progSel.value) return [];
   const files = await fetchFolder(`https://api.github.com/repos/${config.singleRepo.owner}/${config.singleRepo.repo}/contents/${progSel.value}`);
@@ -192,58 +213,11 @@ searchBtn.addEventListener("click", async () => {
   displayPDFs(loadedPDFs);
 });
 
-searchNameBtn.addEventListener("click", async () => {
-  if (!progSel.value) {
-    alert("Please select a program first!");
-    return;
+// --- AI Mode Toggle Button Example ---
+document.getElementById('toggleAI').addEventListener('click', async () => {
+  aiMode = !aiMode;
+  if (aiMode) {
+    if (!userAPIKey) await startPKCEFlow(); // start OAuth if not authenticated
   }
-  if (loadedPDFs.length === 0) loadedPDFs = await loadPDFs();
-
-  const query = searchInput.value.toLowerCase().trim();
-  const filtered = query ? loadedPDFs.filter(f => f.name.toLowerCase().includes(query)) : loadedPDFs;
-  displayPDFs(filtered);
+  document.getElementById('toggleAI').textContent = aiMode ? "AI MODE: ON" : "AI MODE: OFF";
 });
-
-// --- AI MODAL FUNCTION ---
-function showAIAnswerModal(answerText) {
-  let modal = document.getElementById("aiAnswerModal");
-  if (!modal) {
-    modal = document.createElement("div");
-    modal.id = "aiAnswerModal";
-    Object.assign(modal.style, {
-      position: "fixed",
-      top: "50%",
-      left: "50%",
-      transform: "translate(-50%, -50%)",
-      width: "80%",
-      maxHeight: "80%",
-      overflowY: "auto",
-      backgroundColor: "#fff",
-      border: "3px solid #0a1f44",
-      padding: "20px",
-      borderRadius: "12px",
-      zIndex: 10000,
-      boxShadow: "0 8px 20px rgba(0,0,0,0.4)"
-    });
-    const closeBtn = document.createElement("button");
-    closeBtn.textContent = "Close";
-    Object.assign(closeBtn.style, {
-      position: "absolute",
-      top: "10px",
-      right: "10px",
-      padding: "6px 12px",
-      cursor: "pointer"
-    });
-    closeBtn.addEventListener("click", () => modal.remove());
-    modal.appendChild(closeBtn);
-
-    const content = document.createElement("pre");
-    content.id = "aiAnswerContent";
-    Object.assign(content.style, {whiteSpace: "pre-wrap"});
-    modal.appendChild(content);
-
-    document.body.appendChild(modal);
-  }
-
-  document.getElementById("aiAnswerContent").textContent = answerText;
-}
