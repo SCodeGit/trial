@@ -8,17 +8,18 @@ const config = {
   }
 };
 
-// --- YOUR OPENROUTER API KEY ---
+// --- OPENROUTER API KEY ---
 const OPENROUTER_KEY = "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";
 
-// --- AI MODE SWITCH (DEFAULT: OFF) ---
+// --- AI MODE SWITCH ---
 let aiMode = false;
 
-// Toggle button handler (YOU WILL ADD BUTTON IN HTML LATER)
+// Toggle button handler (add button with id="toggleAI" in HTML)
 document.addEventListener("click", e => {
   if (e.target.id === "toggleAI") {
     aiMode = !aiMode;
     e.target.textContent = aiMode ? "AI MODE: ON" : "AI MODE: OFF";
+    if(loadedPDFs.length) displayPDFs(loadedPDFs); // refresh buttons
   }
 });
 
@@ -26,16 +27,15 @@ document.addEventListener("click", e => {
 async function getAIFullAnswer(pdfName) {
   try {
     const prompt = `
-You are solving an exam question from a past paper.
-Give a FULL, DETAILED answer for the question based ONLY on the filename:
+You are a professional exam solver. Provide FULL, DETAILED answers for the past paper:
 
 Filename: ${pdfName}
 
-Provide:
-- full solved answer
-- explanations
-- examples
-- step-by-step where needed
+Requirements:
+- Full solved answers
+- Step-by-step explanations
+- Examples where applicable
+- No summaries, full answers only
     `;
 
     const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
@@ -46,7 +46,8 @@ Provide:
       },
       body: JSON.stringify({
         model: "gpt-4o-mini",
-        messages: [{ role: "user", content: prompt }]
+        messages: [{ role: "user", content: prompt }],
+        max_tokens: 2500
       })
     });
 
@@ -59,7 +60,7 @@ Provide:
 }
 
 // ---------------------------------------------------------------------------
-// YOUR ORIGINAL CODE (UNCHANGED)
+// ORIGINAL DROPDOWN & PDF CODE (UNCHANGED)
 // ---------------------------------------------------------------------------
 
 const universitySel = document.getElementById("university");
@@ -115,10 +116,11 @@ function displayPDFs(pdfs) {
     const div = document.createElement("div");
     div.className = "pdf-item";
 
-    // if AI mode → no download, instead show "Solve"
     if (aiMode) {
+      // AI SOLVE MODE → show "Solve" button
       div.innerHTML = `<button class="solve-btn" data-name="${f.name}">${f.name}</button>`;
     } else {
+      // NORMAL DOWNLOAD MODE
       div.innerHTML = `<a href="${rawURL}" download>${f.name}</a>`;
     }
 
@@ -141,19 +143,20 @@ function displayPDFs(pdfs) {
     pdfList.querySelectorAll(".solve-btn").forEach(btn => {
       btn.addEventListener("click", async () => {
         window.open(adLink, "_blank"); // ad first
-
         btn.textContent = "Solving...";
+
         const result = await getAIFullAnswer(btn.dataset.name);
 
-        // Show answer in popup
-        alert(result);
+        // Show answer in a modal
+        showAIAnswerModal(result);
+
         btn.textContent = btn.dataset.name;
       });
     });
   }
 }
 
-// --- Load universities
+// --- Load universities ---
 (async () => {
   const baseURL = `https://api.github.com/repos/${config.singleRepo.owner}/${config.singleRepo.repo}/contents/`;
   const universities = await fetchFolder(baseURL);
@@ -203,3 +206,47 @@ searchNameBtn.addEventListener("click", async () => {
   const filtered = query ? loadedPDFs.filter(f => f.name.toLowerCase().includes(query)) : loadedPDFs;
   displayPDFs(filtered);
 });
+
+// --- AI MODAL FUNCTION ---
+function showAIAnswerModal(answerText) {
+  let modal = document.getElementById("aiAnswerModal");
+  if (!modal) {
+    modal = document.createElement("div");
+    modal.id = "aiAnswerModal";
+    Object.assign(modal.style, {
+      position: "fixed",
+      top: "50%",
+      left: "50%",
+      transform: "translate(-50%, -50%)",
+      width: "80%",
+      maxHeight: "80%",
+      overflowY: "auto",
+      backgroundColor: "#fff",
+      border: "3px solid #0a1f44",
+      padding: "20px",
+      borderRadius: "12px",
+      zIndex: 10000,
+      boxShadow: "0 8px 20px rgba(0,0,0,0.4)"
+    });
+    const closeBtn = document.createElement("button");
+    closeBtn.textContent = "Close";
+    Object.assign(closeBtn.style, {
+      position: "absolute",
+      top: "10px",
+      right: "10px",
+      padding: "6px 12px",
+      cursor: "pointer"
+    });
+    closeBtn.addEventListener("click", () => modal.remove());
+    modal.appendChild(closeBtn);
+
+    const content = document.createElement("pre");
+    content.id = "aiAnswerContent";
+    Object.assign(content.style, {whiteSpace: "pre-wrap"});
+    modal.appendChild(content);
+
+    document.body.appendChild(modal);
+  }
+
+  document.getElementById("aiAnswerContent").textContent = answerText;
+}
