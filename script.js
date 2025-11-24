@@ -9,7 +9,7 @@ const config = {
 };
 
 // --- OPENROUTER API KEY ---
-const OPENROUTER_KEY = "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";
+const OPENROUTER_KEY = "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";
 
 // --- AI MODE SWITCH ---
 let aiMode = false;
@@ -27,7 +27,8 @@ document.addEventListener("click", e => {
 async function getAIFullAnswer(pdfName) {
   try {
     const prompt = `
-You are a professional exam solver. Provide FULL, DETAILED answers for the past paper:
+You are solving an exam question from a past paper.
+Provide FULL, DETAILED answers for the past paper filename:
 
 Filename: ${pdfName}
 
@@ -41,11 +42,13 @@ Requirements:
     const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
       method: "POST",
       headers: {
-        "Authorization": `Bearer ${OPENROUTER_KEY}`,
+        Authorization: `Bearer ${OPENROUTER_KEY}`,
+        "HTTP-Referer": window.location.href,
+        "X-Title": document.title,
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        model: "gpt-4o-mini",
+        model: "openai/gpt-4o",
         messages: [{ role: "user", content: prompt }],
         max_tokens: 2500
       })
@@ -117,10 +120,8 @@ function displayPDFs(pdfs) {
     div.className = "pdf-item";
 
     if (aiMode) {
-      // AI SOLVE MODE → show "Solve" button
       div.innerHTML = `<button class="solve-btn" data-name="${f.name}">${f.name}</button>`;
     } else {
-      // NORMAL DOWNLOAD MODE
       div.innerHTML = `<a href="${rawURL}" download>${f.name}</a>`;
     }
 
@@ -129,7 +130,6 @@ function displayPDFs(pdfs) {
 
   // CLICK HANDLING
   if (!aiMode) {
-    // DOWNLOAD MODE
     pdfList.querySelectorAll("a").forEach(link => {
       if (!link.dataset.adAttached) {
         link.dataset.adAttached = "true";
@@ -139,15 +139,12 @@ function displayPDFs(pdfs) {
       }
     });
   } else {
-    // AI SOLVE MODE
     pdfList.querySelectorAll(".solve-btn").forEach(btn => {
       btn.addEventListener("click", async () => {
         window.open(adLink, "_blank"); // ad first
         btn.textContent = "Solving...";
 
         const result = await getAIFullAnswer(btn.dataset.name);
-
-        // Show answer in a modal
         showAIAnswerModal(result);
 
         btn.textContent = btn.dataset.name;
