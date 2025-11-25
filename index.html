@@ -1,53 +1,49 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Colleges of Education Past Questions | SCode Studio | SCode COE Pasco</title>
-  <link rel="icon" type="image/jpeg" href="https://raw.githubusercontent.com/SCodeGit/trial/main/favicon%20scode.jpg">
-  <link rel="shortcut icon" type="image/jpeg" href="https://raw.githubusercontent.com/SCodeGit/trial/main/favicon%20scode.jpg">
-  <meta name="description" content="Free Colleges of Education past questions for all universities in Ghana. Filter by level, semester, and program. Official platform of SCode Studio and SCode COE Pasco. Created by Atubra Abraham.">
-  <meta name="keywords" content="scode coe pasco, scode-coepasco.online, Colleges of Education past questions, SCode Studio, Atubra Abraham">
-  <meta name="author" content="Atubra Abraham — SCode Studio">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Colleges of Education Past Questions | SCode COE Pasco</title>
+  <link rel="icon" href="https://raw.githubusercontent.com/SCodeGit/trial/main/favicon%20scode.jpg" />
+  <meta name="description" content="Free Colleges of Education past questions for Ghana. Download or OCR+solve with AI." />
+
   <style>
-    :root{--navy:#0a1f44;--white:#fff;--accent:#1e3a8a;--muted:#f3f6fb;--shadow:rgba(10,31,68,0.12);--ai-blue:#2a5cf7;}
+    :root{--navy:#0a1f44;--white:#fff;--accent:#1e3a8a;--muted:#f3f6fb;--ai-blue:#2a5cf7;--shadow:rgba(10,31,68,0.12);}
     *{box-sizing:border-box;margin:0;padding:0}
     body{font-family:'Segoe UI',Arial,sans-serif;background:var(--muted);color:var(--navy);padding:18px;}
     .top-bar{display:flex;align-items:center;gap:18px;max-width:1100px;margin:0 auto 18px;padding:8px 12px;}
-    .top-logos{display:flex;gap:14px;justify-content:center;align-items:center;flex:1 1 auto;}
+    .top-logos{display:flex;gap:14px;align-items:center;flex:1 1 auto;}
     .top-logos img{width:58px;height:58px;border-radius:50%;object-fit:cover;border:2px solid var(--navy);background:var(--white);}
-    #theme-toggle{background:transparent;border:none;font-size:1.2rem;color:var(--navy);cursor:pointer;padding:6px 8px;margin-left:12px;}
-    .frame{max-width:980px;margin:18px auto;background:var(--white);border-radius:14px;border:6px solid var(--navy);box-shadow:0 14px 30px var(--shadow);overflow:hidden;animation:frameIn .7s ease both;}
-    @keyframes frameIn{from{transform:translateY(12px) scale(.995);opacity:0}to{transform:translateY(0) scale(1);opacity:1}}
+    #theme-toggle{background:transparent;border:none;cursor:pointer;padding:6px 8px;}
+    .frame{max-width:980px;margin:18px auto;background:var(--white);border-radius:14px;border:6px solid var(--navy);box-shadow:0 14px 30px var(--shadow);overflow:hidden;}
     .frame-inner{padding:26px;}
     h1{text-align:center;margin-top:8px;color:var(--navy);font-size:1.55rem;font-weight:600;}
     .tagline{text-align:center;color:#0f335f;margin:10px 0 18px;font-style:italic;}
-    .controls{display:block;width:100%;max-width:760px;margin:0 auto;gap:10px;}
-    .controls>*{display:block;width:100%;margin:8px 0;}
-    select,input[type="text"],button{padding:10px 12px;border-radius:10px;border:1px solid #cbd9f0;font-size:0.98rem;background:#fff;color:var(--navy);}
-    select:hover,button:hover,input[type="text"]:hover{box-shadow:0 6px 18px rgba(30,58,138,0.06);transform:translateY(-1px);}
-    .pdf-list a,.pdf-item button.solve-btn{display:block;color:var(--navy);text-decoration:none;padding:8px 12px;border-radius:8px;border:1px solid #cbd9f0;margin:6px 0;transition:all 0.3s ease;background:#fff;text-align:left;width:100%;}
-    .pdf-list a:hover,.pdf-item button.solve-btn:hover{background:var(--accent);color:var(--white);transform:translateX(2px);}
-    .instructions-container{text-align:center;margin:40px auto;max-width:700px;font-family:'Poppins',sans-serif;}
-    .instructions-toggle{background:transparent;color:#00b3ff;border:1px solid #00b3ff;border-radius:8px;padding:10px 20px;cursor:pointer;font-size:17px;transition:all 0.3s ease;box-shadow:0 0 10px rgba(0,179,255,0.3);}
-    .instructions-toggle:hover{color:#fff;background:#001a33;box-shadow:0 0 15px #00b3ff;}
-    .instructions-content{display:none;margin-top:15px;background:rgba(0,10,30,0.9);color:#d6f1ff;border:1px solid #0a3d62;border-radius:10px;padding:20px;animation:fadeIn 0.5s ease;box-shadow:0 0 10px rgba(0,179,255,0.2);}
-    @keyframes fadeIn{from{opacity:0;transform:translateY(-5px);}to{opacity:1;transform:translateY(0);}}
-    .ai-answer-box{max-width:980px;margin:18px auto;background:#f9fbff;border-radius:12px;border:2px solid rgba(42,92,247,0.12);padding:18px;box-shadow:0 8px 20px rgba(10,31,68,0.06);display:none;}
-    .ai-answer-box h3{margin-bottom:8px;color:var(--ai-blue);}
-    .ai-answer-box .content{white-space:pre-wrap;color:#0b1b3b;line-height:1.45;}
+    .controls{max-width:760px;margin:0 auto;display:block;}
+    select,input[type="text"],button{padding:10px 12px;border-radius:10px;border:1px solid #cbd9f0;font-size:0.98rem;background:#fff;color:var(--navy);width:100%;margin:8px 0;}
+    .pdf-list .pdf-item{margin:6px 0;}
+    .pdf-list a, .pdf-item button.solve-btn{display:block;padding:8px 12px;border-radius:8px;border:1px solid #cbd9f0;background:#fff;text-decoration:none;color:var(--navy);transition:all .2s;}
+    .pdf-list a:hover, .pdf-item button.solve-btn:hover{background:var(--accent);color:#fff;transform:translateX(2px);}
+    .instructions-container{text-align:center;margin:40px auto;max-width:700px;}
+    .ai-answer-box{max-width:980px;margin:18px auto;background:#f9fbff;border-radius:12px;border:2px solid rgba(42,92,247,0.12);padding:18px;display:none;}
     #ai-float{position:fixed;bottom:28px;right:28px;width:64px;height:64px;border-radius:50%;background:var(--ai-blue);color:#fff;display:flex;align-items:center;justify-content:center;font-size:26px;cursor:pointer;box-shadow:0 10px 30px rgba(42,92,247,0.25);z-index:9999;border:3px solid rgba(255,255,255,0.12);}
-    #ai-float.off{background:#7a7f89;box-shadow:0 8px 20px rgba(0,0,0,0.12);}
+    #ai-float.off{background:#7a7f89;}
     #ai-badge{position:absolute;bottom:4px;right:4px;background:#fff;color:var(--ai-blue);font-size:10px;padding:2px 6px;border-radius:999px;font-weight:700;border:1px solid rgba(42,92,247,0.12);}
-    footer{margin-top:18px;text-align:center;color:#374761;font-size:0.9rem;}
+    .loader{font-size:0.95rem;color:#123;padding:6px 0;}
+    footer{text-align:center;margin-top:18px;color:#374761;font-size:0.9rem;}
+    @media (max-width:720px){.top-logos img{width:48px;height:48px}}
   </style>
+
+  <!-- pdf.js and tesseract.js (required) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.12.313/pdf.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@4.1.1/dist/tesseract.min.js"></script>
 </head>
 <body>
   <div class="top-bar">
     <div class="top-logos">
-      <img src="https://raw.githubusercontent.com/SCodeGit/trial/main/WhatsApp%20Image%202025-10-29%20at%2021.28.30_968e228b.jpg" alt="School Collaboration Logo">
-      <img src="https://raw.githubusercontent.com/SCodeGit/trial/main/WhatsApp%20Image%202025-10-29%20at%2021.29.26_b1bcd9d3.jpg" alt="Colleges Group Logo">
-      <img src="https://raw.githubusercontent.com/SCodeGit/trial/main/WhatsApp%20Image%202025-10-29%20at%2021.31.34_5c11e8e8.jpg" alt="SCode Studio Logo">
+      <img src="https://raw.githubusercontent.com/SCodeGit/trial/main/WhatsApp%20Image%202025-10-29%20at%2021.28.30_968e228b.jpg" alt="logo">
+      <img src="https://raw.githubusercontent.com/SCodeGit/trial/main/WhatsApp%20Image%202025-10-29%20at%2021.29.26_b1bcd9d3.jpg" alt="logo">
+      <img src="https://raw.githubusercontent.com/SCodeGit/trial/main/WhatsApp%20Image%202025-10-29%20at%2021.31.34_5c11e8e8.jpg" alt="logo">
     </div>
     <button id="theme-toggle" title="Toggle theme">☀️</button>
   </div>
@@ -57,13 +53,13 @@
 
   <div class="instructions-container">
     <button class="instructions-toggle" onclick="toggleInstructions()">View Instructions For Trainees</button>
-    <div class="instructions-content" id="instructionsBox">
-      <p><strong>Welcome Trainees!</strong> Here’s how to navigate this platform:</p>
-      <ul style="list-style: none; text-align:left; padding:0; margin-top:10px;">
-        <li>Select your <strong>university, level, semester, and program</strong> to view available PDFs.</li>
-        <li>Click on any file name to <strong>download</strong> the past questions or solve with AI mode.</li>
+    <div class="instructions-content" id="instructionsBox" style="display:none;">
+      <p><strong>Welcome Trainees!</strong></p>
+      <ul style="text-align:left;max-width:640px;margin:0 auto;">
+        <li>Select your university → level → semester → program and click "Search PDFs".</li>
+        <li>If the AI mode (🤖) is OFF: clicking a file downloads it (ad opens first).</li>
+        <li>If AI mode is ON: clicking a file scans the PDF with OCR and opens ChatGPT with the extracted text.</li>
       </ul>
-      <p style="margin-top:10px;font-size:0.9rem;opacity:0.8;">Stay focused, study smart, and all the best!</p>
     </div>
   </div>
 
@@ -76,6 +72,7 @@
         <select id="program" disabled><option value="">Select Program</option></select>
         <button id="searchBtn">Search PDFs</button>
       </div>
+
       <div id="pdf-list" class="pdf-list"></div>
     </div>
   </div>
@@ -83,6 +80,7 @@
   <div id="ai-answer-box" class="ai-answer-box" aria-live="polite">
     <h3 id="ai-answer-title">AI Answer</h3>
     <div id="ai-answer-content" class="content">Answer will appear here.</div>
+    <div id="ai-loader" class="loader" style="display:none;">Scanning PDF pages with OCR...</div>
   </div>
 
   <div id="ai-float" class="off" title="Toggle AI Mode">
@@ -92,111 +90,286 @@
 
   <footer>&copy; 2025 SCode. All rights reserved.</footer>
 
-  <!-- PDF.js and Tesseract.js -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.12.313/pdf.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@4.1.1/dist/tesseract.min.js"></script>
-
   <script>
-    // --- CONFIG ---
-    const config={mode:"single",singleRepo:{owner:"SCodeGit",repo:"trial",branch:"main"}};
-    const AD_LINK="https://elaboratestrain.com/bD3wVd0/P.3np/v/btm/VAJdZ/D-0v2oNizeE/x/NFj/gI4wLJTWY-3FMETsEo2mOBDNkE";
+  // ---------- CONFIG ----------
+  const config = { mode: "single", singleRepo: { owner: "SCodeGit", repo: "trial", branch: "main" } };
+  const AD_LINK = "https://elaboratestrain.com/bD3wVd0/P.3np/v/btm/VAJdZ/D-0v2oNizeE/x/NFj/gI4wLJTWY-3FMETsEo2mOBDNkE";
 
-    const universitySel=document.getElementById("university");
-    const levelSel=document.getElementById("level");
-    const semSel=document.getElementById("semester");
-    const progSel=document.getElementById("program");
-    const pdfList=document.getElementById("pdf-list");
-    const searchBtn=document.getElementById("searchBtn");
-    const aiFloat=document.getElementById("ai-float");
-    const aiBadge=document.getElementById("ai-badge");
-    const aiAnswerBox=document.getElementById("ai-answer-box");
-    const aiAnswerTitle=document.getElementById("ai-answer-title");
-    const aiAnswerContent=document.getElementById("ai-answer-content");
+  // DOM
+  const universitySel = document.getElementById("university");
+  const levelSel = document.getElementById("level");
+  const semSel = document.getElementById("semester");
+  const progSel = document.getElementById("program");
+  const pdfList = document.getElementById("pdf-list");
+  const searchBtn = document.getElementById("searchBtn");
+  const aiFloat = document.getElementById("ai-float");
+  const aiBadge = document.getElementById("ai-badge");
+  const aiAnswerBox = document.getElementById("ai-answer-box");
+  const aiAnswerTitle = document.getElementById("ai-answer-title");
+  const aiAnswerContent = document.getElementById("ai-answer-content");
+  const aiLoader = document.getElementById("ai-loader");
 
-    let loadedPDFs=[]; let aiMode=false;
+  let loadedPDFs = [];
+  let aiMode = false;
+  let busy = false; // prevent concurrent OCR runs
 
-    async function fetchFolder(url,branch=config.singleRepo.branch){
-      try{const res=await fetch(url.includes("?")?url:`${url}?ref=${branch}`); if(!res.ok) return []; return await res.json();}
-      catch(e){console.error("fetchFolder error:",e); return [];}
+  // -------- helpers ----------
+  async function fetchFolder(url, branch = config.singleRepo.branch) {
+    try {
+      const full = url.includes("?") ? url : `${url}?ref=${branch}`;
+      const res = await fetch(full);
+      if (!res.ok) return [];
+      return await res.json();
+    } catch (e) {
+      console.error("fetchFolder", e);
+      return [];
+    }
+  }
+
+  function populateDropdown(dropdown, items) {
+    dropdown.innerHTML = `<option value="">Select ${dropdown.id.charAt(0).toUpperCase() + dropdown.id.slice(1)}</option>`;
+    items.forEach(i => {
+      if (i.type === "dir") {
+        const opt = document.createElement("option");
+        opt.value = i.path;
+        opt.textContent = i.name;
+        dropdown.appendChild(opt);
+      }
+    });
+    dropdown.disabled = false;
+  }
+
+  function resetDropdowns(...dropdowns) {
+    dropdowns.forEach(d => {
+      d.innerHTML = `<option value="">Select ${d.id.charAt(0).toUpperCase() + d.id.slice(1)}</option>`;
+      d.disabled = true;
+    });
+    pdfList.innerHTML = "";
+    loadedPDFs = [];
+    hideAIAnswer();
+  }
+
+  function showAIAnswer(title, content) {
+    aiAnswerBox.style.display = "block";
+    aiAnswerTitle.textContent = title;
+    aiAnswerContent.textContent = content;
+  }
+  function hideAIAnswer() {
+    aiAnswerBox.style.display = "none";
+    aiAnswerTitle.textContent = "AI Answer";
+    aiAnswerContent.textContent = "";
+  }
+  function setLoader(visible) {
+    aiLoader.style.display = visible ? "block" : "none";
+  }
+
+  // -------- load PDFs (from GitHub repo) ----------
+  async function loadPDFs() {
+    if (!progSel.value) return [];
+    const files = await fetchFolder(`https://api.github.com/repos/${config.singleRepo.owner}/${config.singleRepo.repo}/contents/${progSel.value}`);
+    return files.filter(f => f.name.toLowerCase().endsWith(".pdf"));
+  }
+
+  // -------- OCR + ChatGPT integration ----------
+  // rawPdfUrl is direct raw.githubusercontent.com URL
+  async function ocrAndOpenChatGPT(rawPdfUrl, fileName) {
+    try {
+      if (busy) return "Already scanning - please wait.";
+      busy = true;
+      setLoader(true);
+      showAIAnswer(`Scanning: ${fileName}`, "Downloading PDF and performing OCR. This may take a few seconds per page...");
+
+      // 1) Fetch PDF bytes
+      const arrayBuffer = await fetch(rawPdfUrl).then(r => {
+        if (!r.ok) throw new Error("Failed to fetch PDF (CORS or network)");
+        return r.arrayBuffer();
+      });
+
+      // 2) Load pdf.js
+      const pdfDoc = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+
+      // 3) Loop pages, render canvas, OCR each
+      let extractedText = "";
+      for (let p = 1; p <= pdfDoc.numPages; p++) {
+        showAIAnswer(`Scanning: ${fileName}`, `OCR page ${p} / ${pdfDoc.numPages} ...`);
+        const page = await pdfDoc.getPage(p);
+        const viewport = page.getViewport({ scale: 2 });
+
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
+        canvas.width = Math.floor(viewport.width);
+        canvas.height = Math.floor(viewport.height);
+
+        await page.render({ canvasContext: ctx, viewport }).promise;
+
+        // Use Tesseract to recognize text from the canvas
+        const res = await Tesseract.recognize(canvas, 'eng', {
+          logger: m => {
+            // optional: could log percentage
+            // console.log("Tesseract:", m);
+          }
+        });
+        extractedText += `\n\n--- PAGE ${p} ---\n\n` + (res.data?.text || "");
+      }
+
+      // 4) Build prompt (truncate to sensible length)
+      const TRUNC = 2500; // characters to include (browser URL limit considerations)
+      const excerpt = extractedText.trim().length > TRUNC ? extractedText.trim().substring(0, TRUNC) + "\n\n...[truncated]" : extractedText.trim();
+
+      const prompt = `Source file: ${fileName}\n\nExtracted text (first ${TRUNC} chars):\n\n${excerpt}\n\nPlease answer the questions found in this text with full, step-by-step solutions where applicable.`;
+
+      // 5) Open ChatGPT (prefill via URL). Note: prefill via URL is not official API,
+      // users can paste the text into ChatGPT chat if required. We open with a query param to help paste.
+      const chatUrl = `https://chat.openai.com/?system_prompt=${encodeURIComponent(prompt)}`;
+      window.open(chatUrl, "_blank");
+
+      showAIAnswer(`Done — ${fileName}`, "ChatGPT opened in a new tab with the extracted text (first portion). If ChatGPT does not auto-fill, paste the text into a new chat.");
+      return "Opened ChatGPT (new tab).";
+    } catch (err) {
+      console.error("OCR error", err);
+      showAIAnswer("OCR ERROR", String(err.message || err));
+      return "OCR ERROR: " + (err.message || err);
+    } finally {
+      busy = false;
+      setLoader(false);
+    }
+  }
+
+  // -------- render list ----------
+  function displayPDFs(pdfs) {
+    pdfList.innerHTML = "";
+    hideAIAnswer();
+
+    if (!pdfs || pdfs.length === 0) {
+      pdfList.innerHTML = "<p>No PDF files found.</p>";
+      return;
     }
 
-    function populateDropdown(dropdown,items){items.forEach(i=>{if(i.type==="dir"){const opt=document.createElement("option"); opt.value=i.path; opt.textContent=i.name; dropdown.appendChild(opt);}}); dropdown.disabled=false;}
-    function resetDropdowns(...dropdowns){dropdowns.forEach(d=>{d.innerHTML=`<option value="">Select ${d.id.charAt(0).toUpperCase()+d.id.slice(1)}</option>`; d.disabled=true;}); pdfList.innerHTML=""; loadedPDFs=[]; hideAIAnswer();}
+    pdfs.forEach(f => {
+      const rawURL = `https://raw.githubusercontent.com/${config.singleRepo.owner}/${config.singleRepo.repo}/${config.singleRepo.branch}/${f.path}`;
+      const div = document.createElement("div");
+      div.className = "pdf-item";
 
-    async function loadPDFs(){if(!progSel.value) return []; const files=await fetchFolder(`https://api.github.com/repos/${config.singleRepo.owner}/${config.singleRepo.repo}/contents/${progSel.value}`); return files.filter(f=>f.name.toLowerCase().endsWith(".pdf"));}
+      if (!aiMode) {
+        // normal download behaviour
+        div.innerHTML = `<a href="${rawURL}" download data-filename="${f.name}">${f.name}</a>`;
+      } else {
+        // AI mode - show a Solve button
+        div.innerHTML = `<button class="solve-btn" data-url="${rawURL}" data-name="${f.name}">Solve with AI — ${f.name}</button>`;
+      }
 
-    function displayPDFs(pdfs){
-      pdfList.innerHTML=""; hideAIAnswer();
-      if(pdfs.length===0){ pdfList.innerHTML="<p>No PDF files found.</p>"; return; }
-      pdfs.forEach(f=>{
-        const rawURL=`https://raw.githubusercontent.com/${config.singleRepo.owner}/${config.singleRepo.repo}/${config.singleRepo.branch}/${f.path}`;
-        const div=document.createElement("div"); div.className="pdf-item";
-        div.innerHTML=`<a href="${rawURL}" download data-filename="${f.name}">${f.name}</a>`;
-        pdfList.appendChild(div);
-      });
-      pdfList.querySelectorAll("a").forEach(link=>{
-        if(!link.dataset.adAttached){ link.dataset.adAttached="true"; link.addEventListener("click",()=>{if(!aiMode) window.open(AD_LINK,"_blank");}); }
-      });
-    }
-
-    (async()=>{const baseURL=`https://api.github.com/repos/${config.singleRepo.owner}/${config.singleRepo.repo}/contents/`; const universities=await fetchFolder(baseURL); populateDropdown(universitySel,universities);})();
-
-    universitySel.addEventListener("change",async()=>{resetDropdowns(levelSel,semSel,progSel); if(!universitySel.value) return; const levels=await fetchFolder(`https://api.github.com/repos/${config.singleRepo.owner}/${config.singleRepo.repo}/contents/${universitySel.value}`); populateDropdown(levelSel,levels);});
-    levelSel.addEventListener("change",async()=>{resetDropdowns(semSel,progSel); if(!levelSel.value) return; const sems=await fetchFolder(`https://api.github.com/repos/${config.singleRepo.owner}/${config.singleRepo.repo}/contents/${levelSel.value}`); populateDropdown(semSel,sems);});
-    semSel.addEventListener("change",async()=>{resetDropdowns(progSel); if(!semSel.value) return; const programs=await fetchFolder(`https://api.github.com/repos/${config.singleRepo.owner}/${config.singleRepo.repo}/contents/${semSel.value}`); populateDropdown(progSel,programs);});
-    searchBtn.addEventListener("click",async()=>{loadedPDFs=await loadPDFs(); displayPDFs(loadedPDFs);});
-
-    function updateAIBadge(){if(aiMode){aiFloat.classList.remove("off"); aiBadge.textContent="ON"; aiBadge.style.color="var(--ai-blue)";}else{aiFloat.classList.add("off"); aiBadge.textContent="OFF"; aiBadge.style.color="#7a7f89";}}
-    aiFloat.addEventListener("click",()=>{aiMode=!aiMode; updateAIBadge(); hideAIAnswer(); if(loadedPDFs.length) displayPDFs(loadedPDFs);});
-    updateAIBadge();
-
-    function showAIAnswer(title,content){aiAnswerBox.style.display="block"; aiAnswerTitle.textContent=title; aiAnswerContent.textContent=content; setTimeout(()=>{aiAnswerBox.scrollIntoView({behavior:"smooth",block:"center"});},50);}
-    function hideAIAnswer(){aiAnswerBox.style.display="none"; aiAnswerTitle.textContent="AI Answer"; aiAnswerContent.textContent="";}
-
-    // --- AI OCR PDF → ChatGPT ---
-    pdfList.addEventListener("click", async (e) => {
-      const a = e.target.closest("a"); if (!a || !aiMode) return;
-      e.preventDefault();
-      const pdfName = a.dataset.filename || a.textContent || "Unknown.pdf";
-      window.open(AD_LINK, "_blank");
-
-      const input = document.createElement("input");
-      input.type = "file";
-      input.accept = "application/pdf";
-      input.click();
-
-      input.onchange = async () => {
-        const file = input.files[0]; if(!file) return;
-        showAIAnswer(`Solving: ${pdfName}`, "Extracting text and opening ChatGPT...");
-
-        const pdfData = await file.arrayBuffer();
-        const pdfDoc = await pdfjsLib.getDocument(pdfData).promise;
-        let extractedText = "";
-
-        for(let pageNum=1; pageNum<=pdfDoc.numPages; pageNum++){
-          const page = await pdfDoc.getPage(pageNum);
-          const viewport = page.getViewport({scale:2});
-          const canvas = document.createElement("canvas");
-          canvas.width = viewport.width; canvas.height = viewport.height;
-          await page.render({canvasContext: canvas.getContext("2d"), viewport}).promise;
-
-          const { data:{ text } } = await Tesseract.recognize(canvas, 'eng');
-          extractedText += text + "\n\n";
-        }
-
-        const prompt = `Solve all questions from this PDF: ${pdfName}\n\n${extractedText.substring(0,3000)}`;
-        const chatUrl = `https://chat.openai.com/?system_prompt=${encodeURIComponent(prompt)}`;
-        window.open(chatUrl, "_blank");
-
-        showAIAnswer(`Done — ${pdfName}`, "ChatGPT opened with extracted text.");
-      };
+      pdfList.appendChild(div);
     });
 
-    function toggleInstructions(){ const box=document.getElementById("instructionsBox"); box.style.display=box.style.display==="block"?"none":"block"; }
+    // attach events
+    if (!aiMode) {
+      pdfList.querySelectorAll("a").forEach(link => {
+        if (!link.dataset.adAttached) {
+          link.dataset.adAttached = "true";
+          link.addEventListener("click", () => {
+            try { window.open(AD_LINK, "_blank"); } catch (e) { /* ignore */ }
+          });
+        }
+      });
+    } else {
+      pdfList.querySelectorAll(".solve-btn").forEach(btn => {
+        btn.addEventListener("click", async () => {
+          if (busy) return;
+          const raw = btn.dataset.url;
+          const name = btn.dataset.name;
 
-    (function(){const btn=document.getElementById('theme-toggle'); const body=document.body;
-      try{ const saved=localStorage.getItem('theme'); if(saved==='dark'){ body.setAttribute('data-theme','dark'); btn.textContent='🌙'; }else{ body.removeAttribute('data-theme'); btn.textContent='☀️'; } }catch(e){}
-      btn.addEventListener('click',()=>{if(body.getAttribute('data-theme')==='dark'){ body.removeAttribute('data-theme'); btn.textContent='☀️'; try{localStorage.setItem('theme','light');}catch(e){} }else{ body.setAttribute('data-theme','dark'); btn.textContent='🌙'; try{localStorage.setItem('theme','dark');}catch(e){} }});})();
+          // open ad first
+          try { window.open(AD_LINK, "_blank"); } catch (e) {}
+
+          // run OCR -> open ChatGPT
+          btn.textContent = "Scanning PDF…";
+          btn.disabled = true;
+          const res = await ocrAndOpenChatGPT(raw, name);
+          btn.textContent = `Solve with AI — ${name}`;
+          btn.disabled = false;
+        });
+      });
+    }
+  }
+
+  // -------- initial load ----------
+  (async () => {
+    const baseURL = `https://api.github.com/repos/${config.singleRepo.owner}/${config.singleRepo.repo}/contents/`;
+    const universities = await fetchFolder(baseURL);
+    populateDropdown(universitySel, universities);
+  })();
+
+  // -------- dropdown events ----------
+  universitySel.addEventListener("change", async () => {
+    resetDropdowns(levelSel, semSel, progSel);
+    if (!universitySel.value) return;
+    const levels = await fetchFolder(`https://api.github.com/repos/${config.singleRepo.owner}/${config.singleRepo.repo}/contents/${universitySel.value}`);
+    populateDropdown(levelSel, levels);
+  });
+
+  levelSel.addEventListener("change", async () => {
+    resetDropdowns(semSel, progSel);
+    if (!levelSel.value) return;
+    const sems = await fetchFolder(`https://api.github.com/repos/${config.singleRepo.owner}/${config.singleRepo.repo}/contents/${levelSel.value}`);
+    populateDropdown(semSel, sems);
+  });
+
+  semSel.addEventListener("change", async () => {
+    resetDropdowns(progSel);
+    if (!semSel.value) return;
+    const programs = await fetchFolder(`https://api.github.com/repos/${config.singleRepo.owner}/${config.singleRepo.repo}/contents/${semSel.value}`);
+    populateDropdown(progSel, programs);
+  });
+
+  searchBtn.addEventListener("click", async () => {
+    loadedPDFs = await loadPDFs();
+    displayPDFs(loadedPDFs);
+  });
+
+  // -------- AI toggle ----------
+  function updateAIBadge() {
+    if (aiMode) {
+      aiFloat.classList.remove("off");
+      aiBadge.textContent = "ON";
+      aiBadge.style.color = "var(--ai-blue)";
+    } else {
+      aiFloat.classList.add("off");
+      aiBadge.textContent = "OFF";
+      aiBadge.style.color = "#7a7f89";
+    }
+  }
+  aiFloat.addEventListener("click", () => {
+    aiMode = !aiMode;
+    updateAIBadge();
+    hideAIAnswer();
+    if (loadedPDFs.length) displayPDFs(loadedPDFs);
+  });
+  updateAIBadge();
+
+  // -------- small helpers ----------
+  function toggleInstructions() {
+    const box = document.getElementById("instructionsBox");
+    box.style.display = box.style.display === "block" ? "none" : "block";
+  }
+
+  (function themeToggle() {
+    const btn = document.getElementById('theme-toggle');
+    const body = document.body;
+    try {
+      const saved = localStorage.getItem('theme');
+      if (saved === 'dark') { body.setAttribute('data-theme','dark'); btn.textContent='🌙'; } else { body.removeAttribute('data-theme'); btn.textContent='☀️'; }
+    } catch(e) {}
+    btn.addEventListener('click', () => {
+      if (body.getAttribute('data-theme')==='dark'){ body.removeAttribute('data-theme'); btn.textContent='☀️'; try{localStorage.setItem('theme','light')}catch(e){} }
+      else { body.setAttribute('data-theme','dark'); btn.textContent='🌙'; try{localStorage.setItem('theme','dark')}catch(e){} }
+    });
+  })();
+
+  // Configure pdf.js worker (use CDN internal worker)
+  if (typeof pdfjsLib !== 'undefined') {
+    // set workerSrc to CDN (pdf.js 3.x)
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.12.313/pdf.worker.min.js';
+  }
   </script>
 </body>
 </html>
