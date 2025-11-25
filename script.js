@@ -4,7 +4,7 @@ const config = {
   singleRepo: { owner: "SCodeGit", repo: "trial", branch: "main" }
 };
 
-// --- AI MODE ---
+// --- AI MODE SWITCH ---
 let aiMode = false;
 
 // --- ORIGINAL DROPDOWN + DOWNLOAD SYSTEM ---
@@ -17,36 +17,7 @@ const searchBtn = document.getElementById("searchBtn");
 
 let loadedPDFs = [];
 
-// --- AI FUNCTION: Get Full Answer via Cloudflare Worker ---
-async function getAIFullAnswer(pdfName) {
-  try {
-    const prompt = `
-You are solving an exam question from a past paper.
-Give a FULL, DETAILED answer for the question based ONLY on the filename:
-
-Filename: ${pdfName}
-
-Provide:
-- full solved answer
-- explanations
-- examples
-- step-by-step where needed
-    `;
-
-    const response = await fetch('https://scode-colleges-of-education.kimbon226.workers.dev/', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ question: prompt })
-    });
-
-    const data = await response.json();
-    return data?.generated_text || "No answer returned";
-  } catch (err) {
-    return 'AI ERROR: ' + err.message;
-  }
-}
-
-// --- Fetch GitHub folder ---
+// Fetch GitHub folder
 async function fetchFolder(url, branch=config.singleRepo.branch) {
   const fullUrl = url.includes("?") ? url : `${url}?ref=${branch}`;
   const res = await fetch(fullUrl);
@@ -54,7 +25,7 @@ async function fetchFolder(url, branch=config.singleRepo.branch) {
   return await res.json();
 }
 
-// --- Populate dropdown ---
+// Populate dropdown
 function populateDropdown(dropdown, items) {
   items.forEach(i => {
     if (i.type === "dir") {
@@ -67,7 +38,7 @@ function populateDropdown(dropdown, items) {
   dropdown.disabled = false;
 }
 
-// --- Reset dropdowns ---
+// Reset dropdowns
 function resetDropdowns(...dropdowns) {
   dropdowns.forEach(d => {
     d.innerHTML = `<option value="">Select ${d.id.charAt(0).toUpperCase() + d.id.slice(1)}</option>`;
@@ -77,7 +48,33 @@ function resetDropdowns(...dropdowns) {
   loadedPDFs = [];
 }
 
-// --- Display PDFs ---
+// --- AI FUNCTION: Get Full Answer via Cloudflare Worker ---
+async function getAIFullAnswer(pdfName) {
+  try {
+    const prompt = `
+You are a professional exam solver. The following is the filename of a past questions PDF:
+Filename: ${pdfName}
+
+Provide FULL, DETAILED solutions for each question likely in this PDF:
+- Step-by-step working where applicable
+- Explanations and examples
+- Number answers clearly
+    `;
+
+    const response = await fetch('https://scode-colleges-of-education.kimbon226.workers.dev/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ question: prompt })
+    });
+
+    const data = await response.json();
+    return data.generated_text || "No answer returned from AI.";
+  } catch (err) {
+    return 'AI ERROR: ' + err.message;
+  }
+}
+
+// Display PDFs
 function displayPDFs(pdfs) {
   pdfList.innerHTML = "";
   if (pdfs.length === 0) { pdfList.innerHTML = "<p>No PDF files found.</p>"; return; }
@@ -117,14 +114,14 @@ function displayPDFs(pdfs) {
   }
 }
 
-// --- Load universities ---
+// Load universities
 (async () => {
   const baseURL = `https://api.github.com/repos/${config.singleRepo.owner}/${config.singleRepo.repo}/contents/`;
   const universities = await fetchFolder(baseURL);
   populateDropdown(universitySel, universities);
 })();
 
-// --- Dropdown listeners ---
+// Dropdown listeners
 universitySel.addEventListener("change", async () => {
   resetDropdowns(levelSel, semSel, progSel);
   if(!universitySel.value) return;
@@ -146,23 +143,21 @@ semSel.addEventListener("change", async () => {
   populateDropdown(progSel, programs);
 });
 
-// --- Load PDFs ---
+// Load PDFs
 async function loadPDFs() {
   if (!progSel.value) return [];
   const files = await fetchFolder(`https://api.github.com/repos/${config.singleRepo.owner}/${config.singleRepo.repo}/contents/${progSel.value}`);
   return files.filter(f => f.name.toLowerCase().endsWith(".pdf"));
 }
 
-// --- Search button ---
 searchBtn.addEventListener("click", async () => {
   loadedPDFs = await loadPDFs();
   displayPDFs(loadedPDFs);
 });
 
 // --- AI Mode Toggle Button ---
-document.getElementById('toggleAI').addEventListener('click', async () => {
+document.getElementById('toggleAI').addEventListener('click', () => {
   aiMode = !aiMode;
   document.getElementById('toggleAI').textContent = aiMode ? "AI MODE: ON" : "AI MODE: OFF";
-  // Refresh PDF list to show buttons/links correctly
-  displayPDFs(loadedPDFs);
+  if (loadedPDFs.length) displayPDFs(loadedPDFs);
 });
