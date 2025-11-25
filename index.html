@@ -34,7 +34,7 @@
     @media (max-width:720px){.top-logos img{width:48px;height:48px}}
   </style>
 
-  <!-- pdf.js and tesseract.js (required) -->
+  <!-- pdf.js and tesseract.js -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.12.313/pdf.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/tesseract.js@4.1.1/dist/tesseract.min.js"></script>
 </head>
@@ -72,7 +72,6 @@
         <select id="program" disabled><option value="">Select Program</option></select>
         <button id="searchBtn">Search PDFs</button>
       </div>
-
       <div id="pdf-list" class="pdf-list"></div>
     </div>
   </div>
@@ -163,7 +162,7 @@
     aiLoader.style.display = visible ? "block" : "none";
   }
 
-  // -------- load PDFs (from GitHub repo) ----------
+  // -------- load PDFs ----------
   async function loadPDFs() {
     if (!progSel.value) return [];
     const files = await fetchFolder(`https://api.github.com/repos/${config.singleRepo.owner}/${config.singleRepo.repo}/contents/${progSel.value}`);
@@ -171,7 +170,6 @@
   }
 
   // -------- OCR + ChatGPT integration ----------
-  // rawPdfUrl is direct raw.githubusercontent.com URL
   async function ocrAndOpenChatGPT(rawPdfUrl, fileName) {
     try {
       if (busy) return "Already scanning - please wait.";
@@ -179,51 +177,37 @@
       setLoader(true);
       showAIAnswer(`Scanning: ${fileName}`, "Downloading PDF and performing OCR. This may take a few seconds per page...");
 
-      // 1) Fetch PDF bytes
       const arrayBuffer = await fetch(rawPdfUrl).then(r => {
-        if (!r.ok) throw new Error("Failed to fetch PDF (CORS or network)");
+        if (!r.ok) throw new Error("Failed to fetch PDF");
         return r.arrayBuffer();
       });
 
-      // 2) Load pdf.js
       const pdfDoc = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
 
-      // 3) Loop pages, render canvas, OCR each
       let extractedText = "";
       for (let p = 1; p <= pdfDoc.numPages; p++) {
         showAIAnswer(`Scanning: ${fileName}`, `OCR page ${p} / ${pdfDoc.numPages} ...`);
         const page = await pdfDoc.getPage(p);
         const viewport = page.getViewport({ scale: 2 });
-
         const canvas = document.createElement("canvas");
         const ctx = canvas.getContext("2d");
         canvas.width = Math.floor(viewport.width);
         canvas.height = Math.floor(viewport.height);
-
         await page.render({ canvasContext: ctx, viewport }).promise;
 
-        // Use Tesseract to recognize text from the canvas
-        const res = await Tesseract.recognize(canvas, 'eng', {
-          logger: m => {
-            // optional: could log percentage
-            // console.log("Tesseract:", m);
-          }
-        });
+        const res = await Tesseract.recognize(canvas, 'eng', { logger: m => {} });
         extractedText += `\n\n--- PAGE ${p} ---\n\n` + (res.data?.text || "");
       }
 
-      // 4) Build prompt (truncate to sensible length)
-      const TRUNC = 2500; // characters to include (browser URL limit considerations)
+      const TRUNC = 2500;
       const excerpt = extractedText.trim().length > TRUNC ? extractedText.trim().substring(0, TRUNC) + "\n\n...[truncated]" : extractedText.trim();
 
       const prompt = `Source file: ${fileName}\n\nExtracted text (first ${TRUNC} chars):\n\n${excerpt}\n\nPlease answer the questions found in this text with full, step-by-step solutions where applicable.`;
 
-      // 5) Open ChatGPT (prefill via URL). Note: prefill via URL is not official API,
-      // users can paste the text into ChatGPT chat if required. We open with a query param to help paste.
       const chatUrl = `https://chat.openai.com/?system_prompt=${encodeURIComponent(prompt)}`;
       window.open(chatUrl, "_blank");
 
-      showAIAnswer(`Done — ${fileName}`, "ChatGPT opened in a new tab with the extracted text (first portion). If ChatGPT does not auto-fill, paste the text into a new chat.");
+      showAIAnswer(`Done — ${fileName}`, "ChatGPT opened in a new tab with the extracted text. If it does not auto-fill, paste the text into a new chat.");
       return "Opened ChatGPT (new tab).";
     } catch (err) {
       console.error("OCR error", err);
@@ -251,24 +235,19 @@
       div.className = "pdf-item";
 
       if (!aiMode) {
-        // normal download behaviour
         div.innerHTML = `<a href="${rawURL}" download data-filename="${f.name}">${f.name}</a>`;
       } else {
-        // AI mode - show a Solve button
         div.innerHTML = `<button class="solve-btn" data-url="${rawURL}" data-name="${f.name}">Solve with AI — ${f.name}</button>`;
       }
 
       pdfList.appendChild(div);
     });
 
-    // attach events
     if (!aiMode) {
       pdfList.querySelectorAll("a").forEach(link => {
         if (!link.dataset.adAttached) {
           link.dataset.adAttached = "true";
-          link.addEventListener("click", () => {
-            try { window.open(AD_LINK, "_blank"); } catch (e) { /* ignore */ }
-          });
+          link.addEventListener("click", () => { try { window.open(AD_LINK, "_blank"); } catch(e) {} });
         }
       });
     } else {
@@ -277,14 +256,10 @@
           if (busy) return;
           const raw = btn.dataset.url;
           const name = btn.dataset.name;
-
-          // open ad first
           try { window.open(AD_LINK, "_blank"); } catch (e) {}
-
-          // run OCR -> open ChatGPT
           btn.textContent = "Scanning PDF…";
           btn.disabled = true;
-          const res = await ocrAndOpenChatGPT(raw, name);
+          await ocrAndOpenChatGPT(raw, name);
           btn.textContent = `Solve with AI — ${name}`;
           btn.disabled = false;
         });
@@ -328,22 +303,10 @@
 
   // -------- AI toggle ----------
   function updateAIBadge() {
-    if (aiMode) {
-      aiFloat.classList.remove("off");
-      aiBadge.textContent = "ON";
-      aiBadge.style.color = "var(--ai-blue)";
-    } else {
-      aiFloat.classList.add("off");
-      aiBadge.textContent = "OFF";
-      aiBadge.style.color = "#7a7f89";
-    }
+    if (aiMode) { aiFloat.classList.remove("off"); aiBadge.textContent="ON"; aiBadge.style.color="var(--ai-blue)"; }
+    else { aiFloat.classList.add("off"); aiBadge.textContent="OFF"; aiBadge.style.color="#7a7f89"; }
   }
-  aiFloat.addEventListener("click", () => {
-    aiMode = !aiMode;
-    updateAIBadge();
-    hideAIAnswer();
-    if (loadedPDFs.length) displayPDFs(loadedPDFs);
-  });
+  aiFloat.addEventListener("click", () => { aiMode = !aiMode; updateAIBadge(); hideAIAnswer(); if(loadedPDFs.length) displayPDFs(loadedPDFs); });
   updateAIBadge();
 
   // -------- small helpers ----------
@@ -355,21 +318,14 @@
   (function themeToggle() {
     const btn = document.getElementById('theme-toggle');
     const body = document.body;
-    try {
-      const saved = localStorage.getItem('theme');
-      if (saved === 'dark') { body.setAttribute('data-theme','dark'); btn.textContent='🌙'; } else { body.removeAttribute('data-theme'); btn.textContent='☀️'; }
-    } catch(e) {}
+    try { const saved = localStorage.getItem('theme'); if(saved==='dark'){ body.setAttribute('data-theme','dark'); btn.textContent='🌙'; } } catch(e){}
     btn.addEventListener('click', () => {
-      if (body.getAttribute('data-theme')==='dark'){ body.removeAttribute('data-theme'); btn.textContent='☀️'; try{localStorage.setItem('theme','light')}catch(e){} }
+      if(body.getAttribute('data-theme')==='dark'){ body.removeAttribute('data-theme'); btn.textContent='☀️'; try{localStorage.setItem('theme','light')}catch(e){} }
       else { body.setAttribute('data-theme','dark'); btn.textContent='🌙'; try{localStorage.setItem('theme','dark')}catch(e){} }
     });
   })();
 
-  // Configure pdf.js worker (use CDN internal worker)
-  if (typeof pdfjsLib !== 'undefined') {
-    // set workerSrc to CDN (pdf.js 3.x)
-    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.12.313/pdf.worker.min.js';
-  }
+  if (typeof pdfjsLib !== 'undefined') { pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.12.313/pdf.worker.min.js'; }
   </script>
 </body>
 </html>
