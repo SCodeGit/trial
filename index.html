@@ -61,7 +61,7 @@
       <p><strong>Welcome Trainees!</strong> Here’s how to navigate this platform:</p>
       <ul style="list-style: none; text-align:left; padding:0; margin-top:10px;">
         <li>Select your <strong>university, level, semester, and program</strong> to view available PDFs.</li>
-        <li>Click on any file name to <strong>download</strong> the past questions.</li>
+        <li>Click on any file name to <strong>download</strong> the past questions or solve with AI mode.</li>
       </ul>
       <p style="margin-top:10px;font-size:0.9rem;opacity:0.8;">Stay focused, study smart, and all the best!</p>
     </div>
@@ -92,12 +92,14 @@
 
   <footer>&copy; 2025 SCode. All rights reserved.</footer>
 
+  <!-- PDF.js and Tesseract.js -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.12.313/pdf.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@4.1.1/dist/tesseract.min.js"></script>
 
   <script>
     // --- CONFIG ---
-    const config = { mode:"single", singleRepo:{owner:"SCodeGit", repo:"trial", branch:"main"} };
-    const AD_LINK = "https://elaboratestrain.com/bD3wVd0/P.3np/v/btm/VAJdZ/D-0v2oNizeE/x/NFj/gI4wLJTWY-3FMETsEo2mOBDNkE";
+    const config={mode:"single",singleRepo:{owner:"SCodeGit",repo:"trial",branch:"main"}};
+    const AD_LINK="https://elaboratestrain.com/bD3wVd0/P.3np/v/btm/VAJdZ/D-0v2oNizeE/x/NFj/gI4wLJTWY-3FMETsEo2mOBDNkE";
 
     const universitySel=document.getElementById("university");
     const levelSel=document.getElementById("level");
@@ -113,15 +115,15 @@
 
     let loadedPDFs=[]; let aiMode=false;
 
-    async function fetchFolder(url, branch=config.singleRepo.branch){
-      try{ const res=await fetch(url.includes("?")?url:`${url}?ref=${branch}`); if(!res.ok) return []; return await res.json(); }
-      catch(e){ console.error("fetchFolder error:",e); return []; }
+    async function fetchFolder(url,branch=config.singleRepo.branch){
+      try{const res=await fetch(url.includes("?")?url:`${url}?ref=${branch}`); if(!res.ok) return []; return await res.json();}
+      catch(e){console.error("fetchFolder error:",e); return [];}
     }
 
-    function populateDropdown(dropdown,items){ items.forEach(i=>{ if(i.type==="dir"){ const opt=document.createElement("option"); opt.value=i.path; opt.textContent=i.name; dropdown.appendChild(opt); } }); dropdown.disabled=false; }
-    function resetDropdowns(...dropdowns){ dropdowns.forEach(d=>{ d.innerHTML=`<option value="">Select ${d.id.charAt(0).toUpperCase()+d.id.slice(1)}</option>`; d.disabled=true; }); pdfList.innerHTML=""; loadedPDFs=[]; hideAIAnswer(); }
+    function populateDropdown(dropdown,items){items.forEach(i=>{if(i.type==="dir"){const opt=document.createElement("option"); opt.value=i.path; opt.textContent=i.name; dropdown.appendChild(opt);}}); dropdown.disabled=false;}
+    function resetDropdowns(...dropdowns){dropdowns.forEach(d=>{d.innerHTML=`<option value="">Select ${d.id.charAt(0).toUpperCase()+d.id.slice(1)}</option>`; d.disabled=true;}); pdfList.innerHTML=""; loadedPDFs=[]; hideAIAnswer();}
 
-    async function loadPDFs(){ if(!progSel.value) return []; const files=await fetchFolder(`https://api.github.com/repos/${config.singleRepo.owner}/${config.singleRepo.repo}/contents/${progSel.value}`); return files.filter(f=>f.name.toLowerCase().endsWith(".pdf")); }
+    async function loadPDFs(){if(!progSel.value) return []; const files=await fetchFolder(`https://api.github.com/repos/${config.singleRepo.owner}/${config.singleRepo.repo}/contents/${progSel.value}`); return files.filter(f=>f.name.toLowerCase().endsWith(".pdf"));}
 
     function displayPDFs(pdfs){
       pdfList.innerHTML=""; hideAIAnswer();
@@ -129,53 +131,72 @@
       pdfs.forEach(f=>{
         const rawURL=`https://raw.githubusercontent.com/${config.singleRepo.owner}/${config.singleRepo.repo}/${config.singleRepo.branch}/${f.path}`;
         const div=document.createElement("div"); div.className="pdf-item";
-        div.innerHTML=`<a href="${rawURL}" download data-filename="${f.name}">${f.name}</a>`; pdfList.appendChild(div);
+        div.innerHTML=`<a href="${rawURL}" download data-filename="${f.name}">${f.name}</a>`;
+        pdfList.appendChild(div);
       });
       pdfList.querySelectorAll("a").forEach(link=>{
-        if(!link.dataset.adAttached){ link.dataset.adAttached="true"; link.addEventListener("click",()=>{ if(!aiMode) window.open(AD_LINK,"_blank"); }); }
+        if(!link.dataset.adAttached){ link.dataset.adAttached="true"; link.addEventListener("click",()=>{if(!aiMode) window.open(AD_LINK,"_blank");}); }
       });
     }
 
-    (async()=>{ const baseURL=`https://api.github.com/repos/${config.singleRepo.owner}/${config.singleRepo.repo}/contents/`; const universities=await fetchFolder(baseURL); populateDropdown(universitySel,universities); })();
+    (async()=>{const baseURL=`https://api.github.com/repos/${config.singleRepo.owner}/${config.singleRepo.repo}/contents/`; const universities=await fetchFolder(baseURL); populateDropdown(universitySel,universities);})();
 
-    universitySel.addEventListener("change",async()=>{ resetDropdowns(levelSel,semSel,progSel); if(!universitySel.value) return; const levels=await fetchFolder(`https://api.github.com/repos/${config.singleRepo.owner}/${config.singleRepo.repo}/contents/${universitySel.value}`); populateDropdown(levelSel,levels); });
-    levelSel.addEventListener("change",async()=>{ resetDropdowns(semSel,progSel); if(!levelSel.value) return; const sems=await fetchFolder(`https://api.github.com/repos/${config.singleRepo.owner}/${config.singleRepo.repo}/contents/${levelSel.value}`); populateDropdown(semSel,sems); });
-    semSel.addEventListener("change",async()=>{ resetDropdowns(progSel); if(!semSel.value) return; const programs=await fetchFolder(`https://api.github.com/repos/${config.singleRepo.owner}/${config.singleRepo.repo}/contents/${semSel.value}`); populateDropdown(progSel,programs); });
-    searchBtn.addEventListener("click",async()=>{ loadedPDFs=await loadPDFs(); displayPDFs(loadedPDFs); });
+    universitySel.addEventListener("change",async()=>{resetDropdowns(levelSel,semSel,progSel); if(!universitySel.value) return; const levels=await fetchFolder(`https://api.github.com/repos/${config.singleRepo.owner}/${config.singleRepo.repo}/contents/${universitySel.value}`); populateDropdown(levelSel,levels);});
+    levelSel.addEventListener("change",async()=>{resetDropdowns(semSel,progSel); if(!levelSel.value) return; const sems=await fetchFolder(`https://api.github.com/repos/${config.singleRepo.owner}/${config.singleRepo.repo}/contents/${levelSel.value}`); populateDropdown(semSel,sems);});
+    semSel.addEventListener("change",async()=>{resetDropdowns(progSel); if(!semSel.value) return; const programs=await fetchFolder(`https://api.github.com/repos/${config.singleRepo.owner}/${config.singleRepo.repo}/contents/${semSel.value}`); populateDropdown(progSel,programs);});
+    searchBtn.addEventListener("click",async()=>{loadedPDFs=await loadPDFs(); displayPDFs(loadedPDFs);});
 
-    function updateAIBadge(){ if(aiMode){ aiFloat.classList.remove("off"); aiBadge.textContent="ON"; aiBadge.style.color="var(--ai-blue)"; }else{ aiFloat.classList.add("off"); aiBadge.textContent="OFF"; aiBadge.style.color="#7a7f89"; } }
-    aiFloat.addEventListener("click",()=>{ aiMode=!aiMode; updateAIBadge(); hideAIAnswer(); if(loadedPDFs.length) displayPDFs(loadedPDFs); });
+    function updateAIBadge(){if(aiMode){aiFloat.classList.remove("off"); aiBadge.textContent="ON"; aiBadge.style.color="var(--ai-blue)";}else{aiFloat.classList.add("off"); aiBadge.textContent="OFF"; aiBadge.style.color="#7a7f89";}}
+    aiFloat.addEventListener("click",()=>{aiMode=!aiMode; updateAIBadge(); hideAIAnswer(); if(loadedPDFs.length) displayPDFs(loadedPDFs);});
     updateAIBadge();
 
-    function showAIAnswer(title,content){ aiAnswerBox.style.display="block"; aiAnswerTitle.textContent=title; aiAnswerContent.textContent=content; setTimeout(()=>{aiAnswerBox.scrollIntoView({behavior:"smooth",block:"center"});},50);}
-    function hideAIAnswer(){ aiAnswerBox.style.display="none"; aiAnswerTitle.textContent="AI Answer"; aiAnswerContent.textContent=""; }
+    function showAIAnswer(title,content){aiAnswerBox.style.display="block"; aiAnswerTitle.textContent=title; aiAnswerContent.textContent=content; setTimeout(()=>{aiAnswerBox.scrollIntoView({behavior:"smooth",block:"center"});},50);}
+    function hideAIAnswer(){aiAnswerBox.style.display="none"; aiAnswerTitle.textContent="AI Answer"; aiAnswerContent.textContent="";}
 
-    async function getAIFullAnswer(pdfName){
-      try{
-        const prompt=`You are solving an exam question from a past paper. Provide FULL, DETAILED answers and step-by-step solutions based on the filename: ${pdfName}`;
-        const resp=await fetch('https://scode-colleges-of-education.kimbon226.workers.dev/',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({question:prompt})});
-        const data=await resp.json();
-        return data?.generated_text||"No answer returned";
-      }catch(err){ return "AI ERROR: "+err.message; }
-    }
-
-    pdfList.addEventListener("click",async(e)=>{
-      const a=e.target.closest("a"); if(!a) return; if(!aiMode) return;
+    // --- AI OCR PDF → ChatGPT ---
+    pdfList.addEventListener("click", async (e) => {
+      const a = e.target.closest("a"); if (!a || !aiMode) return;
       e.preventDefault();
-      const pdfName=a.dataset.filename||a.textContent||"Unknown.pdf";
-      try{ window.open(AD_LINK,"_blank"); }catch(e){}
-      showAIAnswer(`Solving: ${pdfName}`, "Generating full answer — please wait...");
-      const answer=await getAIFullAnswer(pdfName);
-      showAIAnswer(`Answer — ${pdfName}`, answer);
+      const pdfName = a.dataset.filename || a.textContent || "Unknown.pdf";
+      window.open(AD_LINK, "_blank");
+
+      const input = document.createElement("input");
+      input.type = "file";
+      input.accept = "application/pdf";
+      input.click();
+
+      input.onchange = async () => {
+        const file = input.files[0]; if(!file) return;
+        showAIAnswer(`Solving: ${pdfName}`, "Extracting text and opening ChatGPT...");
+
+        const pdfData = await file.arrayBuffer();
+        const pdfDoc = await pdfjsLib.getDocument(pdfData).promise;
+        let extractedText = "";
+
+        for(let pageNum=1; pageNum<=pdfDoc.numPages; pageNum++){
+          const page = await pdfDoc.getPage(pageNum);
+          const viewport = page.getViewport({scale:2});
+          const canvas = document.createElement("canvas");
+          canvas.width = viewport.width; canvas.height = viewport.height;
+          await page.render({canvasContext: canvas.getContext("2d"), viewport}).promise;
+
+          const { data:{ text } } = await Tesseract.recognize(canvas, 'eng');
+          extractedText += text + "\n\n";
+        }
+
+        const prompt = `Solve all questions from this PDF: ${pdfName}\n\n${extractedText.substring(0,3000)}`;
+        const chatUrl = `https://chat.openai.com/?system_prompt=${encodeURIComponent(prompt)}`;
+        window.open(chatUrl, "_blank");
+
+        showAIAnswer(`Done — ${pdfName}`, "ChatGPT opened with extracted text.");
+      };
     });
 
     function toggleInstructions(){ const box=document.getElementById("instructionsBox"); box.style.display=box.style.display==="block"?"none":"block"; }
 
-    (function(){
-      const btn=document.getElementById('theme-toggle'); const body=document.body;
+    (function(){const btn=document.getElementById('theme-toggle'); const body=document.body;
       try{ const saved=localStorage.getItem('theme'); if(saved==='dark'){ body.setAttribute('data-theme','dark'); btn.textContent='🌙'; }else{ body.removeAttribute('data-theme'); btn.textContent='☀️'; } }catch(e){}
-      btn.addEventListener('click',()=>{ if(body.getAttribute('data-theme')==='dark'){ body.removeAttribute('data-theme'); btn.textContent='☀️'; try{localStorage.setItem('theme','light');}catch(e){} }else{ body.setAttribute('data-theme','dark'); btn.textContent='🌙'; try{localStorage.setItem('theme','dark');}catch(e){} }});
-    })();
+      btn.addEventListener('click',()=>{if(body.getAttribute('data-theme')==='dark'){ body.removeAttribute('data-theme'); btn.textContent='☀️'; try{localStorage.setItem('theme','light');}catch(e){} }else{ body.setAttribute('data-theme','dark'); btn.textContent='🌙'; try{localStorage.setItem('theme','dark');}catch(e){} }});})();
   </script>
 </body>
 </html>
