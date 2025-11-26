@@ -1,10 +1,8 @@
-// --- CONFIGURATION ---
-const config = {
-  mode: "single",
-  singleRepo: { owner: "SCodeGit", repo: "trial", branch: "main" }
-};
+/***********************
+ *  CONFIG & DOM refs
+ ***********************/
+const config = { mode: "single", singleRepo: { owner: "SCodeGit", repo: "trial", branch: "main" } };
 
-// --- DOM Elements - Main ---
 const universitySel = document.getElementById("university");
 const levelSel = document.getElementById("level");
 const semSel = document.getElementById("semester");
@@ -12,224 +10,220 @@ const progSel = document.getElementById("program");
 const pdfList = document.getElementById("pdf-list");
 const searchBtn = document.getElementById("searchBtn");
 const searchInput = document.getElementById("searchInput");
+const searchNameBtn = document.getElementById("searchNameBtn");
+const recentPanel = document.getElementById("recentPanel");
+const recentList = document.getElementById("recentList");
 
-// --- DOM Elements - SC Tools Hub ---
+// SC Tools
 const scToggle = document.getElementById("scToggle");
 const scContent = document.getElementById("scContent");
-const scUniversity = document.getElementById("scUniversity");
-const scLevel = document.getElementById("scLevel");
-const scSemester = document.getElementById("scSemester");
-const scProgram = document.getElementById("scProgram");
-const scPdfList = document.getElementById("scPdfList");
-const scSearchInput = document.getElementById("scSearchInput");
-const scSearchBtn = document.getElementById("scSearchBtn");
-const scPdfViewer = document.getElementById("scPdfViewer");
+const scInsToggle = document.getElementById("scInsToggle");
+const scInsFull = document.getElementById("scInsFull");
+const scPDFSelect = document.getElementById("scPDF");
+const scPDFInput = document.getElementById("scPDFInput");
+const scOpenPDFBtn = document.getElementById("scOpenPDF");
+const scAISelect = document.getElementById("scAI");
+const scOpenAIBtn = document.getElementById("scOpenAI");
 
-// --- Floating viewer styles for SC ---
-scPdfViewer.style.position = "relative";
-scPdfViewer.style.width = "100%";
-scPdfViewer.style.height = "300px";
-scPdfViewer.style.border = "2px solid #1e3a8a";
-scPdfViewer.style.borderRadius = "6px";
-scPdfViewer.style.marginTop = "10px";
+let loadedPDFs = [];
+let cachedFolders = {};
+let recentOpened = [];
 
-// --- UTILITIES ---
-async function fetchFolder(url, branch = config.singleRepo.branch) {
-  const fullUrl = url.includes("?") ? url : `${url}?ref=${branch}`;
-  const res = await fetch(fullUrl);
-  if (!res.ok) return [];
-  return await res.json();
+/***********************
+ * Helper functions
+ ***********************/
+function showMessage(msg, type="info") {
+  const cls = type === "error" ? "msg-error" : (type === "success" ? "msg-success" : "msg-info");
+  pdfList.innerHTML = `<div class="${cls}">${msg}</div>`;
+}
+function showLoading(msg="Loading…") {
+  pdfList.innerHTML = `<div style="text-align:center"><div class="loading-spinner"></div><p>${msg}</p></div>`;
+}
+function updateRecentUI() {
+  if (!recentOpened.length) { recentPanel.style.display="none"; return; }
+  recentPanel.style.display="block";
+  recentList.innerHTML = recentOpened.map(n=>`<li>${n}</li>`).join("");
 }
 
+/***********************
+ * GitHub fetch + dropdowns
+ ***********************/
+async function fetchFolder(url, branch=config.singleRepo.branch) {
+  const fullUrl = url.includes("?") ? url : `${url}?ref=${branch}`;
+  if(cachedFolders[fullUrl]) return cachedFolders[fullUrl];
+  try {
+    const res = await fetch(fullUrl);
+    if(!res.ok) return [];
+    const data = await res.json();
+    cachedFolders[fullUrl]=data;
+    return data;
+  } catch(e){ console.error(e); return []; }
+}
 function populateDropdown(dropdown, items) {
+  dropdown.innerHTML = `<option value="">Select ${dropdown.id.charAt(0).toUpperCase()+dropdown.id.slice(1)}</option>`;
   items.forEach(i => {
-    if(i.type === "dir"){
+    if(i.type==="dir") {
       const opt = document.createElement("option");
-      opt.value = i.path;
-      opt.textContent = i.name;
+      opt.value=i.path; opt.textContent=i.name;
       dropdown.appendChild(opt);
     }
   });
-  dropdown.disabled = false;
+  dropdown.disabled=false;
 }
-
 function resetDropdowns(...dropdowns){
-  dropdowns.forEach(d => {
-    d.innerHTML = `<option value="">Select ${d.id.charAt(0).toUpperCase() + d.id.slice(1)}</option>`;
-    d.disabled = true;
+  dropdowns.forEach(d=>{ d.innerHTML=`<option value="">Select ${d.id.charAt(0).toUpperCase()+d.id.slice(1)}</option>`; d.disabled=true; });
+  pdfList.innerHTML=""; loadedPDFs=[];
+  populateSCSiteSelector([]);
+}
+
+/***********************
+ * Display PDFs (main)
+ ***********************/
+function displayPDFs(pdfs){
+  if(!Array.isArray(pdfs) || !pdfs.length){ showMessage("No PDF files found.","error"); populateSCSiteSelector([]); return; }
+  pdfList.innerHTML="";
+  const adLink="https://elaboratestrain.com/bD3wVd0/P.3np/v/btm/VAJdZ/D-0v2oNizeE/x/NFj/gI4wLJTWY-3FMETsEo2mOBDNkE";
+  pdfs.forEach(f=>{
+    const rawURL=`https://raw.githubusercontent.com/${config.singleRepo.owner}/${config.singleRepo.repo}/${config.singleRepo.branch}/${f.path}`;
+    const div=document.createElement("div"); div.className="pdf-item";
+    div.innerHTML=`<a href="${rawURL}" download class="pdf-main-link" data-path="${f.path}">${f.name}</a>`;
+    pdfList.appendChild(div);
+  });
+  document.querySelectorAll(".pdf-main-link").forEach(link=>{
+    if(link.dataset.initialized) return;
+    link.dataset.initialized="1";
+    link.addEventListener("click", ()=> {
+      window.open(adLink,"_blank");
+      const name=link.textContent;
+      if(!recentOpened.includes(name)) recentOpened.unshift(name);
+      if(recentOpened.length>10) recentOpened.pop();
+      updateRecentUI();
+    });
+  });
+  populateSCSiteSelector(pdfs);
+}
+
+/***********************
+ * SC Tools: site PDF selector
+ ***********************/
+function populateSCSiteSelector(pdfs){
+  scPDFSelect.innerHTML=`<option value="">--Site PDFs--</option>`;
+  if(!pdfs.length){ scPDFSelect.innerHTML=`<option value="">--No PDFs loaded--</option>`; return; }
+  pdfs.forEach(f=>{
+    const rawURL=`https://raw.githubusercontent.com/${config.singleRepo.owner}/${config.singleRepo.repo}/${config.singleRepo.branch}/${f.path}`;
+    const opt=document.createElement("option");
+    opt.value=rawURL; opt.textContent=f.name;
+    scPDFSelect.appendChild(opt);
   });
 }
 
-// --- DISPLAY PDFs ---
-function displayPDFs(targetList, pdfs, main = true){
-  targetList.innerHTML = "";
-  if(pdfs.length === 0){ targetList.innerHTML = "<p>No PDFs found.</p>"; return; }
-
-  pdfs.forEach(f => {
-    const url = `https://raw.githubusercontent.com/${config.singleRepo.owner}/${config.singleRepo.repo}/${config.singleRepo.branch}/${f.path}`;
-    const div = document.createElement("div");
-    div.className = "pdf-item";
-    if(main){
-      div.innerHTML = `<a href="#" data-pdf="${url}">${f.name}</a>`;
-      div.querySelector("a").addEventListener("click", e=>{
-        e.preventDefault();
-        const adLink = "https://elaboratestrain.com/bD3wVd0/P.3np/v/btm/VAJdZ/D-0v2oNizeE/x/NFj/gI4wLJTWY-3FMETsEo2mOBDNkE";
-        window.open(adLink,"_blank");
-        window.open(url,"_blank");
-      });
-    } else {
-      div.innerHTML = `<a href="#" data-pdf="${url}">${f.name}</a>`;
-      div.querySelector("a").addEventListener("click", e=>{
-        e.preventDefault();
-        scPdfViewer.innerHTML = `<iframe src="https://docs.google.com/gview?url=${encodeURIComponent(url)}&embedded=true" style="width:100%;height:100%;border:none;"></iframe>`;
-      });
-    }
-    targetList.appendChild(div);
-  });
-}
-
-// --- LOAD PDFs ---
-async function loadPDFsFromFolder(folder){
-  const files = await fetchFolder(`https://api.github.com/repos/${config.singleRepo.owner}/${config.singleRepo.repo}/contents/${folder}`);
-  return files.filter(f => f.name.toLowerCase().endsWith(".pdf"));
-}
-
-// --- SEARCH FUNCTION ---
-async function searchPDFs(baseDropdown, searchText){
-  let allPDFs = [];
-  if(baseDropdown.value){
-    const programs = await fetchFolder(`https://api.github.com/repos/${config.singleRepo.owner}/${config.singleRepo.repo}/contents/${baseDropdown.value}`);
-    for(const p of programs){
-      if(p.type === "dir"){
-        const pdfs = await loadPDFsFromFolder(p.path);
-        allPDFs.push(...pdfs);
-      }
-    }
-  } else {
-    const universities = await fetchFolder(`https://api.github.com/repos/${config.singleRepo.owner}/${config.singleRepo.repo}/contents/`);
-    for(const uni of universities){
-      if(uni.type === "dir"){
-        const levels = await fetchFolder(uni.url);
-        for(const lvl of levels){
-          if(lvl.type === "dir"){
-            const semesters = await fetchFolder(lvl.url);
-            for(const sem of semesters){
-              if(sem.type === "dir"){
-                const programs = await fetchFolder(sem.url);
-                for(const prog of programs){
-                  if(prog.type === "dir"){
-                    const pdfs = await loadPDFsFromFolder(prog.path);
-                    allPDFs.push(...pdfs);
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-
-  if(searchText){
-    allPDFs = allPDFs.filter(f => f.name.toLowerCase().includes(searchText.toLowerCase()));
-  }
-  return allPDFs;
-}
-
-// --- DROPDOWN LOGIC ---
-async function initDropdowns(universityD, levelD, semesterD, programD){
-  const baseURL = `https://api.github.com/repos/${config.singleRepo.owner}/${config.singleRepo.repo}/contents/`;
-  const universities = await fetchFolder(baseURL);
-  populateDropdown(universityD, universities);
-
-  universityD.addEventListener("change", async ()=>{
-    resetDropdowns(levelD, semesterD, programD);
-    if(!universityD.value) return;
-    const levels = await fetchFolder(`https://api.github.com/repos/${config.singleRepo.owner}/${config.singleRepo.repo}/contents/${universityD.value}`);
-    populateDropdown(levelD, levels);
-  });
-
-  levelD.addEventListener("change", async ()=>{
-    resetDropdowns(semesterD, programD);
-    if(!levelD.value) return;
-    const semesters = await fetchFolder(`https://api.github.com/repos/${config.singleRepo.owner}/${config.singleRepo.repo}/contents/${levelD.value}`);
-    populateDropdown(semesterD, semesters);
-  });
-
-  semesterD.addEventListener("change", async ()=>{
-    resetDropdowns(programD);
-    if(!semesterD.value) return;
-    const programs = await fetchFolder(`https://api.github.com/repos/${config.singleRepo.owner}/${config.singleRepo.repo}/contents/${semesterD.value}`);
-    populateDropdown(programD, programs);
-  });
-}
-
-// --- INITIALIZE ---
+/***********************
+ * Load universities on page load
+ ***********************/
 (async()=>{
-  initDropdowns(universitySel, levelSel, semSel, progSel);
-  initDropdowns(scUniversity, scLevel, scSemester, scProgram);
+  const baseURL=`https://api.github.com/repos/${config.singleRepo.owner}/${config.singleRepo.repo}/contents/`;
+  showLoading("Loading universities...");
+  const universities = await fetchFolder(baseURL);
+  if(!universities.length){ showMessage("Unable to load universities.","error"); return; }
+  populateDropdown(universitySel, universities);
+  pdfList.innerHTML="";
 })();
 
-// --- SEARCH BUTTONS ---
-searchBtn.addEventListener("click", async ()=>{
-  const text = searchInput.value.trim();
-  const results = await searchPDFs(semSel, text);
-  displayPDFs(pdfList, results, true);
+/***********************
+ * Dropdown events
+ ***********************/
+universitySel.addEventListener("change", async()=>{
+  resetDropdowns(levelSel, semSel, progSel);
+  if(!universitySel.value) return;
+  showLoading("Loading levels...");
+  const levels = await fetchFolder(`https://api.github.com/repos/${config.singleRepo.owner}/${config.singleRepo.repo}/contents/${universitySel.value}`);
+  populateDropdown(levelSel, levels);
+});
+levelSel.addEventListener("change", async()=>{
+  resetDropdowns(semSel, progSel);
+  if(!levelSel.value) return;
+  showLoading("Loading semesters...");
+  const sems = await fetchFolder(`https://api.github.com/repos/${config.singleRepo.owner}/${config.singleRepo.repo}/contents/${levelSel.value}`);
+  populateDropdown(semSel, sems);
+});
+semSel.addEventListener("change", async()=>{
+  resetDropdowns(progSel);
+  if(!semSel.value) return;
+  showLoading("Loading programs...");
+  const programs = await fetchFolder(`https://api.github.com/repos/${config.singleRepo.owner}/${config.singleRepo.repo}/contents/${semSel.value}`);
+  populateDropdown(progSel, programs);
 });
 
-scSearchBtn.addEventListener("click", async ()=>{
-  const text = scSearchInput.value.trim();
-  const results = await searchPDFs(scSemester, text);
-  displayPDFs(scPdfList, results, false);
-});
-
-// --- Instructions toggle ---
-function toggleInstructions(){
-  const box = document.getElementById("instructionsBox");
-  box.style.display = box.style.display === "block" ? "none" : "block";
+/***********************
+ * Load PDFs for program
+ ***********************/
+async function loadPDFsForProgram(){
+  if(!progSel.value) return [];
+  const files = await fetchFolder(`https://api.github.com/repos/${config.singleRepo.owner}/${config.singleRepo.repo}/contents/${progSel.value}`);
+  return files.filter(f=>f.name.toLowerCase().endsWith(".pdf"));
 }
 
-// --- SC Tools toggle ---
+/***********************
+ * Search / filter buttons
+ ***********************/
+searchBtn.addEventListener("click", async()=>{
+  if(!progSel.value){ showMessage("Please select a program first.","error"); return; }
+  showLoading("Loading PDFs for program...");
+  loadedPDFs = await loadPDFsForProgram();
+  displayPDFs(loadedPDFs);
+});
+searchNameBtn.addEventListener("click", async()=>{
+  if(!progSel.value){ showMessage("Please select a program first.","error"); return; }
+  if(!loadedPDFs.length) loadedPDFs = await loadPDFsForProgram();
+  const q=(searchInput.value||"").toLowerCase().trim();
+  const filtered = q ? loadedPDFs.filter(f=>f.name.toLowerCase().includes(q)) : loadedPDFs;
+  displayPDFs(filtered);
+});
+
+/***********************
+ * SC Tools interactions
+ ***********************/
 scToggle.addEventListener("click", ()=>{
-  scContent.style.display = scContent.style.display === "block" ? "none" : "block";
+  const isOpen=scContent.style.display==="block";
+  scContent.style.display=isOpen?"none":"block";
+  scContent.setAttribute("aria-hidden", isOpen?"true":"false");
 });
-
-// --- Theme toggle ---
-(function(){
-  const btn = document.getElementById('theme-toggle');
-  const body = document.body;
-  try{
-    const saved = localStorage.getItem('theme');
-    if(saved === 'dark'){ body.setAttribute('data-theme','dark'); btn.textContent='🌙'; } 
-    else { body.removeAttribute('data-theme'); btn.textContent='☀️'; }
-  }catch(e){}
-
-  btn.addEventListener('click', ()=>{
-    if(body.hasAttribute('data-theme')){
-      body.removeAttribute('data-theme'); btn.textContent='☀️'; localStorage.setItem('theme','light');
-    } else {
-      body.setAttribute('data-theme','dark'); btn.textContent='🌙'; localStorage.setItem('theme','dark');
-    }
-  });
-})();
-
-// --- Draggable SC Tools Hub ---
-let isDragging = false, dragOffsetX=0, dragOffsetY=0;
-scToggle.addEventListener('mousedown', e=>{
-  isDragging = true;
-  dragOffsetX = e.clientX - scContent.getBoundingClientRect().left;
-  dragOffsetY = e.clientY - scContent.getBoundingClientRect().top;
-  document.body.style.userSelect = 'none';
+scInsToggle.addEventListener("click", ()=>{
+  const show=scInsFull.style.display==="block";
+  scInsFull.style.display=show?"none":"block";
+  scInsToggle.textContent = show?"Show more instructions":"Hide instructions";
 });
-document.addEventListener('mousemove', e=>{
-  if(isDragging){
-    scContent.style.position='fixed';
-    scContent.style.left=(e.clientX - dragOffsetX)+'px';
-    scContent.style.top=(e.clientY - dragOffsetY)+'px';
-    scContent.style.zIndex='10000';
+scOpenAIBtn.addEventListener("click", ()=>{
+  const ai=scAISelect.value; if(!ai){ alert("Please select an AI!"); return; }
+  let url="";
+  switch(ai){
+    case 'chatgpt': url="https://chat.openai.com/"; break;
+    case 'copilot': url="https://copilot.microsoft.com/"; break;
+    case 'deepseek': url="https://deepseek.ai/"; break;
+    case 'questionai': url="https://questionai.com/"; break;
   }
+  window.open(url,"_blank");
 });
-document.addEventListener('mouseup', e=>{
-  isDragging = false;
-  document.body.style.userSelect = '';
+scOpenPDFBtn.addEventListener("click", ()=>{
+  const siteUrl=scPDFSelect.value;
+  const upload=scPDFInput.files[0];
+  if(upload){
+    const url=URL.createObjectURL(upload);
+    window.open(url,"_blank");
+    if(!recentOpened.includes(upload.name)) recentOpened.unshift(upload.name);
+    if(recentOpened.length>10) recentOpened.pop();
+    updateRecentUI();
+    return;
+  }
+  if(siteUrl){
+    window.open(siteUrl,"_blank");
+    const name=scPDFSelect.options[scPDFSelect.selectedIndex].text;
+    if(!recentOpened.includes(name)) recentOpened.unshift(name);
+    if(recentOpened.length>10) recentOpened.pop();
+    updateRecentUI();
+    return;
+  }
+  alert("Please choose a site PDF or upload a PDF to open.");
 });
+
+updateRecentUI();
