@@ -1,117 +1,125 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Colleges of Education Past Questions | SCode Studio | SCode COE Pasco</title>
-  <link rel="icon" type="image/jpeg" href="https://raw.githubusercontent.com/SCodeGit/trial/main/favicon%20scode.jpg">
-  <link rel="shortcut icon" type="image/jpeg" href="https://raw.githubusercontent.com/SCodeGit/trial/main/favicon%20scode.jpg">
-  <meta name="description" content="Free Colleges of Education past questions for all universities in Ghana. Filter by level, semester, and program. Official platform of SCode Studio and SCode COE Pasco. Created by Atubra Abraham.">
-  <meta name="author" content="Atubra Abraham — SCode Studio">
-  <style>
-    /* All your CSS from previous HTML goes here exactly */
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Colleges of Education Past Questions | SCode Studio | SCode COE Pasco</title>
+<link rel="icon" type="image/jpeg" href="https://raw.githubusercontent.com/SCodeGit/trial/main/favicon%20scode.jpg">
+<link rel="shortcut icon" type="image/jpeg" href="https://raw.githubusercontent.com/SCodeGit/trial/main/favicon%20scode.jpg">
+<meta name="description" content="Free Colleges of Education past questions for all universities in Ghana. Filter by level, semester, and program. Official platform of SCode Studio and SCode COE Pasco.">
+<meta name="author" content="Atubra Abraham — SCode Studio">
+
+<style>
+:root{
+  --navy:#0a1f44; --white:#fff; --accent:#1e3a8a; --muted:#f3f6fb; --shadow:rgba(10,31,68,0.12);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Arial,sans-serif;background:var(--muted);color:var(--navy);padding:18px;transition: background 0.3s, color 0.3s;}
+.top-bar{display:flex;align-items:center;gap:18px;max-width:1100px;margin:0 auto 18px;padding:8px 12px;}
+.top-logos{display:flex;gap:14px;flex:1;align-items:center;justify-content:center;}
+.top-logos img{width:58px;height:58px;border-radius:50%;border:2px solid var(--navy);background:var(--white);object-fit:cover;}
+#theme-toggle{background:transparent;border:none;font-size:1.2rem;color:var(--navy);cursor:pointer;padding:6px 8px;margin-left:12px;}
+
+.frame{max-width:980px;margin:18px auto;background:var(--white);border-radius:14px;border:6px solid var(--navy);box-shadow:0 14px 30px var(--shadow);overflow:hidden;animation:frameIn .7s ease both;}
+@keyframes frameIn{from{transform:translateY(12px) scale(.995);opacity:0} to{transform:translateY(0) scale(1);opacity:1}}
+.frame-inner{padding:26px;}
+
+h1{text-align:center;margin-top:8px;color:var(--navy);font-size:1.55rem;font-weight:600;}
+.tagline{text-align:center;color:#0f335f;margin:10px 0 18px;font-style:italic;}
+
+.controls{display:block;width:100%;max-width:760px;margin:0 auto;gap:10px;}
+.controls > *{display:block;width:100%;margin:8px 0;}
+select,input[type="text"],button{padding:10px 12px;border-radius:10px;border:1px solid #cbd9f0;font-size:0.98rem;background:#fff;color:var(--navy);transition: all 0.2s;}
+select:hover,button:hover,input[type="text"]:hover{box-shadow:0 6px 18px rgba(30,58,138,0.06);transform:translateY(-1px);}
+
+.pdf-list a{display:block;color:var(--navy);text-decoration:none;padding:8px 12px;border-radius:8px;border:1px solid #cbd9f0;margin:6px 0;transition: all 0.3s ease;}
+.pdf-list a:hover{background:var(--accent);color:var(--white);transform:translateX(2px);}
+
+footer{text-align:center;margin-top:18px;color:#374761;font-size:0.9rem;}
+
+body[data-theme="dark"]{background:#071427;color:#e9eef6;}
+body[data-theme="dark"] .frame{background:rgba(8,18,36,0.92);border-color:#072043;box-shadow:0 14px 30px rgba(0,0,0,0.5);}
+body[data-theme="dark"] .top-logos img{border-color:#e9eef6;}
+body[data-theme="dark"] #theme-toggle{color:#e9eef6;}
+body[data-theme="dark"] select,input[type="text"],button{background:#071427;color:#e9eef6;border:1px solid rgba(255,255,255,0.06);}
+
+/* SC Tools Hub */
+#scToolsHub{position:fixed;bottom:20px;right:20px;width:250px;z-index:9999;font-family:'Segoe UI',Arial,sans-serif;cursor:grab;}
+#scToggle{background:var(--accent);color:#fff;width:50px;height:50px;border-radius:50%;text-align:center;line-height:50px;font-weight:bold;font-size:18px;box-shadow:0 4px 12px rgba(0,0,0,0.25);cursor:pointer;}
+#scContent{display:none;background:var(--white);border:1px solid #ccc;border-radius:10px;box-shadow:0 4px 12px rgba(0,0,0,0.25);padding:10px;margin-top:10px;transition: background 0.3s, color 0.3s;}
+#scContent h4{text-align:center;margin:0 0 10px 0;}
+#scContent select,#scContent input[type="file"],#scContent button{width:100%;margin-bottom:6px;padding:8px;border-radius:6px;border:1px solid #ccc;}
+#scContent button{background:var(--accent);color:#fff;cursor:pointer;}
+#scContent button:hover{background:#0a1f44;}
+.sc-instructions{background:rgba(30,58,138,0.1);padding:6px;border-radius:6px;font-size:0.85rem;margin-bottom:8px;}
+body[data-theme="dark"] #scContent{background:#071427;color:#e9eef6;border-color:rgba(255,255,255,0.2);}
+</style>
 </head>
 <body>
-  <div class="top-bar">
-    <div class="top-logos">
-      <img src="https://raw.githubusercontent.com/SCodeGit/trial/main/WhatsApp%20Image%202025-10-29%20at%2021.28.30_968e228b.jpg" alt="School Collaboration Logo">
-      <img src="https://raw.githubusercontent.com/SCodeGit/trial/main/WhatsApp%20Image%202025-10-29%20at%2021.29.26_b1bcd9d3.jpg" alt="Colleges Group Logo">
-      <img src="https://raw.githubusercontent.com/SCodeGit/trial/main/WhatsApp%20Image%202025-10-29%20at%2021.31.34_5c11e8e8.jpg" alt="SCode Studio Logo">
-    </div>
-    <button id="theme-toggle" title="Toggle theme" aria-label="Toggle theme">☀️</button>
+
+<div class="top-bar">
+  <div class="top-logos">
+    <img src="https://raw.githubusercontent.com/SCodeGit/trial/main/WhatsApp%20Image%202025-10-29%20at%2021.28.30_968e228b.jpg">
+    <img src="https://raw.githubusercontent.com/SCodeGit/trial/main/WhatsApp%20Image%202025-10-29%20at%2021.29.26_b1bcd9d3.jpg">
+    <img src="https://raw.githubusercontent.com/SCodeGit/trial/main/WhatsApp%20Image%202025-10-29%20at%2021.31.34_5c11e8e8.jpg">
   </div>
+  <button id="theme-toggle" title="Toggle theme">☀️</button>
+</div>
 
-  <h1>Colleges of Education Past Questions</h1>
-  <p class="tagline">Empowering Learning Through Past Questions</p>
+<h1>Colleges of Education Past Questions</h1>
+<p class="tagline">Empowering Learning Through Past Questions</p>
 
-  <div class="frame">
-    <div class="frame-inner">
+<div class="frame">
+  <div class="frame-inner">
+    <div class="controls">
+      <select id="university"><option value="">Select University</option></select>
+      <select id="level" disabled><option value="">Select Level</option></select>
+      <select id="semester" disabled><option value="">Select Semester</option></select>
+      <select id="program" disabled><option value="">Select Program</option></select>
 
-      <div class="instructions-container" style="text-align:center;margin-bottom:12px;">
-        <button class="instructions-toggle" onclick="toggleInstructions()" style="background:transparent;color:#00b3ff;border:1px solid #00b3ff;border-radius:8px;padding:10px 20px;cursor:pointer;">
-          View Instructions For Trainees
-        </button>
-        <div class="instructions-content" id="instructionsBox" style="display:none;margin-top:15px;background:rgba(0,10,30,0.9);color:#d6f1ff;border-radius:10px;padding:14px;">
-          <p><strong>Welcome Trainees!</strong> Here’s how to navigate this platform:</p>
-          <ul style="list-style:none;text-align:left;padding-left:0;margin-top:10px;">
-            <li>Select your <strong>university, level, semester, and program</strong> to view available PDFs.</li>
-            <li>Click a file name in the main list to <strong>download</strong> it (main list). Use <strong>SC Tools → Site PDFs</strong> to open PDFs in a new tab for comparing.</li>
-          </ul>
-        </div>
+      <div style="display:flex; gap:8px;">
+        <button id="searchBtn" style="flex:1">Search PDFs</button>
+        <input id="searchInput" type="text" placeholder="Filter by name..." style="flex:2; padding:10px; border-radius:10px; border:1px solid #cbd9f0;">
+        <button id="searchNameBtn">Filter</button>
       </div>
+    </div>
 
-      <div class="controls">
-        <select id="university"><option value="">Select University</option></select>
-        <select id="level" disabled><option value="">Select Level</option></select>
-        <select id="semester" disabled><option value="">Select Semester</option></select>
-        <select id="program" disabled><option value="">Select Program</option></select>
-
-        <div style="display:flex; gap:8px;">
-          <button id="searchBtn" style="flex:1">Search PDFs</button>
-          <input id="searchInput" type="text" placeholder="Filter by name..." style="flex:2; padding:10px; border-radius:10px; border:1px solid #cbd9f0;">
-          <button id="searchNameBtn">Filter</button>
-        </div>
-      </div>
-
-      <div id="pdf-list" class="pdf-list"></div>
-
-      <div class="recent" id="recentPanel" style="display:none;">
-        <strong>Recently opened:</strong>
-        <ul id="recentList"></ul>
-      </div>
-
+    <div id="pdf-list" class="pdf-list"></div>
+    <div class="recent" id="recentPanel" style="display:none;">
+      <strong>Recently opened:</strong>
+      <ul id="recentList"></ul>
     </div>
   </div>
+</div>
 
-  <footer style="text-align:center;margin-top:18px;color:#374761;font-size:0.9rem;">
-    &copy; 2025 SCode. All rights reserved.
-  </footer>
+<footer>&copy; 2025 SCode. All rights reserved.</footer>
 
-  <!-- SC Tools Floating Hub -->
-  <div id="scToolsHub" aria-hidden="false">
-    <div id="scToggle" title="Open SC Tools">SC</div>
-    <div id="scContent" role="dialog" aria-label="SC Tools Hub" aria-hidden="true">
-        <h4>SC Tools Hub</h4>
-        <div class="sc-instructions">
-            <div id="scInsShort">
-              <strong>Quick:</strong> Open an AI or open PDFs (site or upload).
-              <div class="sc-instructions-link" style="margin-top:6px;">
-                <span class="toggle-small" id="scInsToggle">Show more instructions</span>
-              </div>
-            </div>
-            <div id="scInsFull" style="display:none; margin-top:8px;">
-              <ul style="padding-left:14px; margin:0;">
-                <li>Select an AI and click <em>Go</em> to open it in a new tab.</li>
-                <li>Use <strong>Site PDFs</strong> to open PDFs from the program you selected above (no download — opens in new tab for comparison).</li>
-                <li>Or upload a PDF from your device to open it temporarily in a new tab.</li>
-              </ul>
-            </div>
-        </div>
-
-        <label for="scAI">Select AI:</label>
-        <select id="scAI">
-            <option value="">--Choose AI--</option>
-            <option value="chatgpt">ChatGPT</option>
-            <option value="copilot">Copilot</option>
-            <option value="deepseek">DeepSeek</option>
-            <option value="questionai">Question AI</option>
-        </select>
-        <button id="scOpenAI">Go</button>
-
-        <div style="margin-top:6px;" class="sc-sitepdf-note">Site PDFs follow the main dropdown selections (choose program then press Search).</div>
-        <label for="scPDF">Site PDFs (program)</label>
-        <select id="scPDF">
-            <option value="">--No PDFs loaded--</option>
-        </select>
-
-        <label for="scPDFInput" style="margin-top:6px;">Upload PDF (device)</label>
-        <input type="file" id="scPDFInput" accept=".pdf">
-
-        <button id="scOpenPDF">Open PDF</button>
+<!-- SC Tools Hub -->
+<div id="scToolsHub">
+  <div id="scToggle">SC</div>
+  <div id="scContent">
+    <h4>SC Tools Hub</h4>
+    <div class="sc-instructions">
+      <strong>Quick:</strong> Open AI or PDFs.
     </div>
-  </div>
+    <label>Select AI:</label>
+    <select id="scAI">
+      <option value="">--Choose AI--</option>
+      <option value="chatgpt">ChatGPT</option>
+      <option value="copilot">Copilot</option>
+      <option value="deepseek">DeepSeek</option>
+      <option value="questionai">Question AI</option>
+    </select>
+    <button id="scOpenAI">Go</button>
 
-  <script src="script.js"></script>
+    <label>Site PDFs:</label>
+    <select id="scPDF"><option value="">--No PDFs loaded--</option></select>
+    <label>Upload PDF:</label>
+    <input type="file" id="scPDFInput" accept=".pdf">
+    <button id="scOpenPDF">Open PDF</button>
+  </div>
+</div>
+
+<script src="script.js"></script>
 </body>
 </html>
