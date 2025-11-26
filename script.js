@@ -1,134 +1,151 @@
-<script>
+// --- CONFIGURATION ---
 const config = {
   mode: "single",
   singleRepo: { owner: "SCodeGit", repo: "trial", branch: "main" }
 };
 
+// --- DOM Elements ---
 const universitySel = document.getElementById("university");
 const levelSel = document.getElementById("level");
 const semSel = document.getElementById("semester");
 const progSel = document.getElementById("program");
 const pdfList = document.getElementById("pdf-list");
 const searchBtn = document.getElementById("searchBtn");
-const searchInput = document.getElementById("searchInput");
-const searchNameBtn = document.getElementById("searchNameBtn");
 const viewerContainer = document.getElementById("sc-pdf-viewer");
-const pdfInput = document.getElementById("pdfInput");
 
-let loadedPDFs = [];
+// --- Floating Viewer Setup ---
+function createFloatingViewer() {
+  // Add close button
+  const closeBtn = document.createElement("button");
+  closeBtn.textContent = "✖ Close";
+  closeBtn.style.position = "absolute";
+  closeBtn.style.top = "10px";
+  closeBtn.style.right = "10px";
+  closeBtn.style.padding = "6px 12px";
+  closeBtn.style.background = "#1e3a8a";
+  closeBtn.style.color = "#fff";
+  closeBtn.style.border = "none";
+  closeBtn.style.borderRadius = "6px";
+  closeBtn.style.cursor = "pointer";
+  closeBtn.style.zIndex = "10000";
+  closeBtn.addEventListener("click", () => {
+    viewerContainer.style.display = "none";
+    viewerContainer.innerHTML = "";
+  });
 
-async function fetchFolder(url, branch=config.singleRepo.branch){
+  viewerContainer.appendChild(closeBtn);
+}
+
+// Apply floating styles
+viewerContainer.style.position = "fixed";
+viewerContainer.style.top = "50px";
+viewerContainer.style.right = "20px";
+viewerContainer.style.width = "700px";
+viewerContainer.style.height = "80vh";
+viewerContainer.style.border = "2px solid #1e3a8a";
+viewerContainer.style.borderRadius = "10px";
+viewerContainer.style.background = "#fff";
+viewerContainer.style.boxShadow = "0 10px 30px rgba(0,0,0,0.3)";
+viewerContainer.style.display = "none";
+viewerContainer.style.zIndex = "9999";
+viewerContainer.style.overflow = "hidden";
+
+// --- Utility Functions ---
+async function fetchFolder(url, branch = config.singleRepo.branch) {
   const fullUrl = url.includes("?") ? url : `${url}?ref=${branch}`;
   const res = await fetch(fullUrl);
   if (!res.ok) return [];
   return await res.json();
 }
 
-function populateDropdown(dropdown, items){
-  items.forEach(i=>{
-    if(i.type==="dir"){
+function populateDropdown(dropdown, items) {
+  items.forEach(i => {
+    if (i.type === "dir") {
       const opt = document.createElement("option");
       opt.value = i.path;
       opt.textContent = i.name;
       dropdown.appendChild(opt);
     }
   });
-  dropdown.disabled=false;
+  dropdown.disabled = false;
 }
 
-function resetDropdowns(...dropdowns){
-  dropdowns.forEach(d=>{
-    d.innerHTML=`<option value="">Select ${d.id.charAt(0).toUpperCase()+d.id.slice(1)}</option>`;
-    d.disabled=true;
+function resetDropdowns(...dropdowns) {
+  dropdowns.forEach(d => {
+    d.innerHTML = `<option value="">Select ${d.id.charAt(0).toUpperCase() + d.id.slice(1)}</option>`;
+    d.disabled = true;
   });
-  pdfList.innerHTML="";
-  viewerContainer.style.display="none";
-  loadedPDFs=[];
+  pdfList.innerHTML = "";
+  viewerContainer.style.display = "none";
+  viewerContainer.innerHTML = "";
+  createFloatingViewer(); // re-add close button
 }
 
-function displayPDFs(pdfs){
-  pdfList.innerHTML="";
-  if(pdfs.length===0){ pdfList.innerHTML="<p>No PDF files found.</p>"; return; }
+async function loadPDFs() {
+  if (!progSel.value) return [];
+  const files = await fetchFolder(`https://api.github.com/repos/${config.singleRepo.owner}/${config.singleRepo.repo}/contents/${progSel.value}`);
+  return files.filter(f => f.name.toLowerCase().endsWith(".pdf"));
+}
 
-  const adLink="https://elaboratestrain.com/bD3wVd0/P.3np/v/btm/VAJdZ/D-0v2oNizeE/x/NFj/gI4wLJTWY-3FMETsEo2mOBDNkE";
+function displayPDFs(pdfs) {
+  pdfList.innerHTML = "";
+  if (pdfs.length === 0) {
+    pdfList.innerHTML = "<p>No PDF files found.</p>";
+    return;
+  }
 
-  pdfs.forEach(f=>{
-    const rawURL=`https://raw.githubusercontent.com/${config.singleRepo.owner}/${config.singleRepo.repo}/${config.singleRepo.branch}/${f.path}`;
-    const div=document.createElement("div");
-    div.className="pdf-item";
-    const a=document.createElement("a");
-    a.href="#";
-    a.textContent=f.name;
-    a.addEventListener("click", e=>{
-      e.preventDefault();
-      // Show PDF in iframe viewer
-      viewerContainer.innerHTML=`<iframe src="https://docs.google.com/gview?url=${encodeURIComponent(rawURL)}&embedded=true" style="width:100%;height:100%;border:none;"></iframe>`;
-      viewerContainer.style.display="block";
-      viewerContainer.scrollIntoView({behavior:"smooth"});
-      // Trigger ad in new tab
-      window.open(adLink,"_blank","noopener,noreferrer");
-    });
-    div.appendChild(a);
+  pdfs.forEach(f => {
+    const rawURL = `https://raw.githubusercontent.com/${config.singleRepo.owner}/${config.singleRepo.repo}/${config.singleRepo.branch}/${f.path}`;
+    const div = document.createElement("div");
+    div.className = "pdf-item";
+    div.innerHTML = `<a href="#" data-pdf="${rawURL}">${f.name}</a>`;
     pdfList.appendChild(div);
   });
-}
 
-async function loadPDFs(){
-  if(!progSel.value) return [];
-  const files=await fetchFolder(`https://api.github.com/repos/${config.singleRepo.owner}/${config.singleRepo.repo}/contents/${progSel.value}`);
-  return files.filter(f=>f.name.toLowerCase().endsWith(".pdf"));
-}
-
-searchBtn.addEventListener("click", async ()=>{
-  loadedPDFs=await loadPDFs();
-  displayPDFs(loadedPDFs);
-});
-
-if(searchNameBtn){
-  searchNameBtn.addEventListener("click", async ()=>{
-    if(!progSel.value){ alert("Please select a program first!"); return; }
-    if(loadedPDFs.length===0) loadedPDFs=await loadPDFs();
-    const query=searchInput.value.toLowerCase().trim();
-    const filtered=query ? loadedPDFs.filter(f=>f.name.toLowerCase().includes(query)) : loadedPDFs;
-    displayPDFs(filtered);
+  pdfList.querySelectorAll("a").forEach(link => {
+    link.addEventListener("click", e => {
+      e.preventDefault();
+      const pdfURL = link.dataset.pdf;
+      viewerContainer.innerHTML = `<iframe src="https://docs.google.com/gview?url=${encodeURIComponent(pdfURL)}&embedded=true" style="width:100%;height:100%;border:none;"></iframe>`;
+      viewerContainer.style.display = "block";
+      createFloatingViewer(); // ensure close button is there
+      viewerContainer.scrollIntoView({ behavior: "smooth" });
+    });
   });
 }
 
-function viewPDF(){
-  if(pdfInput.files.length===0){ alert("Please select a PDF from your computer."); return; }
-  const file=pdfInput.files[0];
-  const url=URL.createObjectURL(file);
-  viewerContainer.innerHTML=`<iframe src="${url}" style="width:100%;height:100%;border:none;"></iframe>`;
-  viewerContainer.style.display="block";
-  viewerContainer.scrollIntoView({behavior:"smooth"});
-}
-
-// Load universities on page load
-(async ()=>{
-  const baseURL=`https://api.github.com/repos/${config.singleRepo.owner}/${config.singleRepo.repo}/contents/`;
-  const universities=await fetchFolder(baseURL);
-  populateDropdown(universitySel, universities);
-})();
-
-// Dropdown event listeners
-universitySel.addEventListener("change", async ()=>{
+// --- Dropdown Event Listeners ---
+universitySel.addEventListener("change", async () => {
   resetDropdowns(levelSel, semSel, progSel);
-  if(!universitySel.value) return;
-  const levels=await fetchFolder(`https://api.github.com/repos/${config.singleRepo.owner}/${config.singleRepo.repo}/contents/${universitySel.value}`);
+  if (!universitySel.value) return;
+  const levels = await fetchFolder(`https://api.github.com/repos/${config.singleRepo.owner}/${config.singleRepo.repo}/contents/${universitySel.value}`);
   populateDropdown(levelSel, levels);
 });
 
-levelSel.addEventListener("change", async ()=>{
+levelSel.addEventListener("change", async () => {
   resetDropdowns(semSel, progSel);
-  if(!levelSel.value) return;
-  const sems=await fetchFolder(`https://api.github.com/repos/${config.singleRepo.owner}/${config.singleRepo.repo}/contents/${levelSel.value}`);
+  if (!levelSel.value) return;
+  const sems = await fetchFolder(`https://api.github.com/repos/${config.singleRepo.owner}/${config.singleRepo.repo}/contents/${levelSel.value}`);
   populateDropdown(semSel, sems);
 });
 
-semSel.addEventListener("change", async ()=>{
+semSel.addEventListener("change", async () => {
   resetDropdowns(progSel);
-  if(!semSel.value) return;
-  const programs=await fetchFolder(`https://api.github.com/repos/${config.singleRepo.owner}/${config.singleRepo.repo}/contents/${semSel.value}`);
+  if (!semSel.value) return;
+  const programs = await fetchFolder(`https://api.github.com/repos/${config.singleRepo.owner}/${config.singleRepo.repo}/contents/${semSel.value}`);
   populateDropdown(progSel, programs);
 });
-</script>
+
+// --- Search Button ---
+searchBtn.addEventListener("click", async () => {
+  const loadedPDFs = await loadPDFs();
+  displayPDFs(loadedPDFs);
+});
+
+// --- Initialize ---
+(async () => {
+  const baseURL = `https://api.github.com/repos/${config.singleRepo.owner}/${config.singleRepo.repo}/contents/`;
+  const universities = await fetchFolder(baseURL);
+  populateDropdown(universitySel, universities);
+  createFloatingViewer(); // setup initial close button
+})();
