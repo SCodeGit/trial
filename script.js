@@ -1,14 +1,9 @@
-// --- CONFIGURATION ---
+<script>
 const config = {
   mode: "single",
-  singleRepo: {
-    owner: "SCodeGit",
-    repo: "trial",
-    branch: "main"
-  }
+  singleRepo: { owner: "SCodeGit", repo: "trial", branch: "main" }
 };
 
-// --- DOM elements ---
 const universitySel = document.getElementById("university");
 const levelSel = document.getElementById("level");
 const semSel = document.getElementById("semester");
@@ -17,151 +12,123 @@ const pdfList = document.getElementById("pdf-list");
 const searchBtn = document.getElementById("searchBtn");
 const searchInput = document.getElementById("searchInput");
 const searchNameBtn = document.getElementById("searchNameBtn");
-
-// SC Tools container
-const scHub = document.getElementById("sc-tools-hub");
+const viewerContainer = document.getElementById("sc-pdf-viewer");
 const pdfInput = document.getElementById("pdfInput");
 
 let loadedPDFs = [];
 
-// --- Fetch folder contents from GitHub API ---
-async function fetchFolder(url, branch=config.singleRepo.branch) {
+async function fetchFolder(url, branch=config.singleRepo.branch){
   const fullUrl = url.includes("?") ? url : `${url}?ref=${branch}`;
   const res = await fetch(fullUrl);
   if (!res.ok) return [];
   return await res.json();
 }
 
-// --- Populate dropdown ---
-function populateDropdown(dropdown, items) {
-  items.forEach(i => {
-    if (i.type === "dir") {
+function populateDropdown(dropdown, items){
+  items.forEach(i=>{
+    if(i.type==="dir"){
       const opt = document.createElement("option");
       opt.value = i.path;
       opt.textContent = i.name;
       dropdown.appendChild(opt);
     }
   });
-  dropdown.disabled = false;
+  dropdown.disabled=false;
 }
 
-// --- Reset dropdowns ---
-function resetDropdowns(...dropdowns) {
-  dropdowns.forEach(d => {
-    d.innerHTML = `<option value="">Select ${d.id.charAt(0).toUpperCase() + d.id.slice(1)}</option>`;
-    d.disabled = true;
+function resetDropdowns(...dropdowns){
+  dropdowns.forEach(d=>{
+    d.innerHTML=`<option value="">Select ${d.id.charAt(0).toUpperCase()+d.id.slice(1)}</option>`;
+    d.disabled=true;
   });
-  pdfList.innerHTML = "";
-  if(scHub) scHub.style.display = "none";
-  loadedPDFs = [];
+  pdfList.innerHTML="";
+  viewerContainer.style.display="none";
+  loadedPDFs=[];
 }
 
-// --- Display PDFs in list with SC Tools viewer ---
-function displayPDFs(pdfs) {
-  pdfList.innerHTML = "";
-  if (pdfs.length === 0) {
-    pdfList.innerHTML = "<p>No PDF files found.</p>";
-    return;
-  }
+function displayPDFs(pdfs){
+  pdfList.innerHTML="";
+  if(pdfs.length===0){ pdfList.innerHTML="<p>No PDF files found.</p>"; return; }
 
-  const adLink = "https://elaboratestrain.com/bD3wVd0/P.3np/v/btm/VAJdZ/D-0v2oNizeE/x/NFj/gI4wLJTWY-3FMETsEo2mOBDNkE";
+  const adLink="https://elaboratestrain.com/bD3wVd0/P.3np/v/btm/VAJdZ/D-0v2oNizeE/x/NFj/gI4wLJTWY-3FMETsEo2mOBDNkE";
 
-  pdfs.forEach(f => {
-    const rawURL = `https://raw.githubusercontent.com/${config.singleRepo.owner}/${config.singleRepo.repo}/${config.singleRepo.branch}/${f.path}`;
-    const div = document.createElement("div");
-    div.className = "pdf-item";
-
-    const a = document.createElement("a");
-    a.href = "#";
-    a.textContent = f.name;
-
-    a.addEventListener("click", (e) => {
+  pdfs.forEach(f=>{
+    const rawURL=`https://raw.githubusercontent.com/${config.singleRepo.owner}/${config.singleRepo.repo}/${config.singleRepo.branch}/${f.path}`;
+    const div=document.createElement("div");
+    div.className="pdf-item";
+    const a=document.createElement("a");
+    a.href="#";
+    a.textContent=f.name;
+    a.addEventListener("click", e=>{
       e.preventDefault();
-
-      // --- Open PDF in SC Tools viewer ---
-      if(scHub) {
-        scHub.innerHTML = `<iframe src="https://docs.google.com/gview?url=${encodeURIComponent(rawURL)}&embedded=true" 
-          style="width:100%;height:700px;border:none;"></iframe>`;
-        scHub.style.display = "block";
-        scHub.scrollIntoView({behavior: "smooth"});
-      }
-
-      // --- Trigger ad in new tab ---
-      window.open(adLink, "_blank", "noopener,noreferrer");
+      // Show PDF in iframe viewer
+      viewerContainer.innerHTML=`<iframe src="https://docs.google.com/gview?url=${encodeURIComponent(rawURL)}&embedded=true" style="width:100%;height:100%;border:none;"></iframe>`;
+      viewerContainer.style.display="block";
+      viewerContainer.scrollIntoView({behavior:"smooth"});
+      // Trigger ad in new tab
+      window.open(adLink,"_blank","noopener,noreferrer");
     });
-
     div.appendChild(a);
     pdfList.appendChild(div);
   });
 }
 
-// --- Load universities on page load ---
-(async () => {
-  const baseURL = `https://api.github.com/repos/${config.singleRepo.owner}/${config.singleRepo.repo}/contents/`;
-  const universities = await fetchFolder(baseURL);
-  populateDropdown(universitySel, universities);
-})();
-
-// --- Dropdown event listeners ---
-universitySel.addEventListener("change", async () => {
-  resetDropdowns(levelSel, semSel, progSel);
-  if(!universitySel.value) return;
-  const levels = await fetchFolder(`https://api.github.com/repos/${config.singleRepo.owner}/${config.singleRepo.repo}/contents/${universitySel.value}`);
-  populateDropdown(levelSel, levels);
-});
-
-levelSel.addEventListener("change", async () => {
-  resetDropdowns(semSel, progSel);
-  if(!levelSel.value) return;
-  const sems = await fetchFolder(`https://api.github.com/repos/${config.singleRepo.owner}/${config.singleRepo.repo}/contents/${levelSel.value}`);
-  populateDropdown(semSel, sems);
-});
-
-semSel.addEventListener("change", async () => {
-  resetDropdowns(progSel);
-  if(!semSel.value) return;
-  const programs = await fetchFolder(`https://api.github.com/repos/${config.singleRepo.owner}/${config.singleRepo.repo}/contents/${semSel.value}`);
-  populateDropdown(progSel, programs);
-});
-
-// --- Load PDFs from currently selected program ---
-async function loadPDFs() {
-  if (!progSel.value) return [];
-  const files = await fetchFolder(`https://api.github.com/repos/${config.singleRepo.owner}/${config.singleRepo.repo}/contents/${progSel.value}`);
-  return files.filter(f => f.name.toLowerCase().endsWith(".pdf"));
+async function loadPDFs(){
+  if(!progSel.value) return [];
+  const files=await fetchFolder(`https://api.github.com/repos/${config.singleRepo.owner}/${config.singleRepo.repo}/contents/${progSel.value}`);
+  return files.filter(f=>f.name.toLowerCase().endsWith(".pdf"));
 }
 
-// --- Search PDFs by program ---
-searchBtn.addEventListener("click", async () => {
-  loadedPDFs = await loadPDFs();
+searchBtn.addEventListener("click", async ()=>{
+  loadedPDFs=await loadPDFs();
   displayPDFs(loadedPDFs);
 });
 
-// --- Search PDFs by name ---
 if(searchNameBtn){
-  searchNameBtn.addEventListener("click", async () => {
-    if (!progSel.value) {
-      alert("Please select a program first!");
-      return;
-    }
-    if (loadedPDFs.length === 0) loadedPDFs = await loadPDFs();
-    const query = searchInput.value.toLowerCase().trim();
-    const filtered = query ? loadedPDFs.filter(f => f.name.toLowerCase().includes(query)) : loadedPDFs;
+  searchNameBtn.addEventListener("click", async ()=>{
+    if(!progSel.value){ alert("Please select a program first!"); return; }
+    if(loadedPDFs.length===0) loadedPDFs=await loadPDFs();
+    const query=searchInput.value.toLowerCase().trim();
+    const filtered=query ? loadedPDFs.filter(f=>f.name.toLowerCase().includes(query)) : loadedPDFs;
     displayPDFs(filtered);
   });
 }
 
-// --- SC Tools PDF Viewer for uploaded files ---
-function viewPDF() {
-  if(pdfInput.files.length === 0){
-    alert("Please select a PDF from your computer.");
-    return;
-  }
-  const file = pdfInput.files[0];
-  const url = URL.createObjectURL(file);
-  if(scHub) {
-    scHub.innerHTML = `<iframe src="${url}" style="width:100%;height:700px;border:none;"></iframe>`;
-    scHub.style.display = "block";
-    scHub.scrollIntoView({behavior: "smooth"});
-  }
+function viewPDF(){
+  if(pdfInput.files.length===0){ alert("Please select a PDF from your computer."); return; }
+  const file=pdfInput.files[0];
+  const url=URL.createObjectURL(file);
+  viewerContainer.innerHTML=`<iframe src="${url}" style="width:100%;height:100%;border:none;"></iframe>`;
+  viewerContainer.style.display="block";
+  viewerContainer.scrollIntoView({behavior:"smooth"});
 }
+
+// Load universities on page load
+(async ()=>{
+  const baseURL=`https://api.github.com/repos/${config.singleRepo.owner}/${config.singleRepo.repo}/contents/`;
+  const universities=await fetchFolder(baseURL);
+  populateDropdown(universitySel, universities);
+})();
+
+// Dropdown event listeners
+universitySel.addEventListener("change", async ()=>{
+  resetDropdowns(levelSel, semSel, progSel);
+  if(!universitySel.value) return;
+  const levels=await fetchFolder(`https://api.github.com/repos/${config.singleRepo.owner}/${config.singleRepo.repo}/contents/${universitySel.value}`);
+  populateDropdown(levelSel, levels);
+});
+
+levelSel.addEventListener("change", async ()=>{
+  resetDropdowns(semSel, progSel);
+  if(!levelSel.value) return;
+  const sems=await fetchFolder(`https://api.github.com/repos/${config.singleRepo.owner}/${config.singleRepo.repo}/contents/${levelSel.value}`);
+  populateDropdown(semSel, sems);
+});
+
+semSel.addEventListener("change", async ()=>{
+  resetDropdowns(progSel);
+  if(!semSel.value) return;
+  const programs=await fetchFolder(`https://api.github.com/repos/${config.singleRepo.owner}/${config.singleRepo.repo}/contents/${semSel.value}`);
+  populateDropdown(progSel, programs);
+});
+</script>
