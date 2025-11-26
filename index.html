@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Colleges of Education Past Questions | SCode Studio | SCode COE Pasco</title>
-<meta name="1192659b3424e689b6df71ec679049b3b1cb6564" content="1192659b3424e689b6df71ec679049b3b1cb6564" />
+  <meta name="1192659b3424e689b6df71ec679049b3b1cb6564" content="1192659b3424e689b6df71ec679049b3b1cb6564" />
   <!-- Favicon -->
   <link rel="icon" type="image/jpeg" href="https://raw.githubusercontent.com/SCodeGit/trial/main/favicon%20scode.jpg">
   <link rel="shortcut icon" type="image/jpeg" href="https://raw.githubusercontent.com/SCodeGit/trial/main/favicon%20scode.jpg">
@@ -265,12 +265,10 @@
   <div class="instructions-container">
     <button class="instructions-toggle" onclick="toggleInstructions()"> View Instructions For Trainees</button>
     <div class="instructions-content" id="instructionsBox">
-      <p><strong>Welcome Trainees!</strong> Here’s how to navigate this platform with SC Tools:</p>
+      <p><strong>Welcome Trainees!</strong> Here’s how to navigate this platform:</p>
       <ul style="list-style: none; text-align: left; padding: 0; margin-top: 10px;">
         <li> Select your <strong>university, level, semester, and program</strong> to view available PDFs.</li>
-        <li> Click on any file name to <strong>view it instantly in the SC Tools viewer</strong> inside this hub.</li>
-        <li> You can still download PDFs by right-clicking or using your browser download option.</li>
-        <li> Use SC Tools to highlight, search inside PDFs, and interact with learning materials efficiently.</li>
+        <li> Click on any file name to <strong>download</strong> the past questions.</li>
       </ul>
       <p style="margin-top: 10px; font-size: 0.9rem; opacity: 0.8;">Stay focused, study smart, and all the best!</p>
     </div>
@@ -286,16 +284,12 @@
         <select id="program" disabled><option value="">Select Program</option></select>
         <button id="searchBtn">Search PDFs</button>
       </div>
-
       <div id="pdf-list" class="pdf-list"></div>
-
-      <!-- SC Tools PDF Viewer -->
-      <div id="sc-pdf-viewer" style="width:100%;height:700px;margin-top:20px;border:2px solid #1e3a8a;border-radius:10px;display:none;"></div>
     </div>
   </div>
 
   <footer>
-    &copy; 2025 SCode Studio. All rights reserved.
+    &copy; 2025 SCode. All rights reserved.
   </footer>
 
   <!-- Scripts -->
@@ -325,109 +319,154 @@
         }
       });
     })();
-
-    // --- SC Tools PDF Viewer Logic ---
-    const config = {
-      mode: "single",
-      singleRepo: { owner: "SCodeGit", repo: "trial", branch: "main" }
-    };
-
-    const universitySel = document.getElementById("university");
-    const levelSel = document.getElementById("level");
-    const semSel = document.getElementById("semester");
-    const progSel = document.getElementById("program");
-    const pdfList = document.getElementById("pdf-list");
-    const searchBtn = document.getElementById("searchBtn");
-    const viewerContainer = document.getElementById("sc-pdf-viewer");
-
-    let loadedPDFs = [];
-
-    async function fetchFolder(url, branch=config.singleRepo.branch) {
-      const fullUrl = url.includes("?") ? url : `${url}?ref=${branch}`;
-      const res = await fetch(fullUrl);
-      if (!res.ok) return [];
-      return await res.json();
-    }
-
-    function populateDropdown(dropdown, items) {
-      items.forEach(i => {
-        if(i.type === "dir") {
-          const opt = document.createElement("option");
-          opt.value = i.path;
-          opt.textContent = i.name;
-          dropdown.appendChild(opt);
-        }
-      });
-      dropdown.disabled = false;
-    }
-
-    function resetDropdowns(...dropdowns) {
-      dropdowns.forEach(d => {
-        d.innerHTML = `<option value="">Select ${d.id.charAt(0).toUpperCase() + d.id.slice(1)}</option>`;
-        d.disabled = true;
-      });
-      pdfList.innerHTML = "";
-      viewerContainer.style.display = "none";
-      loadedPDFs = [];
-    }
-
-    function displayPDFs(pdfs) {
-      pdfList.innerHTML = "";
-      if (pdfs.length === 0) {
-        pdfList.innerHTML = "<p>No PDF files found.</p>";
-        return;
-      }
-
-      pdfs.forEach(f => {
-        const rawURL = `https://raw.githubusercontent.com/${config.singleRepo.owner}/${config.singleRepo.repo}/${config.singleRepo.branch}/${f.path}`;
-        const div = document.createElement("div");
-        div.className = "pdf-item";
-        div.innerHTML = `<a href="#" data-pdf="${rawURL}">${f.name}</a>`;
-        pdfList.appendChild(div);
-      });
-
-      pdfList.querySelectorAll("a").forEach(link => {
-        link.addEventListener("click", e => {
-          e.preventDefault();
-          const pdfURL = link.dataset.pdf;
-          viewerContainer.innerHTML = `<iframe src="https://docs.google.com/gview?url=${encodeURIComponent(pdfURL)}&embedded=true" style="width:100%;height:100%;border:none;"></iframe>`;
-          viewerContainer.style.display = "block";
-          viewerContainer.scrollIntoView({behavior: "smooth"});
-        });
-      });
-    }
-
-    async function loadPDFs() {
-      if(!progSel.value) return [];
-      const files = await fetchFolder(`https://api.github.com/repos/${config.singleRepo.owner}/${config.singleRepo.repo}/contents/${progSel.value}`);
-      return files.filter(f => f.name.toLowerCase().endsWith(".pdf"));
-    }
-
-    universitySel.addEventListener("change", async () => {
-      resetDropdowns(levelSel, semSel, progSel);
-      if(!universitySel.value) return;
-      const levels = await fetchFolder(`https://api.github.com/repos/${config.singleRepo.owner}/${config.singleRepo.repo}/contents/${universitySel.value}`);
-      populateDropdown(levelSel, levels);
-    });
-
-    levelSel.addEventListener("change", async () => {
-      resetDropdowns(semSel, progSel);
-      if(!levelSel.value) return;
-      const sems = await fetchFolder(`https://api.github.com/repos/${config.singleRepo.owner}/${config.singleRepo.repo}/contents/${levelSel.value}`);
-      populateDropdown(semSel, sems);
-    });
-
-    semSel.addEventListener("change", async () => {
-      resetDropdowns(progSel);
-      if(!semSel.value) return;
-      const programs = await fetchFolder(`https://api.github.com/repos/${config.singleRepo.owner}/${config.singleRepo.repo}/contents/${semSel.value}`);
-      populateDropdown(progSel, programs);
-    });
-
-    searchBtn.addEventListener("click", async () => {
-      loadedPDFs = await loadPDFs();
-      displayPDFs(loadedPDFs);
-    });
   </script>
+
+  <!-- PDF / GitHub + DirectLink Integration -->
+  <script src="script.js"></script>
+<!-- SC Tools Floating Hub -->
+<div id="scToolsHub">
+    <div id="scToggle" title="Open SC Tools">SC</div>
+    <div id="scContent">
+        <h4>SC Tools Hub</h4>
+
+        <!-- Instructions -->
+        <div class="sc-instructions">
+            <p><strong>SC Tools Instructions:</strong></p>
+            <ul>
+                <li>Select an AI to open in a new tab.</li>
+                <li>Select a PDF from site or upload your own to view in a new tab.</li>
+            </ul>
+        </div>
+
+        <!-- AI Selector -->
+        <label for="scAI">Select AI:</label>
+        <select id="scAI">
+            <option value="">--Choose AI--</option>
+            <option value="chatgpt">ChatGPT</option>
+            <option value="copilot">Copilot</option>
+            <option value="deepseek">DeepSeek</option>
+            <option value="questionai">Question AI</option>
+        </select>
+        <button onclick="openSC_AI()">Go</button>
+
+        <!-- PDF Selector / Upload -->
+        <label for="scPDF">Open PDF:</label>
+        <select id="scPDF">
+            <option value="">--Site PDFs--</option>
+            <option value="pdfs/sample1.pdf">Sample PDF 1</option>
+            <option value="pdfs/sample2.pdf">Sample PDF 2</option>
+        </select>
+        <input type="file" id="scPDFInput" accept=".pdf">
+        <button onclick="viewSC_PDF()">View PDF</button>
+    </div>
+</div>
+
+<!-- SC Tools CSS -->
+<style>
+#scToolsHub {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 250px;
+    z-index: 9999;
+    font-family: sans-serif;
+}
+
+#scToggle {
+    background: #1e3a8a;
+    color: #fff;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 50px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 18px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+}
+
+#scContent {
+    display: none;
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+    padding: 10px;
+    margin-top: 10px;
+}
+
+#scContent h4 {
+    margin: 0 0 10px 0;
+    text-align: center;
+}
+
+#scContent select, #scContent input[type="file"], #scContent button {
+    width: 100%;
+    margin-bottom: 6px;
+    padding: 8px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+}
+
+#scContent button {
+    background: #1e3a8a;
+    color: #fff;
+    cursor: pointer;
+}
+
+#scContent button:hover {
+    background: #0a1f44;
+}
+
+.sc-instructions {
+    background: rgba(30,58,138,0.1);
+    padding: 6px;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    margin-bottom: 8px;
+}
+</style>
+
+<!-- SC Tools JS -->
+<script>
+const scToggle = document.getElementById("scToggle");
+const scContent = document.getElementById("scContent");
+
+scToggle.addEventListener("click", () => {
+    scContent.style.display = scContent.style.display === "block" ? "none" : "block";
+});
+
+// Open selected AI
+function openSC_AI(){
+    const ai = document.getElementById("scAI").value;
+    if(!ai){ alert("Please select an AI!"); return; }
+    let url = "";
+    switch(ai){
+        case 'chatgpt': url="https://chat.openai.com/"; break;
+        case 'copilot': url="https://copilot.microsoft.com/"; break;
+        case 'deepseek': url="https://deepseek.ai/"; break;
+        case 'questionai': url="https://questionai.com/"; break;
+    }
+    window.open(url, "_blank");
+}
+
+// View PDF
+function viewSC_PDF(){
+    const selectPDF = document.getElementById("scPDF").value;
+    const uploadPDF = document.getElementById("scPDFInput").files[0];
+
+    if(uploadPDF){
+        const url = URL.createObjectURL(uploadPDF);
+        window.open(url, "_blank");
+    } else if(selectPDF){
+        window.open(selectPDF, "_blank");
+    } else {
+        alert("Please select a PDF or upload one.");
+    }
+}
+</script>
+
 </body>
 </html>
+
