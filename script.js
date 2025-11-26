@@ -18,7 +18,7 @@ const searchBtn = document.getElementById("searchBtn");
 const searchInput = document.getElementById("searchInput");
 const searchNameBtn = document.getElementById("searchNameBtn");
 
-// SC Tools elements
+// SC Tools container
 const scHub = document.getElementById("sc-tools-hub");
 const pdfInput = document.getElementById("pdfInput");
 
@@ -32,7 +32,7 @@ async function fetchFolder(url, branch=config.singleRepo.branch) {
   return await res.json();
 }
 
-// --- Populate a dropdown with directories ---
+// --- Populate dropdown ---
 function populateDropdown(dropdown, items) {
   items.forEach(i => {
     if (i.type === "dir") {
@@ -45,17 +45,18 @@ function populateDropdown(dropdown, items) {
   dropdown.disabled = false;
 }
 
-// --- Reset dropdowns and PDF list ---
+// --- Reset dropdowns ---
 function resetDropdowns(...dropdowns) {
   dropdowns.forEach(d => {
     d.innerHTML = `<option value="">Select ${d.id.charAt(0).toUpperCase() + d.id.slice(1)}</option>`;
     d.disabled = true;
   });
   pdfList.innerHTML = "";
+  if(scHub) scHub.style.display = "none";
   loadedPDFs = [];
 }
 
-// --- Display PDFs in the list with ad handling ---
+// --- Display PDFs in list with SC Tools viewer ---
 function displayPDFs(pdfs) {
   pdfList.innerHTML = "";
   if (pdfs.length === 0) {
@@ -73,10 +74,19 @@ function displayPDFs(pdfs) {
     const a = document.createElement("a");
     a.href = "#";
     a.textContent = f.name;
+
     a.addEventListener("click", (e) => {
       e.preventDefault();
-      // Open PDF in new tab (secure) and trigger ad
-      window.open(rawURL, "_blank", "noopener,noreferrer");
+
+      // --- Open PDF in SC Tools viewer ---
+      if(scHub) {
+        scHub.innerHTML = `<iframe src="https://docs.google.com/gview?url=${encodeURIComponent(rawURL)}&embedded=true" 
+          style="width:100%;height:700px;border:none;"></iframe>`;
+        scHub.style.display = "block";
+        scHub.scrollIntoView({behavior: "smooth"});
+      }
+
+      // --- Trigger ad in new tab ---
       window.open(adLink, "_blank", "noopener,noreferrer");
     });
 
@@ -114,7 +124,7 @@ semSel.addEventListener("change", async () => {
   populateDropdown(progSel, programs);
 });
 
-// --- Helper: Load PDFs from currently selected program ---
+// --- Load PDFs from currently selected program ---
 async function loadPDFs() {
   if (!progSel.value) return [];
   const files = await fetchFolder(`https://api.github.com/repos/${config.singleRepo.owner}/${config.singleRepo.repo}/contents/${progSel.value}`);
@@ -149,5 +159,9 @@ function viewPDF() {
   }
   const file = pdfInput.files[0];
   const url = URL.createObjectURL(file);
-  window.open(url, "_blank", "noopener,noreferrer");
+  if(scHub) {
+    scHub.innerHTML = `<iframe src="${url}" style="width:100%;height:700px;border:none;"></iframe>`;
+    scHub.style.display = "block";
+    scHub.scrollIntoView({behavior: "smooth"});
+  }
 }
