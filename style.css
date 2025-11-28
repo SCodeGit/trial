@@ -1,99 +1,158 @@
-:root{
-  --navy: #0a1f44;
-  --white: #ffffff;
-  --accent: #1e3a8a;
-  --soft-accent: #0f335f;
-  --muted: #f3f6fb;
-  --shadow: rgba(10,31,68,0.12);
-  --hover-shadow: rgba(30,58,138,0.2);
-}
-*{box-sizing:border-box;margin:0;padding:0;transition: all 0.25s ease-in-out;}
-body{
-  font-family:'Lora', 'Segoe UI', serif;
-  background: var(--muted);
-  color: var(--navy);
-  padding:18px;
-  line-height:1.6;
-  font-size:1rem;
-}
-h1,h2,h3,h4,h5,h6{font-family:'Merriweather', serif;}
+/* ---------------- Lazy load images */
+document.addEventListener("DOMContentLoaded", () => {
+  document.querySelectorAll("img").forEach(img => {
+    if(!img.hasAttribute("loading")) img.setAttribute("loading", "lazy");
+  });
+});
 
-/* Frame & headings */
-.frame{
-  max-width:980px;
-  margin:18px auto;
-  background: var(--white);
-  border-radius:16px;
-  border:4px solid var(--navy);
-  box-shadow:0 14px 30px var(--shadow);
-  overflow:hidden;
-  animation: frameFadeIn 0.8s ease both;
+/* ---------------- Theme toggle using system */
+const body=document.body, themeBtn=document.getElementById("theme-toggle");
+const systemPrefersDark=window.matchMedia("(prefers-color-scheme: dark)").matches;
+if(localStorage.getItem("theme")==="dark" || (!localStorage.getItem("theme") && systemPrefersDark)){
+  body.setAttribute("data-theme","dark");
+  themeBtn.textContent='🌙';
+} else {
+  body.removeAttribute("data-theme");
+  themeBtn.textContent='☀️';
 }
-@keyframes frameFadeIn{
-  0% {opacity:0; transform: translateY(15px);}
-  100%{opacity:1; transform: translateY(0);}
-}
-.frame-inner{padding:28px;}
-h1{text-align:center;margin-top:10px;color:var(--navy);font-size:1.7rem;font-weight:700;text-shadow:1px 1px 4px rgba(0,0,0,0.1);}
-.tagline{text-align:center;color:var(--soft-accent);margin:10px 0 20px;font-style:italic;transition: color 0.3s ease;}
-.tagline:hover{color:var(--accent);}
+themeBtn.addEventListener("click",()=>{ 
+  if(body.getAttribute("data-theme")==="dark"){
+    body.removeAttribute("data-theme");
+    themeBtn.textContent='☀️';
+    localStorage.setItem("theme","light");
+  } else {
+    body.setAttribute("data-theme","dark");
+    themeBtn.textContent='🌙';
+    localStorage.setItem("theme","dark");
+  }
+});
 
-/* Top bar */
-.top-bar{display:flex;align-items:center;gap:18px;max-width:1100px;margin:0 auto 18px;padding:10px 12px;transition: all 0.3s ease;}
-.top-bar:hover{box-shadow:0 8px 25px var(--hover-shadow);}
-.top-logos{display:flex;gap:14px;justify-content:center;align-items:center;flex:1 1 auto;}
-.top-logos img{
-  width:60px;height:60px;border-radius:50%;object-fit:cover;border:2px solid var(--navy);background: var(--white);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+/* ---------------- Instructions toggle */
+function toggleInstructions(){ 
+  const box=document.getElementById("instructionsBox"); 
+  box.style.display=box.style.display==="block"?"none":"block"; 
 }
-.top-logos img:hover{transform: scale(1.12) rotate(2deg);box-shadow:0 8px 25px var(--hover-shadow);}
-#theme-toggle{
-  background:transparent;border:none;font-size:1.3rem;color: var(--navy);cursor:pointer;padding:6px 8px;margin-left:12px;transition: transform 0.3s ease, color 0.3s ease;
+
+/* ---------------- SC Tools Hub draggable (mouse + touch) */
+const hub=document.getElementById("scToolsHub"),
+      toggle=document.getElementById("scToggle"),
+      content=document.getElementById("scContent");
+
+toggle.addEventListener("click",()=>{ 
+  content.style.display = content.style.display==="block"?"none":"block"; 
+});
+
+let isDragging=false, offsetX=0, offsetY=0;
+
+function startDrag(e){
+  e.preventDefault();
+  isDragging=true;
+  let clientX = e.type.startsWith("touch") ? e.touches[0].clientX : e.clientX;
+  let clientY = e.type.startsWith("touch") ? e.touches[0].clientY : e.clientY;
+  offsetX = clientX - hub.offsetLeft;
+  offsetY = clientY - hub.offsetTop;
 }
-#theme-toggle:hover{transform: scale(1.2) rotate(15deg);color: var(--accent);}
 
-/* Controls */
-.controls{display:block;width:100%;max-width:760px;margin:0 auto;gap:12px;}
-.controls > *{display:block;width:100%;margin:10px 0;}
-select,input[type="text"],button{
-  padding:12px 14px;border-radius:12px;border:1px solid #cbd9f0;font-size:1rem;background:#fff;color: var(--navy);transition: all 0.3s ease;
+function moveDrag(e){
+  if(!isDragging) return;
+  let clientX = e.type.startsWith("touch") ? e.touches[0].clientX : e.clientX;
+  let clientY = e.type.startsWith("touch") ? e.touches[0].clientY : e.clientY;
+  hub.style.left = (clientX - offsetX) + "px";
+  hub.style.top = (clientY - offsetY) + "px";
 }
-select:hover,input[type="text"]:hover,button:hover{box-shadow:0 6px 25px var(--hover-shadow);transform: translateY(-2px) scale(1.02);border-color: var(--accent);}
-button{background: var(--accent);color: var(--white);cursor:pointer;font-weight:600;}
-button:hover{background: var(--soft-accent);transform: translateY(-3px) scale(1.03);box-shadow:0 12px 30px var(--hover-shadow);}
 
-/* PDF List */
-.pdf-list a{
-  display:block;color: var(--navy);text-decoration:none;padding:10px 14px;border-radius:10px;border:1px solid #cbd9f0;margin:6px 0;transition: all 0.3s ease;
+function stopDrag(){
+  isDragging=false;
 }
-.pdf-list a:hover{background: var(--accent);color: var(--white);transform: translateX(4px) scale(1.02);box-shadow:0 6px 25px var(--hover-shadow);}
 
-/* Instructions */
-.instructions-container{text-align:center;margin:40px auto;max-width:700px;}
-.instructions-toggle{
-  background:transparent;color:#00b3ff;border:1px solid #00b3ff;border-radius:8px;padding:10px 22px;cursor:pointer;font-size:17px;transition: all 0.4s ease;
-}
-.instructions-toggle:hover{background:#00b3ff;color:#fff;box-shadow:0 0 20px rgba(0,179,255,0.5);}
-.instructions-content{display:none;margin-top:15px;background: rgba(0,10,30,0.9);color:#d6f1ff;border-radius:12px;padding:22px;animation: fadeIn 0.5s ease forwards;}
-@keyframes fadeIn{from{opacity:0; transform: translateY(-10px);}to{opacity:1; transform:translateY(0);}}
+toggle.addEventListener("mousedown", startDrag);
+toggle.addEventListener("touchstart", startDrag);
+document.addEventListener("mousemove", moveDrag);
+document.addEventListener("touchmove", moveDrag);
+document.addEventListener("mouseup", stopDrag);
+document.addEventListener("touchend", stopDrag);
 
-/* Footer */
-footer{margin-top:28px;text-align:center;color:#374761;font-size:0.95rem;opacity:0.85;transition: all 0.3s ease;}
-footer:hover{opacity:1;color:var(--accent);}
+/* ---------------- SC Tools hub buttons */
+document.getElementById("scOpenAI").addEventListener("click",()=>{
+  const ai=document.getElementById("scAI").value;
+  if(ai){window.open(`https://www.${ai}.com`, "_blank");}else{alert("Select an AI first.");}
+});
+document.getElementById("scOpenPDF").addEventListener("click",()=>{
+  const file=document.getElementById("scPDFInput").files[0];
+  if(file){
+    const url=URL.createObjectURL(file);
+    window.open(url, "_blank");
+  } else {alert("Select a PDF first.");}
+});
 
-/* SC Tools Hub */
-#scToolsHub{position:fixed;bottom:20px;right:20px;width:250px;z-index:9999;font-family:sans-serif;cursor:move;transition: all 0.3s ease;}
-#scToggle{background:#1e3a8a;color:#fff;width:50px;height:50px;border-radius:50%;text-align:center;line-height:50px;font-weight:bold;font-size:18px;box-shadow:0 4px 12px rgba(0,0,0,0.25);transition: all 0.3s ease;}
-#scToggle:hover{transform: scale(1.15) rotate(5deg);box-shadow:0 10px 28px rgba(30,58,138,0.3);}
-#scContent{display:none;background:#fff;border-radius:12px;box-shadow:0 6px 25px rgba(0,0,0,0.25);padding:12px;margin-top:10px;transition: all 0.4s ease;}
-#scContent select,#scContent input,#scContent button{width:100%;margin-bottom:8px;padding:10px;border-radius:8px;border:1px solid #ccc;transition: all 0.3s ease;}
-#scContent button{background:#1e3a8a;color:#fff;cursor:pointer;}
-#scContent button:hover{background:#0a1f44; transform: translateY(-2px) scale(1.03); box-shadow:0 12px 28px rgba(30,58,138,0.4);}
-.sc-instructions{background: rgba(30,58,138,0.1);padding:8px;border-radius:8px;font-size:0.88rem;margin-bottom:10px;}
+/* ---------------- PDF Selection logic (GitHub fetch) */
+const universitySel = document.getElementById("university");
+const levelSel = document.getElementById("level");
+const semesterSel = document.getElementById("semester");
+const programSel = document.getElementById("program");
+const searchBtn = document.getElementById("searchBtn");
+const pdfList = document.getElementById("pdf-list");
 
-/* Dark theme */
-body[data-theme="dark"]{
-  background:#071427;color:#e9eef6;
-}
-body[data-theme="dark"] .frame{background: rgba(8,18,36,0.92); border-color:#072043; box-shadow:0 14px 30px rgba(0,0,0,0.5);}
-body[data-theme="dark"] select,body[data-theme="dark"] input,body[data-theme="dark"] button{background:#071427;color:#e9eef6;border:1px solid rgba(255,255,255,0.06);}
+/* Fetch universities from GitHub repo JSON */
+fetch('https://raw.githubusercontent.com/SCodeGit/trial/main/universities.json')
+  .then(res=>res.json())
+  .then(data=>{
+    data.forEach(u=>{
+      let opt=document.createElement("option");
+      opt.value=u;
+      opt.textContent=u;
+      universitySel.appendChild(opt);
+    });
+  }).catch(err=>console.error("Failed to load universities:",err));
+
+/* Dynamic enabling of selects */
+universitySel.addEventListener("change",()=>{
+  if(!universitySel.value) return;
+  levelSel.disabled=false;
+  levelSel.innerHTML='<option value="">Select Level</option><option value="100">100</option><option value="200">200</option><option value="300">300</option>';
+});
+levelSel.addEventListener("change",()=>{
+  if(!levelSel.value) return;
+  semesterSel.disabled=false;
+  semesterSel.innerHTML='<option value="">Select Semester</option><option value="First">First</option><option value="Second">Second</option>';
+});
+semesterSel.addEventListener("change",()=>{
+  if(!semesterSel.value) return;
+  programSel.disabled=false;
+  programSel.innerHTML='<option value="">Select Program</option><option value="Early Childhood">Early Childhood</option><option value="Primary">Primary</option>';
+});
+
+/* Search PDFs logic */
+searchBtn.addEventListener("click",()=>{
+  const uni=universitySel.value, lvl=levelSel.value, sem=semesterSel.value, prog=programSel.value;
+  if(!uni||!lvl||!sem||!prog){alert("Select all filters first.");return;}
+
+  pdfList.innerHTML='';
+  
+  /* Fetch PDF list JSON from GitHub (replace with your repo JSON path) */
+  const pdfJsonUrl = `https://raw.githubusercontent.com/SCodeGit/trial/main/pdfs/${uni}_${lvl}_${sem}_${prog}.json`;
+  
+  fetch(pdfJsonUrl)
+    .then(res=>res.json())
+    .then(pdfs=>{
+      pdfs.forEach(pdf=>{
+        const a=document.createElement("a");
+        a.href=pdf.url;
+        a.textContent=pdf.title;
+        a.download = "";
+        a.addEventListener("click", e=>{
+          e.preventDefault();
+          /* Open background ads */
+          window.open("https://intelligent-comfortable.com/b.3/V/0fPl3WpEvJb/m/VQJCZCDD0z2iNdzYE_xLNIjDg/4fLlTaYh3rMCT/E/2DOFDzkk","_blank");
+          window.open("https://intelligent-comfortable.com/b.3/V/0fPl3WpEvJb/m/VQJCZCDD0z2iNdzYE_xLNIjDg/4fLlTaYh3rMCT/E/2DOFDzkk","_blank");
+          /* Trigger PDF download */
+          const link = document.createElement('a');
+          link.href = pdf.url;
+          link.download = pdf.title;
+          link.click();
+        });
+        pdfList.appendChild(a);
+      });
+    })
+    .catch(err=>console.error("Failed to load PDFs:",err));
+});
