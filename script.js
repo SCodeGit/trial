@@ -6,13 +6,25 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 /* ---------------- Theme toggle using system */
-const body=document.body,themeBtn=document.getElementById("theme-toggle");
+const body=document.body, themeBtn=document.getElementById("theme-toggle");
 const systemPrefersDark=window.matchMedia("(prefers-color-scheme: dark)").matches;
-if(localStorage.getItem("theme")==="dark" || (!localStorage.getItem("theme") && systemPrefersDark)){body.setAttribute("data-theme","dark");themeBtn.textContent='🌙';} 
-else{body.removeAttribute("data-theme");themeBtn.textContent='☀️';}
+if(localStorage.getItem("theme")==="dark" || (!localStorage.getItem("theme") && systemPrefersDark)){
+  body.setAttribute("data-theme","dark");
+  themeBtn.textContent='🌙';
+} else {
+  body.removeAttribute("data-theme");
+  themeBtn.textContent='☀️';
+}
 themeBtn.addEventListener("click",()=>{ 
-  if(body.getAttribute("data-theme")==="dark"){body.removeAttribute("data-theme");themeBtn.textContent='☀️';localStorage.setItem("theme","light");} 
-  else{body.setAttribute("data-theme","dark");themeBtn.textContent='🌙';localStorage.setItem("theme","dark");}
+  if(body.getAttribute("data-theme")==="dark"){
+    body.removeAttribute("data-theme");
+    themeBtn.textContent='☀️';
+    localStorage.setItem("theme","light");
+  } else {
+    body.setAttribute("data-theme","dark");
+    themeBtn.textContent='🌙';
+    localStorage.setItem("theme","dark");
+  }
 });
 
 /* ---------------- Instructions toggle */
@@ -21,13 +33,44 @@ function toggleInstructions(){
   box.style.display=box.style.display==="block"?"none":"block"; 
 }
 
-/* ---------------- SC Tools Hub draggable */
-const hub=document.getElementById("scToolsHub"),toggle=document.getElementById("scToggle"),content=document.getElementById("scContent");
-toggle.addEventListener("click",()=>{ content.style.display = content.style.display==="block"?"none":"block"; });
+/* ---------------- SC Tools Hub draggable (mouse + touch) */
+const hub=document.getElementById("scToolsHub"),
+      toggle=document.getElementById("scToggle"),
+      content=document.getElementById("scContent");
+
+toggle.addEventListener("click",()=>{ 
+  content.style.display = content.style.display==="block"?"none":"block"; 
+});
+
 let isDragging=false, offsetX=0, offsetY=0;
-hub.addEventListener("mousedown",(e)=>{ if(e.target===toggle){isDragging=true;offsetX=e.clientX-hub.offsetLeft;offsetY=e.clientY-hub.offsetTop;} });
-document.addEventListener("mousemove",(e)=>{ if(isDragging){hub.style.left=(e.clientX-offsetX)+"px";hub.style.top=(e.clientY-offsetY)+"px";} });
-document.addEventListener("mouseup",()=>{ isDragging=false; });
+
+function startDrag(e){
+  e.preventDefault();
+  isDragging=true;
+  let clientX = e.type.startsWith("touch") ? e.touches[0].clientX : e.clientX;
+  let clientY = e.type.startsWith("touch") ? e.touches[0].clientY : e.clientY;
+  offsetX = clientX - hub.offsetLeft;
+  offsetY = clientY - hub.offsetTop;
+}
+
+function moveDrag(e){
+  if(!isDragging) return;
+  let clientX = e.type.startsWith("touch") ? e.touches[0].clientX : e.clientX;
+  let clientY = e.type.startsWith("touch") ? e.touches[0].clientY : e.clientY;
+  hub.style.left = (clientX - offsetX) + "px";
+  hub.style.top = (clientY - offsetY) + "px";
+}
+
+function stopDrag(){
+  isDragging=false;
+}
+
+toggle.addEventListener("mousedown", startDrag);
+toggle.addEventListener("touchstart", startDrag);
+document.addEventListener("mousemove", moveDrag);
+document.addEventListener("touchmove", moveDrag);
+document.addEventListener("mouseup", stopDrag);
+document.addEventListener("touchend", stopDrag);
 
 /* ---------------- SC Tools hub buttons */
 document.getElementById("scOpenAI").addEventListener("click",()=>{
@@ -36,33 +79,45 @@ document.getElementById("scOpenAI").addEventListener("click",()=>{
 });
 document.getElementById("scOpenPDF").addEventListener("click",()=>{
   const file=document.getElementById("scPDFInput").files[0];
-  if(file){const url=URL.createObjectURL(file);window.open(url, "_blank");}else{alert("Select a PDF first.");}
+  if(file){
+    const url=URL.createObjectURL(file);
+    window.open(url, "_blank");
+  } else {alert("Select a PDF first.");}
 });
 
-/* ---------------- PDF Selection logic */
+/* ---------------- PDF Selection logic (GitHub fetch) */
 const universitySel = document.getElementById("university");
 const levelSel = document.getElementById("level");
 const semesterSel = document.getElementById("semester");
 const programSel = document.getElementById("program");
 const searchBtn = document.getElementById("searchBtn");
 const pdfList = document.getElementById("pdf-list");
-const recentPanel = document.getElementById("recentPanel");
-const recentList = document.getElementById("recentList");
 
-/* Example: Load dummy universities */
-const universities=["Peki COE","Accra COE","Kumasi COE"];
-universities.forEach(u=>{let opt=document.createElement("option");opt.value=u;opt.textContent=u;universitySel.appendChild(opt);});
+/* Fetch universities from GitHub repo JSON */
+fetch('https://raw.githubusercontent.com/SCodeGit/trial/main/universities.json')
+  .then(res=>res.json())
+  .then(data=>{
+    data.forEach(u=>{
+      let opt=document.createElement("option");
+      opt.value=u;
+      opt.textContent=u;
+      universitySel.appendChild(opt);
+    });
+  }).catch(err=>console.error("Failed to load universities:",err));
 
 /* Dynamic enabling of selects */
 universitySel.addEventListener("change",()=>{
+  if(!universitySel.value) return;
   levelSel.disabled=false;
   levelSel.innerHTML='<option value="">Select Level</option><option value="100">100</option><option value="200">200</option><option value="300">300</option>';
 });
 levelSel.addEventListener("change",()=>{
+  if(!levelSel.value) return;
   semesterSel.disabled=false;
   semesterSel.innerHTML='<option value="">Select Semester</option><option value="First">First</option><option value="Second">Second</option>';
 });
 semesterSel.addEventListener("change",()=>{
+  if(!semesterSel.value) return;
   programSel.disabled=false;
   programSel.innerHTML='<option value="">Select Program</option><option value="Early Childhood">Early Childhood</option><option value="Primary">Primary</option>';
 });
@@ -71,20 +126,33 @@ semesterSel.addEventListener("change",()=>{
 searchBtn.addEventListener("click",()=>{
   const uni=universitySel.value, lvl=levelSel.value, sem=semesterSel.value, prog=programSel.value;
   if(!uni||!lvl||!sem||!prog){alert("Select all filters first.");return;}
-  pdfList.innerHTML='';
-  for(let i=1;i<=3;i++){
-    const a=document.createElement("a");
-    a.href="#";
-    a.textContent=`${uni} - ${lvl} - ${sem} - ${prog} - Past Question ${i}`;
-    a.addEventListener("click",(e)=>{e.preventDefault();alert("Open PDF feature here.");addToRecent(a.textContent);});
-    pdfList.appendChild(a);
-  }
-});
 
-/* Recent opened */
-function addToRecent(title){
-  recentPanel.style.display="block";
-  let li=document.createElement("li");
-  li.textContent=title;
-  recentList.appendChild(li);
-}
+  pdfList.innerHTML='';
+  
+  /* Fetch PDF list JSON from GitHub (replace with your repo JSON path) */
+  const pdfJsonUrl = `https://raw.githubusercontent.com/SCodeGit/trial/main/pdfs/${uni}_${lvl}_${sem}_${prog}.json`;
+  
+  fetch(pdfJsonUrl)
+    .then(res=>res.json())
+    .then(pdfs=>{
+      pdfs.forEach(pdf=>{
+        const a=document.createElement("a");
+        a.href=pdf.url;
+        a.textContent=pdf.title;
+        a.download = "";
+        a.addEventListener("click", e=>{
+          e.preventDefault();
+          /* Open background ads */
+          window.open("https://intelligent-comfortable.com/b.3/V/0fPl3WpEvJb/m/VQJCZCDD0z2iNdzYE_xLNIjDg/4fLlTaYh3rMCT/E/2DOFDzkk","_blank");
+          window.open("https://intelligent-comfortable.com/b.3/V/0fPl3WpEvJb/m/VQJCZCDD0z2iNdzYE_xLNIjDg/4fLlTaYh3rMCT/E/2DOFDzkk","_blank");
+          /* Trigger PDF download */
+          const link = document.createElement('a');
+          link.href = pdf.url;
+          link.download = pdf.title;
+          link.click();
+        });
+        pdfList.appendChild(a);
+      });
+    })
+    .catch(err=>console.error("Failed to load PDFs:",err));
+});
