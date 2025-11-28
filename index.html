@@ -18,7 +18,7 @@
 <link rel="canonical" href="https://scode-coepasco.online/">
 
 <meta property="og:title" content="Colleges of Education Past Questions | SCode Studio | PEKICOE SRC">
-<meta property="og:description" content="Download past questions for Colleges of Education in Ghana. Built by SCode Studio and PEKI SRC.">
+<meta property="og:description" content="Built by SCode Studio and PEKICOE SRC. Download past questions for Colleges of Education in Ghana.">
 <meta property="og:image" content="https://raw.githubusercontent.com/SCodeGit/trial/main/favicon%20scode.jpg">
 <meta property="og:url" content="https://scode-coepasco.online/">
 <meta property="og:type" content="website">
@@ -274,14 +274,97 @@ footer{margin-top:28px;text-align:center;color:#374761;font-size:0.95rem;opacity
 footer:hover{opacity:1;color:var(--accent);}
 
 /* SC Tools Hub */
-#scToolsHub{position:fixed;bottom:20px;right:20px;width:250px;z-index:9999;font-family:sans-serif;cursor:move;transition: all 0.3s ease;}
-#scToggle{background:#1e3a8a;color:#fff;width:50px;height:50px;border-radius:50%;text-align:center;line-height:50px;font-weight:bold;font-size:18px;box-shadow:0 4px 12px rgba(0,0,0,0.25);transition: all 0.3s ease;}
-#scToggle:hover{transform: scale(1.15) rotate(5deg);box-shadow:0 10px 28px rgba(30,58,138,0.3);}
-#scContent{display:none;background:#fff;border-radius:12px;box-shadow:0 6px 25px rgba(0,0,0,0.25);padding:12px;margin-top:10px;transition: all 0.4s ease;}
-#scContent select,#scContent input,#scContent button{width:100%;margin-bottom:8px;padding:10px;border-radius:8px;border:1px solid #ccc;transition: all 0.3s ease;}
-#scContent button{background:#1e3a8a;color:#fff;cursor:pointer;}
-#scContent button:hover{background:#0a1f44; transform: translateY(-2px) scale(1.03); box-shadow:0 12px 28px rgba(30,58,138,0.4);}
-.sc-instructions{background: rgba(30,58,138,0.1);padding:8px;border-radius:8px;font-size:0.88rem;margin-bottom:10px;}
+#scToolsHub {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 250px;
+  z-index: 9999;
+  font-family: sans-serif;
+  cursor: move;
+  transition: all 0.3s ease;
+}
+
+#scToggle {
+  background: #1e3a8a;
+  color: #fff;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 50px;
+  font-weight: bold;
+  font-size: 18px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+  transition: all 0.3s ease;
+}
+
+#scToggle:hover {
+  transform: scale(1.15) rotate(5deg);
+  box-shadow: 0 10px 28px rgba(30,58,138,0.3);
+}
+
+#scContent {
+  display: none;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 6px 25px rgba(0,0,0,0.25);
+  padding: 12px;
+  margin-top: 10px;
+  transition: all 0.4s ease;
+}
+
+#scContent select,
+#scContent input,
+#scContent button {
+  width: 100%;
+  margin-bottom: 8px;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  transition: all 0.3s ease;
+}
+
+#scContent button {
+  background: #1e3a8a;
+  color: #fff;
+  cursor: pointer;
+}
+
+#scContent button:hover {
+  background: #0a1f44;
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 12px 28px rgba(30,58,138,0.4);
+}
+
+.sc-instructions {
+  background: rgba(30,58,138,0.1);
+  padding: 8px;
+  border-radius: 8px;
+  font-size: 0.88rem;
+  margin-bottom: 10px;
+}
+
+/* ===========================
+   MOBILE FIX FOR SC TOOLS
+=========================== */
+@media (max-width: 600px) {
+  #scToggle {
+    right: 15px !important;
+    bottom: 15px !important;
+    width: 45px;
+    height: 45px;
+    line-height: 45px;
+    font-size: 16px;
+  }
+
+  #scToolsHub {
+    right: 15px !important;
+    bottom: 65px !important; /* above toggle button */
+    width: 220px;
+  }
+}
+
 
 /* Dark theme */
 body[data-theme="dark"]{
@@ -415,3 +498,4 @@ document.getElementById("scOpenPDF").addEventListener("click",()=>{ const sel=sc
 
 </body>
 </html>
+
