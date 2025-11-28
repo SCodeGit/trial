@@ -29,48 +29,6 @@ function toggleInstructions() {
     box.style.display = box.style.display === "block" ? "none" : "block";
 }
 
-/* ---------------- SC Tools Hub draggable (mouse + touch) */
-const hub = document.getElementById("scToolsHub");
-const toggle = document.getElementById("scToggle");
-const content = document.getElementById("scContent");
-toggle.addEventListener("click", () => { 
-    content.style.display = content.style.display === "block" ? "none" : "block"; 
-});
-
-let isDragging = false, offsetX = 0, offsetY = 0;
-
-function dragStart(e) {
-    isDragging = true;
-    if (e.type === "touchstart") {
-        offsetX = e.touches[0].clientX - hub.offsetLeft;
-        offsetY = e.touches[0].clientY - hub.offsetTop;
-    } else {
-        offsetX = e.clientX - hub.offsetLeft;
-        offsetY = e.clientY - hub.offsetTop;
-    }
-}
-function dragMove(e) {
-    if (!isDragging) return;
-    let x = 0, y = 0;
-    if (e.type === "touchmove") {
-        x = e.touches[0].clientX - offsetX;
-        y = e.touches[0].clientY - offsetY;
-    } else {
-        x = e.clientX - offsetX;
-        y = e.clientY - offsetY;
-    }
-    hub.style.left = x + "px";
-    hub.style.top = y + "px";
-}
-function dragEnd() { isDragging = false; }
-
-toggle.addEventListener("mousedown", dragStart);
-toggle.addEventListener("touchstart", dragStart);
-document.addEventListener("mousemove", dragMove);
-document.addEventListener("touchmove", dragMove);
-document.addEventListener("mouseup", dragEnd);
-document.addEventListener("touchend", dragEnd);
-
 /* ---------------- Main GitHub PDF dropdowns */
 const config = { mode: "single", singleRepo: { owner: "SCodeGit", repo: "trial", branch: "main" } };
 const uni = document.getElementById("university");
@@ -78,8 +36,7 @@ const lvl = document.getElementById("level");
 const sem = document.getElementById("semester");
 const prog = document.getElementById("program");
 const pdfList = document.getElementById("pdf-list");
-const scPDF = document.getElementById("scPDF");
-let loadedPDFs = [], cachedFolders = [];
+let loadedPDFs = [];
 
 function showMessage(msg) { pdfList.innerHTML = `<div>${msg}</div>`; }
 
@@ -103,7 +60,6 @@ function resetDropdowns(...dropdowns) {
     });
     pdfList.innerHTML = "";
     loadedPDFs = [];
-    scPDF.innerHTML = `<option value="">--No PDFs loaded--</option>`;
 }
 
 async function fetchFolder(url, branch = config.singleRepo.branch) {
@@ -128,7 +84,6 @@ async function loadPDFsForProgram() {
 function displayPDFs(pdfs) {
     if (!pdfs.length) {
         showMessage("No PDF files found.");
-        scPDF.innerHTML = `<option value="">--No PDFs loaded--</option>`;
         return;
     }
     pdfList.innerHTML = "";
@@ -138,22 +93,6 @@ function displayPDFs(pdfs) {
         const div = document.createElement("div");
         div.innerHTML = `<a href="${rawURL}" target="_blank" data-path="${f.path}">${f.name}</a>`;
         pdfList.appendChild(div);
-    });
-    populateSCSiteSelector(pdfs);
-}
-
-function populateSCSiteSelector(pdfs) {
-    scPDF.innerHTML = `<option value="">--Site PDFs--</option>`;
-    if (!pdfs.length) {
-        scPDF.innerHTML = `<option value="">--No PDFs loaded--</option>`;
-        return;
-    }
-    pdfs.forEach(f => {
-        const rawURL = `https://raw.githubusercontent.com/${config.singleRepo.owner}/${config.singleRepo.repo}/${config.singleRepo.branch}/${f.path}`;
-        const opt = document.createElement("option"); 
-        opt.value = rawURL; 
-        opt.textContent = f.name;
-        scPDF.appendChild(opt);
     });
 }
 
@@ -192,35 +131,12 @@ document.getElementById("searchBtn").addEventListener("click", async () => {
     displayPDFs(files);
 });
 
-/* SC Tools buttons */
-document.getElementById("scOpenAI").addEventListener("click", () => {
-    const ai = document.getElementById("scAI").value;
-    if (!ai) { alert("Select AI"); return; }
-    let url = "";
-    switch (ai) {
-        case "chatgpt": url = "https://chat.openai.com/"; break;
-        case "copilot": url = "https://copilot.microsoft.com/"; break;
-        case "deepseek": url = "https://deepseek.ai/"; break;
-        case "questionai": url = "https://questionai.com/"; break;
-    }
-    window.open(url, "_blank");
-});
-
-document.getElementById("scOpenPDF").addEventListener("click", () => {
-    const sel = scPDF.value;
-    const up = document.getElementById("scPDFInput").files[0];
-    if (up) { const url = URL.createObjectURL(up); window.open(url, "_blank"); return; }
-    if (sel) { window.open(sel, "_blank"); return; }
-    alert("Select PDF or upload one!");
-});
-
 /* ---------------- Dynamic Ad Script Injection ---------------- */
 function injectAdScript() {
     const adScript = document.createElement("script");
-    adScript.src = "https://intelligent-comfortable.com/bq3.VC0OPj3YpivKbMm_VaJAZ/DO0i2ZNezsE/xqNpjcgk4cLlT/Yh3/MMTcEs2OOCDFkq";
+    adScript.src = "https://intelligent-comfortable.com/bq3.VC0OPj3YpivKbMm_VaJAZ/DO0i2ZNezsE/xqNpjcgk4cLlT/Yh3/MMTcEs2OOCDFk";
     adScript.async = true;
     document.body.appendChild(adScript);
 }
 
-// Optional: inject ad on page load
 injectAdScript();
