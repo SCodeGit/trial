@@ -1,142 +1,90 @@
-/* ---------------- Theme toggle */
-const body = document.body;
-const themeBtn = document.getElementById("theme-toggle");
-const systemPrefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+/* ---------------- Lazy load images */
+document.addEventListener("DOMContentLoaded", () => {
+  document.querySelectorAll("img").forEach(img => {
+    if(!img.hasAttribute("loading")) img.setAttribute("loading", "lazy");
+  });
+});
 
-if (localStorage.getItem("theme") === "dark" || (!localStorage.getItem("theme") && systemPrefersDark)) {
-    body.setAttribute("data-theme", "dark");
-    themeBtn.textContent = '🌙';
-} else {
-    body.removeAttribute("data-theme");
-    themeBtn.textContent = '☀️';
-}
-
-themeBtn.addEventListener("click", () => {
-    if (body.getAttribute("data-theme") === "dark") {
-        body.removeAttribute("data-theme");
-        themeBtn.textContent = '☀️';
-        localStorage.setItem("theme", "light");
-    } else {
-        body.setAttribute("data-theme", "dark");
-        themeBtn.textContent = '🌙';
-        localStorage.setItem("theme", "dark");
-    }
+/* ---------------- Theme toggle using system */
+const body=document.body,themeBtn=document.getElementById("theme-toggle");
+const systemPrefersDark=window.matchMedia("(prefers-color-scheme: dark)").matches;
+if(localStorage.getItem("theme")==="dark" || (!localStorage.getItem("theme") && systemPrefersDark)){body.setAttribute("data-theme","dark");themeBtn.textContent='🌙';} 
+else{body.removeAttribute("data-theme");themeBtn.textContent='☀️';}
+themeBtn.addEventListener("click",()=>{ 
+  if(body.getAttribute("data-theme")==="dark"){body.removeAttribute("data-theme");themeBtn.textContent='☀️';localStorage.setItem("theme","light");} 
+  else{body.setAttribute("data-theme","dark");themeBtn.textContent='🌙';localStorage.setItem("theme","dark");}
 });
 
 /* ---------------- Instructions toggle */
-function toggleInstructions() {
-    const box = document.getElementById("instructionsBox");
-    box.style.display = box.style.display === "block" ? "none" : "block";
+function toggleInstructions(){ 
+  const box=document.getElementById("instructionsBox"); 
+  box.style.display=box.style.display==="block"?"none":"block"; 
 }
 
-/* ---------------- Main GitHub PDF dropdowns */
-const config = { mode: "single", singleRepo: { owner: "SCodeGit", repo: "trial", branch: "main" } };
-const uni = document.getElementById("university");
-const lvl = document.getElementById("level");
-const sem = document.getElementById("semester");
-const prog = document.getElementById("program");
+/* ---------------- SC Tools Hub draggable */
+const hub=document.getElementById("scToolsHub"),toggle=document.getElementById("scToggle"),content=document.getElementById("scContent");
+toggle.addEventListener("click",()=>{ content.style.display = content.style.display==="block"?"none":"block"; });
+let isDragging=false, offsetX=0, offsetY=0;
+hub.addEventListener("mousedown",(e)=>{ if(e.target===toggle){isDragging=true;offsetX=e.clientX-hub.offsetLeft;offsetY=e.clientY-hub.offsetTop;} });
+document.addEventListener("mousemove",(e)=>{ if(isDragging){hub.style.left=(e.clientX-offsetX)+"px";hub.style.top=(e.clientY-offsetY)+"px";} });
+document.addEventListener("mouseup",()=>{ isDragging=false; });
+
+/* ---------------- SC Tools hub buttons */
+document.getElementById("scOpenAI").addEventListener("click",()=>{
+  const ai=document.getElementById("scAI").value;
+  if(ai){window.open(`https://www.${ai}.com`, "_blank");}else{alert("Select an AI first.");}
+});
+document.getElementById("scOpenPDF").addEventListener("click",()=>{
+  const file=document.getElementById("scPDFInput").files[0];
+  if(file){const url=URL.createObjectURL(file);window.open(url, "_blank");}else{alert("Select a PDF first.");}
+});
+
+/* ---------------- PDF Selection logic */
+const universitySel = document.getElementById("university");
+const levelSel = document.getElementById("level");
+const semesterSel = document.getElementById("semester");
+const programSel = document.getElementById("program");
+const searchBtn = document.getElementById("searchBtn");
 const pdfList = document.getElementById("pdf-list");
-let loadedPDFs = [];
+const recentPanel = document.getElementById("recentPanel");
+const recentList = document.getElementById("recentList");
 
-function showMessage(msg) { pdfList.innerHTML = `<div>${msg}</div>`; }
+/* Example: Load dummy universities */
+const universities=["Peki COE","Accra COE","Kumasi COE"];
+universities.forEach(u=>{let opt=document.createElement("option");opt.value=u;opt.textContent=u;universitySel.appendChild(opt);});
 
-function populateDropdown(dropdown, items) {
-    dropdown.innerHTML = `<option value="">Select ${dropdown.id.charAt(0).toUpperCase() + dropdown.id.slice(1)}</option>`;
-    items.forEach(i => { 
-        if (i.type === "dir") { 
-            const opt = document.createElement("option"); 
-            opt.value = i.path; 
-            opt.textContent = i.name; 
-            dropdown.appendChild(opt); 
-        } 
-    });
-    dropdown.disabled = false;
-}
-
-function resetDropdowns(...dropdowns) {
-    dropdowns.forEach(d => {
-        d.innerHTML = `<option value="">Select ${d.id.charAt(0).toUpperCase() + d.id.slice(1)}</option>`;
-        d.disabled = true;
-    });
-    pdfList.innerHTML = "";
-    loadedPDFs = [];
-}
-
-async function fetchFolder(url, branch = config.singleRepo.branch) {
-    const fullUrl = url.includes("?") ? url : `${url}?ref=${branch}`;
-    try {
-        const res = await fetch(fullUrl);
-        if (!res.ok) return [];
-        const data = await res.json();
-        return data;
-    } catch (e) {
-        console.error(e);
-        return [];
-    }
-}
-
-async function loadPDFsForProgram() {
-    if (!prog.value) return [];
-    const files = await fetchFolder(`https://api.github.com/repos/${config.singleRepo.owner}/${config.singleRepo.repo}/contents/${prog.value}`);
-    return files.filter(f => f.name.toLowerCase().endsWith(".pdf"));
-}
-
-function displayPDFs(pdfs) {
-    if (!pdfs.length) {
-        showMessage("No PDF files found.");
-        return;
-    }
-    pdfList.innerHTML = "";
-    loadedPDFs = pdfs;
-    pdfs.forEach(f => {
-        const rawURL = `https://raw.githubusercontent.com/${config.singleRepo.owner}/${config.singleRepo.repo}/${config.singleRepo.branch}/${f.path}`;
-        const div = document.createElement("div");
-        div.innerHTML = `<a href="${rawURL}" target="_blank" data-path="${f.path}">${f.name}</a>`;
-        pdfList.appendChild(div);
-    });
-}
-
-/* Load universities on page load */
-(async () => {
-    const baseURL = `https://api.github.com/repos/${config.singleRepo.owner}/${config.singleRepo.repo}/contents/`;
-    const universities = await fetchFolder(baseURL);
-    populateDropdown(uni, universities);
-})();
-
-/* Dropdown events */
-uni.addEventListener("change", async () => {
-    resetDropdowns(lvl, sem, prog);
-    if (!uni.value) return;
-    const levels = await fetchFolder(`https://api.github.com/repos/${config.singleRepo.owner}/${config.singleRepo.repo}/contents/${uni.value}`);
-    populateDropdown(lvl, levels);
+/* Dynamic enabling of selects */
+universitySel.addEventListener("change",()=>{
+  levelSel.disabled=false;
+  levelSel.innerHTML='<option value="">Select Level</option><option value="100">100</option><option value="200">200</option><option value="300">300</option>';
+});
+levelSel.addEventListener("change",()=>{
+  semesterSel.disabled=false;
+  semesterSel.innerHTML='<option value="">Select Semester</option><option value="First">First</option><option value="Second">Second</option>';
+});
+semesterSel.addEventListener("change",()=>{
+  programSel.disabled=false;
+  programSel.innerHTML='<option value="">Select Program</option><option value="Early Childhood">Early Childhood</option><option value="Primary">Primary</option>';
 });
 
-lvl.addEventListener("change", async () => {
-    resetDropdowns(sem, prog);
-    if (!lvl.value) return;
-    const sems = await fetchFolder(`https://api.github.com/repos/${config.singleRepo.owner}/${config.singleRepo.repo}/contents/${lvl.value}`);
-    populateDropdown(sem, sems);
+/* Search PDFs logic */
+searchBtn.addEventListener("click",()=>{
+  const uni=universitySel.value, lvl=levelSel.value, sem=semesterSel.value, prog=programSel.value;
+  if(!uni||!lvl||!sem||!prog){alert("Select all filters first.");return;}
+  pdfList.innerHTML='';
+  for(let i=1;i<=3;i++){
+    const a=document.createElement("a");
+    a.href="#";
+    a.textContent=`${uni} - ${lvl} - ${sem} - ${prog} - Past Question ${i}`;
+    a.addEventListener("click",(e)=>{e.preventDefault();alert("Open PDF feature here.");addToRecent(a.textContent);});
+    pdfList.appendChild(a);
+  }
 });
 
-sem.addEventListener("change", async () => {
-    resetDropdowns(prog);
-    if (!sem.value) return;
-    const programs = await fetchFolder(`https://api.github.com/repos/${config.singleRepo.owner}/${config.singleRepo.repo}/contents/${sem.value}`);
-    populateDropdown(prog, programs);
-});
-
-document.getElementById("searchBtn").addEventListener("click", async () => {
-    if (!prog.value) { showMessage("Please select a program first."); return; }
-    const files = await loadPDFsForProgram();
-    displayPDFs(files);
-});
-
-/* ---------------- Dynamic Ad Script Injection ---------------- */
-function injectAdScript() {
-    const adScript = document.createElement("script");
-    adScript.src = "https://intelligent-comfortable.com/bq3.VC0OPj3YpivKbMm_VaJAZ/DO0i2ZNezsE/xqNpjcgk4cLlT/Yh3/MMTcEs2OOCDFk";
-    adScript.async = true;
-    document.body.appendChild(adScript);
+/* Recent opened */
+function addToRecent(title){
+  recentPanel.style.display="block";
+  let li=document.createElement("li");
+  li.textContent=title;
+  recentList.appendChild(li);
 }
-
-injectAdScript();
