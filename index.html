@@ -42,6 +42,84 @@
   <button id="theme-toggle" title="Toggle theme">☀️</button>
 </div>
 
+<h1>Colleges of Education Past Questions</h1>
+<p class="tagline">Empowering Learning Through Past Questions</p>
+
+<div class="instructions-container">
+  <button class="instructions-toggle" onclick="toggleInstructions()"> View Instructions For Trainees</button>
+  <div class="instructions-content" id="instructionsBox">
+    <p><strong>Welcome Trainees!</strong> Select your university, level, semester, and program to view PDFs.</p>
+  </div>
+</div>
+
+<div class="frame">
+  <div class="frame-inner">
+    <div class="controls">
+      <select id="university"><option value="">Select University</option></select>
+      <select id="level" disabled><option value="">Select Level</option></select>
+      <select id="semester" disabled><option value="">Select Semester</option></select>
+      <select id="program" disabled><option value="">Select Program</option></select>
+      <button id="searchBtn">Search PDFs</button>
+    </div>
+    <div id="pdf-list" class="pdf-list"></div>
+  </div>
+</div>
+
+<footer>&copy; 2025 SCode. All rights reserved.</footer>
+
+<!-- SC Tools Hub -->
+<div id="scToolsHub">
+  <div id="scToggle">SC</div>
+  <div id="scContent">
+    <h4>SC Tools Hub</h4>
+    <div class="sc-instructions">
+      <p><strong>Instructions:</strong></p>
+      <ul>
+        <li>Select AI or PDF to open in a new tab.</li>
+      </ul>
+    </div>
+    <label>Select AI:</label>
+    <select id="scAI">
+      <option value="">--Choose AI--</option>
+      <option value="chatgpt">ChatGPT</option>
+      <option value="copilot">Copilot</option>
+      <option value="deepseek">DeepSeek</option>
+      <option value="questionai">Question AI</option>
+    </select>
+    <button id="scOpenAI">Go</button>
+
+    <label>Site PDFs:</label>
+    <select id="scPDF">
+      <option value="">--Site PDFs--</option>
+    </select>
+    <input type="file" id="scPDFInput" accept=".pdf">
+    <button id="scOpenPDF">View PDF</button>
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
+
+<!-- Favicon & Fonts -->
+<link rel="icon" href="https://raw.githubusercontent.com/SCodeGit/trial/main/favicon%20scode.jpg" type="image/jpeg">
+<link href="https://fonts.googleapis.com/css2?family=Times+New+Roman&family=Cinzel:wght@700&display=swap" rel="stylesheet">
+
+<!-- CSS -->
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- Top bar -->
+<div class="top-bar">
+  <div class="top-logos">
+    <img src="https://raw.githubusercontent.com/SCodeGit/trial/main/WhatsApp%20Image%202025-10-29%20at%2021.28.30_968e228b.jpg" alt="Logo1">
+    <img src="https://raw.githubusercontent.com/SCodeGit/trial/main/WhatsApp%20Image%202025-10-29%20at%2021.29.26_b1bcd9d3.jpg" alt="Logo2">
+    <img src="https://raw.githubusercontent.com/SCodeGit/trial/main/WhatsApp%20Image%202025-10-29%20at%2021.31.34_5c11e8e8.jpg" alt="Logo3">
+  </div>
+  <button id="theme-toggle" title="Toggle theme">☀️</button>
+</div>
+
 <!-- Placeholder for Ad -->
 <div id="top-ad" style="max-width:980px;margin:20px auto;text-align:center;">
   <!-- Paste your ad script here -->
@@ -110,3 +188,4 @@
 <script src="script.js"></script>
 </body>
 </html>
+
