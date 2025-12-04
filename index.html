@@ -532,9 +532,9 @@ document.getElementById("searchBtn").addEventListener("click",async()=>{ if(!pro
 document.getElementById("scOpenAI").addEventListener("click",()=>{ const ai=document.getElementById("scAI").value; if(!ai){ alert("Select AI"); return;} let url=""; switch(ai){ case "chatgpt": url="https://chat.openai.com/"; break; case "copilot": url="https://copilot.microsoft.com/"; break; case "deepseek": url="https://deepseek.ai/"; break; case "questionai": url="https://questionai.com/"; break;} window.open(url,"_blank"); });
 document.getElementById("scOpenPDF").addEventListener("click",()=>{ const sel=scPDF.value; const up=document.getElementById("scPDFInput").files[0]; if(up){ const url=URL.createObjectURL(up); window.open(url,"_blank"); if(!recentOpened.includes(up.name)) recentOpened.unshift(up.name); if(recentOpened.length>10) recentOpened.pop(); updateRecentUI(); return;} if(sel){ window.open(sel,"_blank"); if(!recentOpened.includes(sel)) recentOpened.unshift(sel); if(recentOpened.length>10) recentOpened.pop(); updateRecentUI(); return;} alert("Select PDF or upload one!"); });
 </script>
-<button onclick="location.href='admin-pdf-count.html'">Admin PDF Counter</button>
-</body>
+<a href="admin-pdf-count.htmll">View PDFs</a></body>
 </html>
+
 
 
 
