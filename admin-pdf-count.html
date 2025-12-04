@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Admin PDF Counter</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: #f5f5f5;
+    padding: 20px;
+  }
+  .box {
+    background: white;
+    padding: 25px;
+    max-width: 450px;
+    margin: auto;
+    border-radius: 12px;
+    box-shadow: 0 0 10px #aaa;
+  }
+  h2 { margin-top: 0; }
+  #count {
+    font-size: 32px;
+    font-weight: bold;
+    color: darkblue;
+  }
+</style>
+</head>
+<body>
+
+<div class="box">
+  <h2>Admin PDF Counter</h2>
+  <p>This tool counts all <strong>.pdf</strong> files in your GitHub repo.</p>
+  <p>Total PDFs:</p>
+  <div id="count">Loading…</div>
+</div>
+
+<script>
+// ---- CONFIG: your GitHub repo ----
+const owner = "SCodeGit";
+const repo  = "trial";
+
+async function countPDFs() {
+  const apiUrl = `https://api.github.com/repos/${owner}/${repo}/git/trees/main?recursive=1`;
+
+  try {
+    const res = await fetch(apiUrl);
+    const data = await res.json();
+
+    let total = 0;
+
+    // Loop through all repo files
+    data.tree.forEach(item => {
+      if (item.path.toLowerCase().endsWith(".pdf")) {
+        total++;
+      }
+    });
+
+    document.getElementById("count").innerText = total;
+
+  } catch (err) {
+    document.getElementById("count").innerText = "Error loading";
+  }
+}
+
+countPDFs();
+</script>
+
+</body>
+</html>
