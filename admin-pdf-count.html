@@ -1,68 +1,125 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PDF List</title>
 
+<!-- ======== COMPACT ROYAL PDF COUNTER ======== -->
 <style>
-    body {
-        font-family: Arial, sans-serif;
-        background: #f5f5f5;
-        padding: 30px;
-    }
-    h2 { margin-bottom: 10px; }
-    .pdf-item {
-        background: white;
-        padding: 12px;
-        margin: 8px 0;
-        border-radius: 6px;
-        box-shadow: 0px 1px 4px rgba(0,0,0,0.15);
-    }
-</style>
-</head>
+.pdf-block {
+  width: 280px;
+  margin: 40px auto;
+  padding: 22px 20px;
+  text-align: center;
 
-<body>
+  /* Royal academic gradient background */
+  background: linear-gradient(145deg, rgba(10,18,50,0.85), rgba(18,28,80,0.65));
+  border-radius: 18px;
 
-<h2>Available PDFs</h2>
-<div id="pdfList">Loading PDFs...</div>
+  box-shadow: 
+    0 0 15px rgba(0,150,255,0.3),
+    0 0 40px rgba(0,0,0,0.2);
 
-<script>
-// -------------- CHANGE ONLY THIS PART ------------------
-const githubFolder = "https://api.github.com/repos/SCodeGit/trial/contents/";
-// -------------------------------------------------------
+  backdrop-filter: blur(18px);
+  border: 1px solid rgba(255,255,255,0.12);
 
-// LIST ONLY PDF FILES
-async function loadPDFs() {
-    try {
-        const response = await fetch(githubFolder);
-        const files = await response.json();
-
-        let pdfs = files.filter(f => f.name.toLowerCase().endsWith(".pdf"));
-
-        if (pdfs.length === 0) {
-            document.getElementById("pdfList").innerHTML = "No PDF files found.";
-            return;
-        }
-
-        let html = "";
-        pdfs.forEach(pdf => {
-            html += `
-                <div class="pdf-item">
-                    <a href="${pdf.download_url}" target="_blank">${pdf.name}</a>
-                </div>
-            `;
-        });
-
-        document.getElementById("pdfList").innerHTML = html;
-
-    } catch (err) {
-        document.getElementById("pdfList").innerHTML = "Error loading PDFs.";
-    }
+  animation: fadeSlide 0.8s ease-out;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-loadPDFs();
-</script>
+.pdf-block:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 0 30px rgba(0,180,255,0.5), 0 0 60px rgba(0,50,255,0.25);
+}
 
-</body>
-</html>
+@keyframes fadeSlide {
+  from { opacity:0; transform: translateY(20px);}
+  to { opacity:1; transform: translateY(0);}
+}
+
+.pdf-icon {
+  font-size: 48px;
+  margin-bottom: 8px;
+  color: #fff;
+  text-shadow: 0 0 8px #4da6ff, 0 0 15px #0077ff, 0 0 25px #0044aa;
+  transition: text-shadow 0.3s ease;
+}
+
+.pdf-block:hover .pdf-icon {
+  text-shadow: 0 0 12px #4da6ff, 0 0 20px #00a0ff, 0 0 30px #0066cc;
+}
+
+.pdf-head {
+  font-size: 20px;
+  font-weight: 700;
+  color: #eaf2ff;
+  margin-bottom: 4px;
+}
+
+.pdf-sub {
+  font-size: 13px;
+  color: #d2ddff;
+  opacity: 0.8;
+  margin-bottom: 18px;
+}
+
+#pdfCount {
+  font-size: 45px;
+  font-weight: 800;
+  padding: 14px 0;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.1);
+  color: #ffffff;
+
+  box-shadow: inset 0 0 25px rgba(0,90,255,0.3);
+  text-shadow: 0 0 6px #80bfff;
+
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+#pdfCount:hover {
+  transform: scale(1.05);
+  box-shadow: inset 0 0 30px rgba(0,120,255,0.45);
+}
+</style>
+
+<div class="pdf-block">
+  <div class="pdf-icon">📄</div>
+  <div class="pdf-head">PDF Archive</div>
+  <div class="pdf-sub">Real-time document count</div>
+  <div id="pdfCount">0</div>
+</div>
+
+<script>
+const owner = "SCodeGit";
+const repo  = "trial";
+
+async function fetchPDFCount() {
+  try {
+    const url = `https://api.github.com/repos/${owner}/${repo}/git/trees/main?recursive=1`;
+    const response = await fetch(url);
+    const data = await response.json();
+
+    let total = 0;
+    for (const item of data.tree) {
+      if (item.path.toLowerCase().endsWith(".pdf")) total++;
+    }
+
+    fastCountUp(total);
+
+  } catch (e) {
+    document.getElementById("pdfCount").innerText = "Error";
+  }
+}
+
+function fastCountUp(target) {
+  let current = 0;
+  const speed = Math.max(1, Math.floor(target / 50));
+  const counter = setInterval(() => {
+    current += speed;
+    if(current >= target){
+      current = target;
+      clearInterval(counter);
+    }
+    document.getElementById("pdfCount").innerText = current;
+  }, 20);
+}
+
+fetchPDFCount();
+</script>
+<!-- ================= END COMPACT PDF COUNTER ================= -->
