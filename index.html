@@ -189,6 +189,79 @@ document.addEventListener("DOMContentLoaded", () => {
 <link rel="icon" type="image/jpeg" href="https://raw.githubusercontent.com/SCodeGit/trial/main/favicon%20scode.jpg">
 
 <style>
+     /* ===========================
+   FULL DARK MODE TEXT FIX
+=========================== */
+body[data-theme="dark"] {
+  color: #ffffff !important;
+}
+
+/* Headings and paragraphs */
+body[data-theme="dark"] h1,
+body[data-theme="dark"] h2,
+body[data-theme="dark"] h3,
+body[data-theme="dark"] h4,
+body[data-theme="dark"] h5,
+body[data-theme="dark"] h6,
+body[data-theme="dark"] p,
+body[data-theme="dark"] span,
+body[data-theme="dark"] label {
+  color: #ffffff !important;
+}
+
+/* Top bar */
+body[data-theme="dark"] .top-bar {
+  color: #ffffff !important;
+}
+body[data-theme="dark"] #theme-toggle {
+  color: #ffffff !important;
+}
+
+/* Tagline */
+body[data-theme="dark"] .tagline {
+  color: #d4e7ff !important;
+}
+
+/* Links */
+body[data-theme="dark"] a {
+  color: #9ec9ff !important;
+}
+body[data-theme="dark"] a:hover {
+  color: #ffffff !important;
+}
+
+/* PDF list */
+body[data-theme="dark"] .pdf-list a {
+  color: #ffffff !important;
+  border-color: rgba(255,255,255,0.2) !important;
+}
+body[data-theme="dark"] .pdf-list a:hover {
+  background: #1e3a8a !important;
+}
+
+/* Inputs & selects */
+body[data-theme="dark"] select,
+body[data-theme="dark"] input,
+body[data-theme="dark"] button {
+  color: #ffffff !important;
+  background: #0b1a33 !important;
+  border-color: rgba(255,255,255,0.15) !important;
+}
+
+/* SC Tools Hub Box */
+body[data-theme="dark"] #scContent {
+  background: #0c162b !important;
+  color: #ffffff !important;
+}
+body[data-theme="dark"] #scContent button {
+  background: #1e3a8a !important;
+  color: #ffffff !important;
+}
+
+/* Footer */
+body[data-theme="dark"] footer {
+  color: #d0e0f5 !important;
+}
 :root{
   --navy: #0a1f44;
   --white: #ffffff;
@@ -531,6 +604,7 @@ document.getElementById("scOpenAI").addEventListener("click",()=>{ const ai=docu
 document.getElementById("scOpenPDF").addEventListener("click",()=>{ const sel=scPDF.value; const up=document.getElementById("scPDFInput").files[0]; if(up){ const url=URL.createObjectURL(up); window.open(url,"_blank"); if(!recentOpened.includes(up.name)) recentOpened.unshift(up.name); if(recentOpened.length>10) recentOpened.pop(); updateRecentUI(); return;} if(sel){ window.open(sel,"_blank"); if(!recentOpened.includes(sel)) recentOpened.unshift(sel); if(recentOpened.length>10) recentOpened.pop(); updateRecentUI(); return;} alert("Select PDF or upload one!"); });
 </script>
 </html>
+
 
 
 
