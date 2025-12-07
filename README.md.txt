@@ -7,10 +7,11 @@ A clean, academic repository hosting past questions from various universities in
 - KNUST
 
 ### Features
-- Organized by university → level → semester → subject
+- Organized by University → Level → Semester → subject
 - Direct access to PDF files
 - Built with static HTML, CSS, and JavaScript
 - Search feature for quick lookup
 - Free hosting via GitHub Pages
 
 **© 2025 SCode — Educational Archive Initiative**
+
