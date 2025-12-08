@@ -481,7 +481,7 @@ body[data-theme="dark"] select,body[data-theme="dark"] input,body[data-theme="da
   </div>
 </div>
 
-<footer>&copy; 2025 SCode. All rights reserved.</footer>
+<footer>&copy; 2025 SCode and Delight. All rights reserved.</footer>
 
 <!-- SC Tools Hub -->
 <div id="scToolsHub">
@@ -604,6 +604,7 @@ document.getElementById("scOpenAI").addEventListener("click",()=>{ const ai=docu
 document.getElementById("scOpenPDF").addEventListener("click",()=>{ const sel=scPDF.value; const up=document.getElementById("scPDFInput").files[0]; if(up){ const url=URL.createObjectURL(up); window.open(url,"_blank"); if(!recentOpened.includes(up.name)) recentOpened.unshift(up.name); if(recentOpened.length>10) recentOpened.pop(); updateRecentUI(); return;} if(sel){ window.open(sel,"_blank"); if(!recentOpened.includes(sel)) recentOpened.unshift(sel); if(recentOpened.length>10) recentOpened.pop(); updateRecentUI(); return;} alert("Select PDF or upload one!"); });
 </script>
 </html>
+
 
 
 
