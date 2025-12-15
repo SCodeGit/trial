@@ -605,20 +605,83 @@ document.getElementById("scOpenPDF").addEventListener("click",()=>{ const sel=sc
 </script>
 </html>
 
+<!-- ===========================
+     FLOATING UCC EXTERNAL PORTAL
+     Self-contained, Academic Badge
+=========================== -->
+<style>
+#uccFloat {
+  position: fixed;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  background: rgba(255,255,255,0.96);
+  border: 2px solid #0a1f44;
+  border-left: none;
+  border-radius: 0 14px 14px 0;
+  box-shadow: 0 8px 28px rgba(10,31,68,0.28);
+  text-decoration: none;
+  z-index: 9997;
+  transition: all 0.35s ease;
+}
+#uccFloat img {
+  width: 38px;
+  height: 38px;
+  object-fit: contain;
+}
+#uccFloat span {
+  font-size: 0.8rem;
+  font-weight: 700;
+  line-height: 1.1;
+  color: #0a1f44;
+  white-space: nowrap;
+}
+#uccFloat:hover {
+  padding-left: 22px;
+  background: #1e3a8a;
+}
+#uccFloat:hover span {
+  color: #ffffff;
+}
+body[data-theme="dark"] #uccFloat {
+  background: rgba(8,18,36,0.96);
+  border-color: #1e3a8a;
+}
+body[data-theme="dark"] #uccFloat span {
+  color: #e9eef6;
+}
+@media (max-width: 600px) {
+  #uccFloat {
+    top: 60%;
+    padding: 8px 12px;
+  }
+  #uccFloat img {
+    width: 32px;
+    height: 32px;
+  }
+  #uccFloat span {
+    font-size: 0.75rem;
+  }
+}
+</style>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+<a
+  id="uccFloat"
+  href="https://sharether.com/"
+  target="_blank"
+  rel="noopener noreferrer"
+  title="University of Cape Coast (UCC) Past Questions Portal"
+>
+  <img
+    src="https://sharether.com/assets/images/new-logo2.webp"
+    alt="UCC Logo"
+  />
+  <span>
+    UCC<br>
+    (Sharether)
+  </span>
+</a>
