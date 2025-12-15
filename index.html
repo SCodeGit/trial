@@ -607,13 +607,13 @@ document.getElementById("scOpenPDF").addEventListener("click",()=>{ const sel=sc
 
 <!-- ===========================
      FLOATING UCC EXTERNAL PORTAL
-     Self-contained, Academic Badge
+     Self-contained, Academic Badge (Draggable)
 =========================== -->
 <style>
 #uccFloat {
   position: fixed;
   left: 0;
-  top: 50%;
+  top: 45%; /* adjusted to sit around middle-edge, near instructions/selects */
   transform: translateY(-50%);
   display: flex;
   align-items: center;
@@ -627,6 +627,7 @@ document.getElementById("scOpenPDF").addEventListener("click",()=>{ const sel=sc
   text-decoration: none;
   z-index: 9997;
   transition: all 0.35s ease;
+  touch-action: none; /* for mobile drag */
 }
 #uccFloat img {
   width: 38px;
@@ -656,7 +657,7 @@ body[data-theme="dark"] #uccFloat span {
 }
 @media (max-width: 600px) {
   #uccFloat {
-    top: 60%;
+    top: 50%;
     padding: 8px 12px;
   }
   #uccFloat img {
@@ -685,3 +686,58 @@ body[data-theme="dark"] #uccFloat span {
     (Sharether)
   </span>
 </a>
+
+<script>
+const ucc = document.getElementById('uccFloat');
+let isDragging = false;
+let startX = 0, startY = 0;
+let origX = 0, origY = 0;
+
+// Mouse drag
+ucc.addEventListener('mousedown', e => {
+  isDragging = true;
+  startX = e.clientX;
+  startY = e.clientY;
+  origX = ucc.offsetLeft;
+  origY = ucc.offsetTop;
+  ucc.style.transition = 'none';
+});
+document.addEventListener('mousemove', e => {
+  if (!isDragging) return;
+  const dx = e.clientX - startX;
+  const dy = e.clientY - startY;
+  ucc.style.left = origX + dx + 'px';
+  ucc.style.top = origY + dy + 'px';
+});
+document.addEventListener('mouseup', () => {
+  if (isDragging) {
+    isDragging = false;
+    ucc.style.transition = 'all 0.35s ease';
+  }
+});
+
+// Touch drag for mobile
+ucc.addEventListener('touchstart', e => {
+  isDragging = true;
+  const touch = e.touches[0];
+  startX = touch.clientX;
+  startY = touch.clientY;
+  origX = ucc.offsetLeft;
+  origY = ucc.offsetTop;
+  ucc.style.transition = 'none';
+});
+ucc.addEventListener('touchmove', e => {
+  if (!isDragging) return;
+  const touch = e.touches[0];
+  const dx = touch.clientX - startX;
+  const dy = touch.clientY - startY;
+  ucc.style.left = origX + dx + 'px';
+  ucc.style.top = origY + dy + 'px';
+});
+ucc.addEventListener('touchend', () => {
+  if (isDragging) {
+    isDragging = false;
+    ucc.style.transition = 'all 0.35s ease';
+  }
+});
+</script>
