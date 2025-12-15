@@ -481,11 +481,8 @@ body[data-theme="dark"] select,body[data-theme="dark"] input,body[data-theme="da
   </div>
 </div>
 
-<footer class="site-footer">
-  <div class="footer-bottom">
-    © 2025 <strong>SCode Studio</strong> · PEKICOE SRC · All Rights Reserved
-  </div>
-</footer>
+<footer>&copy; 2025 SCode. All rights reserved.</footer>
+
 <!-- SC Tools Hub -->
 <div id="scToolsHub">
   <div id="scToggle">SC</div>
@@ -610,15 +607,21 @@ document.getElementById("scOpenPDF").addEventListener("click",()=>{ const sel=sc
 
 <!-- ===========================
      FLOATING UCC EXTERNAL PORTAL
-     Draggable (Desktop + Phone)
-     Scroll-safe on Mobile
+     Self-contained, Draggable
+     Desktop + Mobile (Percent Controlled)
 =========================== -->
 
 <style>
+:root {
+  /* 🔧 EDIT THESE ONLY */
+  --ucc-desktop-top: 35%;   /* Desktop position */
+  --ucc-mobile-top: 55%;   /* Mobile position */
+}
+
 #uccFloat {
   position: fixed;
   left: 0;
-  top: 45%;
+  top: var(--ucc-desktop-top);
   transform: translateY(-50%);
   display: flex;
   align-items: center;
@@ -632,12 +635,12 @@ document.getElementById("scOpenPDF").addEventListener("click",()=>{ const sel=sc
   text-decoration: none;
   z-index: 9997;
   transition: all 0.35s ease;
-  touch-action: none; /* allows drag without page jitter */
+  touch-action: none;
 }
 
 #uccFloat img {
-  width: 30px;
-  height: 30px;
+  width: 38px;
+  height: 38px;
   object-fit: contain;
 }
 
@@ -667,12 +670,11 @@ body[data-theme="dark"] #uccFloat span {
   color: #e9eef6;
 }
 
-/* 📱 MOBILE: scrolls with page, still draggable */
+/* 📱 MOBILE */
 @media (max-width: 600px) {
   #uccFloat {
-    position: absolute;     /* ← critical fix */
-    top: 230px;             /* near instructions / selects */
-    transform: none;
+    top: var(--ucc-mobile-top);
+    transform: translateY(-50%);
     padding: 8px 12px;
   }
 
@@ -709,18 +711,6 @@ const ucc = document.getElementById("uccFloat");
 let dragging = false;
 let startX = 0, startY = 0;
 let baseX = 0, baseY = 0;
-
-const isMobile = window.matchMedia("(max-width: 600px)").matches;
-
-/* --- MOBILE SCROLL FOLLOW --- */
-if (isMobile) {
-  let initialTop = ucc.offsetTop;
-  window.addEventListener("scroll", () => {
-    if (!dragging) {
-      ucc.style.top = initialTop + window.scrollY + "px";
-    }
-  });
-}
 
 /* --- DRAG START --- */
 function dragStart(x, y) {
@@ -761,4 +751,3 @@ ucc.addEventListener("touchmove", e => {
 });
 ucc.addEventListener("touchend", dragEnd);
 </script>
-
