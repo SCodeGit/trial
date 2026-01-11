@@ -503,10 +503,53 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 </div>
 
 <footer class="site-footer">
-  <div class="footer-bottom">
-    © 2025 <strong>SCode Studio</strong> · PEKICOE SRC · All Rights Reserved
-  </div>
+  <p class="footer-main">
+    © <span id="year"></span> SCode Studio • PEKICOE SRC
+  </p>
+
+  <p class="footer-links">
+    <a href="#" onclick="eduOpenPolicy()">Privacy Policy</a> •
+    <a href="#" onclick="eduOpenTerms()">Terms of Use</a>
+  </p>
 </footer>
+
+<script>
+  document.getElementById("year").textContent = new Date().getFullYear();
+</script>
+
+<style>
+  .site-footer {
+    text-align: center;          /* center everything */
+    padding: 20px;               /* spacing around footer */
+    background-color: #111;      /* dark background */
+    color: #fff;                 /* white text */
+    font-family: Arial, sans-serif;
+  }
+
+  .footer-main {
+    font-weight: bold;           /* strong bold text */
+    font-size: 1.1rem;
+    letter-spacing: 1px;
+    margin: 0;
+  }
+
+  .footer-links {
+    margin-top: 8px;
+    font-size: 0.9rem;
+  }
+
+  .footer-links a {
+    color: #ccc;                 /* muted link color */
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+
+  .footer-links a:hover {
+    color: #fff;                 /* brighten on hover */
+  }
+</style>
+
+
      
 <!-- SC Tools Hub -->
 <div id="scToolsHub">
@@ -776,6 +819,242 @@ ucc.addEventListener("touchmove", e => {
 });
 ucc.addEventListener("touchend", dragEnd);
 </script>
+<!-- =====================================================
+     ACADEMIC COOKIE & PRIVACY NOTICE
+     University-Style | Educational Use
+===================================================== -->
+
+<style>
+.edu-cookie-banner{
+  position:fixed;
+  bottom:18px;
+  left:50%;
+  transform:translateX(-50%);
+  max-width:960px;
+  width:94%;
+  background:#0a1f44;
+  color:#fff;
+  padding:22px 26px;
+  border-radius:14px;
+  box-shadow:0 18px 40px rgba(0,0,0,.45);
+  display:none;
+  z-index:9999;
+}
+
+.edu-cookie-banner p{
+  margin:0 0 14px;
+  font-size:0.92rem;
+  line-height:1.7;
+  color:#e6ecff;
+}
+
+.edu-cookie-actions{
+  display:flex;
+  gap:12px;
+  flex-wrap:wrap;
+}
+
+.edu-cookie-actions button,
+.edu-cookie-actions a{
+  padding:10px 22px;
+  border-radius:30px;
+  font-weight:600;
+  cursor:pointer;
+  border:none;
+  text-decoration:none;
+  font-size:0.9rem;
+}
+
+.edu-accept{
+  background:#1f6fff;
+  color:#fff;
+}
+
+.edu-decline{
+  background:#243a66;
+  color:#fff;
+}
+
+.edu-policy{
+  background:transparent;
+  color:#9ec2ff;
+  border:1px solid #9ec2ff;
+}
+
+/* ===== Modal ===== */
+.edu-modal{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.75);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:10000;
+}
+
+.edu-box{
+  background:#081630;
+  color:#e8ecf8;
+  max-width:840px;
+  width:94%;
+  max-height:82vh;
+  overflow:auto;
+  padding:38px;
+  border-radius:16px;
+  position:relative;
+}
+
+.edu-box h2{
+  margin-top:0;
+  color:#ffffff;
+}
+
+.edu-box p{
+  line-height:1.75;
+  font-size:0.95rem;
+  margin-bottom:16px;
+}
+
+.edu-close{
+  position:absolute;
+  top:18px;
+  right:22px;
+  font-size:1.8rem;
+  color:#fff;
+  cursor:pointer;
+}
+</style>
+
+<!-- ===== Cookie Notice ===== -->
+<div id="eduCookieBanner" class="edu-cookie-banner">
+  <p>
+    This website uses cookies and similar technologies to support core
+    functionality, maintain system integrity, and improve the academic
+    user experience. Continued use of this site indicates consent.
+  </p>
+  <div class="edu-cookie-actions">
+    <button class="edu-accept" onclick="eduAccept()">Accept</button>
+    <button class="edu-decline" onclick="eduDecline()">Decline</button>
+    <a class="edu-policy" onclick="eduOpenPolicy()">Privacy Policy</a>
+  </div>
+</div>
+
+<!-- ===== Privacy Policy ===== -->
+<div id="eduPrivacyModal" class="edu-modal">
+  <div class="edu-box">
+    <span class="edu-close" onclick="eduClosePolicy()">&times;</span>
+
+    <h2>Privacy Policy</h2>
+
+    <div class="legal-disclaimer">
+  <p>
+    This digital platform is owned and operated by <strong>SCode Studio</strong> and is expressly dedicated to 
+    advancing educational and academic objectives. Its primary function is the provision and dissemination 
+    of curated learning resources tailored for Colleges of Education and affiliated institutions across Ghana, 
+    thereby supporting the broader mission of intellectual development and institutional excellence.
+  </p>
+
+  <p>
+    In the course of delivering these services, the website may employ cookies, browser storage technologies, 
+    and related mechanisms. Such tools are utilized exclusively to ensure consistent system performance, 
+    safeguard user preferences, and facilitate secure, authenticated access to restricted content. 
+    These measures are implemented in alignment with prevailing best practices in digital governance.
+  </p>
+
+  <p>
+    Any information voluntarily submitted by users through official communication channels—including but not 
+    limited to inquiries, feedback, or administrative correspondence—shall be processed solely for academic, 
+    administrative, or support-related purposes. Under no circumstances will such data be repurposed for 
+    commercial exploitation or unauthorized disclosure.
+  </p>
+
+  <p>
+    <strong>SCode Studio</strong> affirms its unwavering commitment to responsible data stewardship. All 
+    handling, storage, and utilization of information are conducted in strict accordance with recognized 
+    institutional protocols, academic standards, and ethical obligations. By engaging with this platform, 
+    users acknowledge and consent to these practices as integral to the secure and effective operation of 
+    the service.
+  </p>
+</div>
+
+</div>
+
+<!-- ===== Terms of Use ===== -->
+<div id="eduTermsModal" class="edu-modal">
+  <div class="edu-box">
+    <span class="edu-close" onclick="eduCloseTerms()">&times;</span>
+
+   <div class="terms-of-use">
+  <h2>Terms of Use</h2>
+
+  <p>
+    The services and resources provided through this website are made available by 
+    <strong>SCode Studio</strong> strictly for academic and educational purposes. 
+    The platform is designed to support teaching, learning, research, and examination 
+    preparation for students, educators, and affiliated institutions. All content is 
+    curated to advance scholarly engagement and institutional development within the 
+    educational sector.
+  </p>
+
+  <p>
+    Materials, documents, and digital assets accessible on this platform are intended 
+    solely for personal study and legitimate educational use. Any unauthorized 
+    reproduction, redistribution, modification, or commercial exploitation of such 
+    content—whether in whole or in part—is expressly prohibited. Users are reminded 
+    that intellectual property rights subsist in all published materials, and 
+    infringement may result in disciplinary, civil, or legal consequences.
+  </p>
+
+  <p>
+    By continuing to access or utilize this platform, users acknowledge and agree to 
+    be bound by these Terms of Use. Such acceptance constitutes a legally enforceable 
+    agreement governing the relationship between the user and <strong>SCode Studio</strong>. 
+    Users who do not consent to these provisions are advised to discontinue use of the 
+    platform immediately.
+  </p>
+
+  <p>
+    <strong>SCode Studio</strong> reserves the right to amend, update, or revise these 
+    Terms of Use at its sole discretion, with or without prior notice. Continued use 
+    of the platform following any such modifications shall constitute acceptance of 
+    the revised terms. Users are encouraged to review this section periodically to 
+    remain informed of their rights and obligations.
+  </p>
+</div>
+</div>
+
+<script>
+const banner = document.getElementById("eduCookieBanner");
+const privacy = document.getElementById("eduPrivacyModal");
+const terms = document.getElementById("eduTermsModal");
+
+if(!localStorage.getItem("scode_consent")){
+  banner.style.display = "block";
+}
+
+function eduAccept(){
+  localStorage.setItem("scode_consent","accepted");
+  banner.style.display = "none";
+}
+
+function eduDecline(){
+  localStorage.setItem("scode_consent","declined");
+  banner.style.display = "none";
+}
+
+function eduOpenPolicy(){ privacy.style.display = "flex"; }
+function eduClosePolicy(){ privacy.style.display = "none"; }
+
+function eduOpenTerms(){ terms.style.display = "flex"; }
+function eduCloseTerms(){ terms.style.display = "none"; }
+
+[privacy,terms].forEach(modal=>{
+  modal.addEventListener("click",e=>{
+    if(e.target === modal) modal.style.display="none";
+  });
+});
+</script>
+
 
 
 
