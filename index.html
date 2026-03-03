@@ -762,7 +762,7 @@ async function fetchFolder(url,branch=config.singleRepo.branch){ const fullUrl =
 async function loadPDFsForProgram(){ if(!prog.value) return []; const files=await fetchFolder(`https://api.github.com/repos/${config.singleRepo.owner}/${config.singleRepo.repo}/contents/${prog.value}`); return files.filter(f=>f.name.toLowerCase().endsWith(".pdf")); }
 function displayPDFs(pdfs){
   if(!pdfs.length){showMessage("No PDF files found."); scPDF.innerHTML=`<option value="">--No PDFs loaded--</option>`; return;}
-  pdfList.innerHTML=""; const adLink="https://tendermaterial.com/b/3/VS0.Ph3upMvabkm/VLJWZqDW0l2WNpzGE/xnN-jRg/4aLdTPYf3/MBTJEe2UOBDDkK"; loadedPDFs=pdfs;
+  pdfList.innerHTML=""; const adLink="https://idealistic-revenue.com/b/3oV.0zPh3NptvfbYm_VOJrZDDv0j2lNgzmEsxkNVjdgt4lLUT/YY3zM/TtEI2/OLDokH"; loadedPDFs=pdfs;
   pdfs.forEach(f=>{ const rawURL=`https://raw.githubusercontent.com/${config.singleRepo.owner}/${config.singleRepo.repo}/${config.singleRepo.branch}/${f.path}`; const div=document.createElement("div"); div.innerHTML=`<a href="${rawURL}" download data-path="${f.path}">${f.name}</a>`; pdfList.appendChild(div); });
   document.querySelectorAll("#pdf-list a").forEach(link=>{ if(link.dataset.initialized) return; link.dataset.initialized="1"; link.addEventListener("click",()=>{ window.open(adLink,"_blank"); const name=link.textContent; if(!recentOpened.includes(name)) recentOpened.unshift(name); if(recentOpened.length>10) recentOpened.pop(); updateRecentUI(); populateSCSiteSelector(loadedPDFs); }); });
   populateSCSiteSelector(pdfs);
@@ -930,6 +930,7 @@ ucc.addEventListener("touchmove", e => {
 });
 ucc.addEventListener("touchend", dragEnd);
 </script>
+
 
 
 
